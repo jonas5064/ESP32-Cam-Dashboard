@@ -31,8 +31,8 @@ namespace IPCamera
                         "http://192.168.1.34:152/stream?username=alexandrosplatanios&password=Platanios719791" 
         };
 
-        public static String saved_data_path = Environment.CurrentDirectory + "\\App_Readme\\Saved_Cameras\\saved_cameras.txt";
-
+        public static List<String> urls = new List<string>();
+        public static int urls_num = 0;
 
         public MainWindow()
         {
