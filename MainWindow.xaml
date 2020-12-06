@@ -8,33 +8,28 @@
         Title="IPCameras"
         xmlns:tools1="clr-namespace:IPCamera.Tools"
         Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools1:RatioConverter}, ConverterParameter='0.97' }"
-        Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools1:RatioConverter}, ConverterParameter='1' }"
+        Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools1:RatioConverter}, ConverterParameter='0.99' }"
         AutomationProperties.Name="IPCameras"
         WindowStartupLocation="CenterScreen">
     <!-- Icon="icon.ico"-->
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <Grid x:Name="main_grid" Height="1017">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <!-- Camera Viewers -->
-            <Label x:Name="cam_1" />
-            <Label x:Name="cam_2" Grid.ColumnSpan="2"/>
-            <WPF:VideoCapture HorizontalAlignment="Left" Height="852" Margin="40,29,0,0" VerticalAlignment="Top" Width="883" AutomationProperties.Name="IPCameraFrame" x:Name="IPCameraFrame_1" Background="#FF5B5B5B"/>
-            <WPF:VideoCapture x:Name="IPCameraFrame_2" HorizontalAlignment="Left" Margin="958,29,0,88" Width="914" Grid.ColumnSpan="2" Background="#FF5B5B5B"/>
+            
+            <!-- Row 1 -->
             <!-- Buttons Label -->
-            <StackPanel HorizontalAlignment="Left" Height="25" Margin="861,943,0,0" VerticalAlignment="Top" Width="155" Orientation="Horizontal" >
+            <StackPanel x:Name="buttons" Grid.Row="1" HorizontalAlignment="Left" Height="25" Margin="799,883,0,-852" VerticalAlignment="Top" Width="239" Orientation="Horizontal" >
                 <Button Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="74" AutomationProperties.Name="btStart1" Click="Button_Click" Padding="3"/>
                 <GridSplitter HorizontalAlignment="Stretch" Width="7"/>
                 <Button Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="74" AutomationProperties.Name="btStop1" Click="Button_Click_1" Padding="3"/>
+                <GridSplitter HorizontalAlignment="Stretch" Width="7"/>
+                <Button Content="Setings" HorizontalAlignment="Left" Width="74"  Padding="3" Click="Button_Click_2"/>
             </StackPanel>
-            <Button Content="Setings" Grid.Column="1" HorizontalAlignment="Left" Width="74" Margin="690,943,-75,0" VerticalAlignment="Top" Padding="3" Click="Button_Click_2"/>
+
         </Grid>
     </ScrollViewer>
 
