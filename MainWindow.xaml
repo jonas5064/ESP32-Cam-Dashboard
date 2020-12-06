@@ -15,20 +15,6 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <Grid x:Name="main_grid" Height="1017">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            
-            <!-- Row 1 -->
-            <!-- Buttons Label -->
-            <StackPanel x:Name="buttons" Grid.Row="1" HorizontalAlignment="Left" Height="25" Margin="799,883,0,-852" VerticalAlignment="Top" Width="239" Orientation="Horizontal" >
-                <Button Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="74" AutomationProperties.Name="btStart1" Click="Button_Click" Padding="3"/>
-                <GridSplitter HorizontalAlignment="Stretch" Width="7"/>
-                <Button Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="74" AutomationProperties.Name="btStop1" Click="Button_Click_1" Padding="3"/>
-                <GridSplitter HorizontalAlignment="Stretch" Width="7"/>
-                <Button Content="Setings" HorizontalAlignment="Left" Width="74"  Padding="3" Click="Button_Click_2"/>
-            </StackPanel>
 
         </Grid>
     </ScrollViewer>
