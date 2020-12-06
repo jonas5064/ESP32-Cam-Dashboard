@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,22 @@ namespace IPCamera
             MainWindow.urls.Add(url_7.Text);
             MainWindow.urls.Add(url_8.Text);
             MainWindow.urls_num = MainWindow.urls.Count;
+            // Save Data To Database
+            using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
+            {
+                String query = "INSERT INTO dbo.MyCameras (id,urls,password,Name) VALUES (@id,@username,@password, @email)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", "abc");
+                    command.Parameters.AddWithValue("@urls", "abc");
+                    command.Parameters.AddWithValue("@Name", "abc");
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    // Check Error
+                    if (result < 0)
+                        Console.WriteLine("Error inserting data into Database!");
+                }
+            }
         }
     }
 }

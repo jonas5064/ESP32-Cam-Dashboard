@@ -26,10 +26,12 @@
                     <StackPanel Orientation="Vertical" Grid.IsSharedSizeScope="True" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15">
                         <Grid Height="414" MinHeight="200" MaxHeight="600" MinWidth="500" MaxWidth="1000">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="113*" />
+                                <ColumnDefinition Width="177*" />
                                 <ColumnDefinition Width="867*" />
+                                <ColumnDefinition Width="200" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -43,33 +45,42 @@
                             </Grid.RowDefinitions>
                             <!-- Example -->
                             <Label Grid.Row="0" Grid.Column="0" Background="{x:Null}" FontSize="18">Example:</Label>
-                            <Label Grid.Row="0" Grid.Column="1" Background="{x:Null}" FontSize="18">http://  "ip"  :  "port"  /stream?username=  "uname"  &amp;password=  "pass"</Label>
+                            <Label Grid.Row="0" Grid.Column="1" Background="{x:Null}" FontSize="18" Margin="3,0,0,0">http://  "ip"  :  "port"  /stream?username=  "uname"  &amp;password=  "pass"</Label>
+                            <Label Grid.Row="0" Grid.Column="2" Background="{x:Null}" FontSize="18" Margin="33,0,0,0">Give a name</Label>
                             <!-- Cameras URL 1 -->
                             <Label Grid.Row="1" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 1:</Label>
                             <TextBox Grid.Row="1" Grid.Column="1" x:Name="url_1" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="1" Grid.Column="2" x:Name="name_1" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 2 -->
                             <Label Grid.Row="2" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 2:</Label>
                             <TextBox Grid.Row="2" Grid.Column="1" x:Name="url_2" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="2" Grid.Column="2" x:Name="name_2" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 3 -->
                             <Label Grid.Row="3" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 3:</Label>
                             <TextBox Grid.Row="3" Grid.Column="1" x:Name="url_3" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="3" Grid.Column="2" x:Name="name_3" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 4 -->
                             <Label Grid.Row="4" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 4:</Label>
                             <TextBox Grid.Row="4" Grid.Column="1" x:Name="url_4" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="4" Grid.Column="2" x:Name="name_4" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 5 -->
                             <Label Grid.Row="5" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 5:</Label>
                             <TextBox Grid.Row="5" Grid.Column="1" x:Name="url_5" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="5" Grid.Column="2" x:Name="name_5" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 6 -->
                             <Label Grid.Row="6" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 6:</Label>
                             <TextBox Grid.Row="6" Grid.Column="1" x:Name="url_6" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="6" Grid.Column="2" x:Name="name_6" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 7 -->
                             <Label Grid.Row="7" Grid.Column="0" Background="{x:Null}" FontSize="18">http URL 7:</Label>
                             <TextBox Grid.Row="7" Grid.Column="1" x:Name="url_7" Margin="7,2,7,3" FontSize="18"/>
+                            <TextBox Grid.Row="7" Grid.Column="2" x:Name="name_7" Margin="7,2,7,3" FontSize="18"/>
                             <!-- Cameras URL 8 -->
                             <Label Grid.Row="8" Grid.Column="0" Background="{x:Null}" FontSize="18" Margin="0,0,0,36">http URL 8:</Label>
                             <TextBox Grid.Row="8" Grid.Column="1" x:Name="url_8" Margin="7,2,7,36" FontSize="18"/>
+                            <TextBox Grid.Row="8" Grid.Column="2" x:Name="name_8" Margin="7,2,7,36" FontSize="18"/>
                             <!-- Button Apply -->
-                            <Button Content="Apply" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="9" FontSize="18" VerticalAlignment="Top" Width="131" Height="37" Margin="751,39,0,-4" RenderTransformOrigin="-0.189,0.449" Click="Button_Click"/>
+                            <Button Content="Apply" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="9" FontSize="18" VerticalAlignment="Top" Width="131" Height="37" RenderTransformOrigin="-0.189,0.449" Click="Button_Click"/>
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>
