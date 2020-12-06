@@ -22,6 +22,74 @@ namespace IPCamera
         public Settings()
         {
             InitializeComponent();
+
+            // Feel the page with the current data
+            var urls_list  = MainWindow.urls.Keys.ToList();
+            var names_list = MainWindow.urls.Values.ToList();
+            if (MainWindow.urls_num > 0)
+            {
+                if (urls_list[0] != "" && names_list[0] != "")
+                {
+                    url_1.Text = urls_list[0];
+                    name_1.Text = names_list[0];
+                }
+            }
+            if (MainWindow.urls_num > 1)
+            {
+                if (urls_list[1] != "" && names_list[1] != "")
+                {
+                    url_2.Text = urls_list[1];
+                    name_2.Text = names_list[1];
+                }
+            }
+            if (MainWindow.urls_num > 2)
+            {
+                if (urls_list[2] != "" && names_list[2] != "")
+                {
+                    url_3.Text = urls_list[2];
+                    name_3.Text = names_list[2];
+                }
+            }
+            if (MainWindow.urls_num > 3)
+            {
+                if (urls_list[3] != "" && names_list[3] != "")
+                {
+                    url_4.Text = urls_list[3];
+                    name_4.Text = names_list[3];
+                }
+            }
+            if (MainWindow.urls_num > 4)
+            {
+                if (urls_list[4] != "" && names_list[4] != "")
+                {
+                    url_5.Text = urls_list[4];
+                    name_5.Text = names_list[4];
+                }
+            }
+            if (MainWindow.urls_num > 5)
+            {
+                if (urls_list[5] != "" && names_list[5] != "")
+                {
+                    url_6.Text = urls_list[5];
+                    name_6.Text = names_list[5];
+                }
+            }
+            if (MainWindow.urls_num > 6)
+            {
+                if (urls_list[6] != "" && names_list[6] != "")
+                {
+                    url_7.Text = urls_list[6];
+                    name_7.Text = names_list[6];
+                }
+            }
+            if (MainWindow.urls_num > 7)
+            {
+                if (urls_list[7] != "" && names_list[7] != "")
+                {
+                    url_8.Text = urls_list[7];
+                    name_8.Text = names_list[7];
+                }
+            }   
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -63,6 +131,14 @@ namespace IPCamera
             // If urls.Count > 0
             if (MainWindow.urls_num > 0)
             {
+                // Clear Database
+                SqlConnection con = new SqlConnection(MainWindow.DB_connection_string);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "DELETE FROM dbo.MyCameras ";
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
                 foreach (var d in MainWindow.urls)
                 {
                     Guid guid = Guid.NewGuid();
@@ -70,12 +146,12 @@ namespace IPCamera
                     // Save Data To Database
                     using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
                     {
-                        String query = $"INSERT INTO dbo.MyCameras (id,urls,Name) VALUES (@{my_id},@{d.Key},@{d.Value})";
+                        String query = $"INSERT INTO dbo.MyCameras (id,urls,Name) VALUES (@id,@urls,@name)";
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("@id", "abc");
-                            command.Parameters.AddWithValue("@urls", "abc");
-                            command.Parameters.AddWithValue("@Name", "abc");
+                            command.Parameters.AddWithValue("@id", my_id);
+                            command.Parameters.AddWithValue("@urls", d.Key);
+                            command.Parameters.AddWithValue("@name", d.Value);
                             connection.Open();
                             int result = command.ExecuteNonQuery();
                             // Check Error
@@ -84,6 +160,8 @@ namespace IPCamera
                         }
                     }
                 }
+                // Close Settings Window
+                this.Close();
             }
         }
     }

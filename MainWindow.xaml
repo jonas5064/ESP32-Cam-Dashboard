@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IPCamera"
         xmlns:WPF="clr-namespace:VisioForge.Controls.UI.WPF;assembly=VisioForge.Controls.UI" x:Class="IPCamera.MainWindow"
         mc:Ignorable="d"
         Title="IPCameras"
-        xmlns:tools="IPCamera.Tools" xmlns:tools1="clr-namespace:IPCamera.Tools"
+        xmlns:tools1="clr-namespace:IPCamera.Tools"
         Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools1:RatioConverter}, ConverterParameter='0.97' }"
         Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools1:RatioConverter}, ConverterParameter='1' }"
         AutomationProperties.Name="IPCameras"
@@ -25,6 +24,8 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!-- Camera Viewers -->
+            <Label x:Name="cam_1" />
+            <Label x:Name="cam_2" Grid.ColumnSpan="2"/>
             <WPF:VideoCapture HorizontalAlignment="Left" Height="852" Margin="40,29,0,0" VerticalAlignment="Top" Width="883" AutomationProperties.Name="IPCameraFrame" x:Name="IPCameraFrame_1" Background="#FF5B5B5B"/>
             <WPF:VideoCapture x:Name="IPCameraFrame_2" HorizontalAlignment="Left" Margin="958,29,0,88" Width="914" Grid.ColumnSpan="2" Background="#FF5B5B5B"/>
             <!-- Buttons Label -->
