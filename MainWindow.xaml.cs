@@ -31,7 +31,8 @@ namespace IPCamera
                         "http://192.168.1.34:152/stream?username=alexandrosplatanios&password=Platanios719791" 
         };
 
-        public static List<String> urls = new List<string>();
+        //public static List<String> urls = new List<string>();
+        public static Dictionary<String, String> urls = new Dictionary<String, String>();
         public static int urls_num = 0;
         public static String DB_connection_string = "(localdb)\\MSSQLLocalDB;Initial Catalog=C:\\USERS\\ALEXP\\SOURCE\\REPOS\\IPCAMERA\\DATABASE1.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
@@ -43,13 +44,13 @@ namespace IPCamera
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             // Camera 1
-            IPCameraFrame_1.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = url[0], Type = VisioForge.Types.VFIPSource.Auto_VLC };
+            IPCameraFrame_1.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = url[0], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
             IPCameraFrame_1.Audio_PlayAudio = IPCameraFrame_1.Audio_RecordAudio = false;
             IPCameraFrame_1.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             IPCameraFrame_1.Start();
 
             // Camera 2
-            IPCameraFrame_2.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = url[1], Type = VisioForge.Types.VFIPSource.Auto_VLC };
+            IPCameraFrame_2.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = url[1], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
             IPCameraFrame_2.Audio_PlayAudio = IPCameraFrame_1.Audio_RecordAudio = false;
             IPCameraFrame_2.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             IPCameraFrame_2.Start();

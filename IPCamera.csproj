@@ -160,12 +160,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="App_Readme\Elmah.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Saved_Cameras\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
