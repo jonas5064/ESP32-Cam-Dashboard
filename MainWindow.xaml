@@ -3,14 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:WPF="clr-namespace:VisioForge.Controls.UI.WPF;assembly=VisioForge.Controls.UI" x:Class="IPCamera.MainWindow"
+        xmlns:WPF="clr-namespace:VisioForge.Controls.UI.WPF;assembly=VisioForge.Controls.UI"
+        x:Class="IPCamera.MainWindow"
         mc:Ignorable="d"
         Title="IPCameras"
         xmlns:tools1="clr-namespace:IPCamera.Tools"
         Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools1:RatioConverter}, ConverterParameter='0.97' }"
         Width="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={tools1:RatioConverter}, ConverterParameter='0.99' }"
         AutomationProperties.Name="IPCameras"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="#FF151515">
     <!-- Icon="icon.ico"-->
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">

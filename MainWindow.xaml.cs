@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,12 +28,7 @@ namespace IPCamera
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
-
-
-
-        //public static List<String> urls = new List<string>();
+        public static MainWindow main_window;
         public static Dictionary<String, String> urls = new Dictionary<String, String>();
         public static int urls_num = 0;
         public static List<String> id_s = new List<String>();
@@ -41,19 +37,17 @@ namespace IPCamera
 
 
 
-
-
-
         public MainWindow()
         {
             InitializeComponent();
-
+            // Set a Hundeler for this main window
+            main_window = this;
             // Update Urls From Database
             updateUrlsFromDB();
-
             // Open he Cameras Windows
             createVideosPage();
         }
+
 
 
 
@@ -76,9 +70,18 @@ namespace IPCamera
                         String id_cl = String.Concat(id.Where(c => !Char.IsWhiteSpace(c)));
                         String url_cl = String.Concat(url.Where(c => !Char.IsWhiteSpace(c)));
                         //String name_cl = String.Concat(name.Where(c => !Char.IsWhiteSpace(c)));
-                        urls.Add(url_cl, name);
-                        id_s.Add(id_cl);
-                        
+                        try
+                        {
+                            urls.Add(url_cl, name);
+                            id_s.Add(id_cl);
+                        }
+                        catch (System.ArgumentException)
+                        {
+
+                        }
+
+
+
                     }
                     urls_num = id_s.Count;
                 }
@@ -88,7 +91,7 @@ namespace IPCamera
 
 
         // Method to create tha right video captures
-        private void createVideosPage()
+        public void createVideosPage()
         {
             // Cameras Names, URLS
             var names_list = urls.Values.ToList();

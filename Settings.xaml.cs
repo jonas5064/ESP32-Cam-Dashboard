@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -19,12 +20,156 @@ namespace IPCamera
 
     {
 
+
+
         public Settings()
         {
             InitializeComponent();
 
+            update_settings_page();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // Setup a list with the urls and the number of them.
+            if (url_1.Text != "" && name_1.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_1.Text, name_1.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_2.Text != "" && name_2.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_2.Text, name_2.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_3.Text != "" && name_3.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_3.Text, name_3.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_4.Text != "" && name_4.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_4.Text, name_4.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_5.Text != "" && name_5.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_5.Text, name_5.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_6.Text != "" && name_6.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_6.Text, name_6.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_7.Text != "" && name_7.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_7.Text, name_7.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            if (url_8.Text != "" && name_8.Text != "")
+            {
+                try
+                {
+                    MainWindow.urls.Add(url_8.Text, name_8.Text);
+                }
+                catch (System.ArgumentException)
+                {
+
+                }
+            }
+            MainWindow.urls_num = MainWindow.urls.Count;
+            // If urls.Count > 0
+            if (MainWindow.urls_num > 0)
+            {
+                // Clear Database
+                SqlConnection con = new SqlConnection(MainWindow.DB_connection_string);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "DELETE FROM dbo.MyCameras ";
+                cmd.Connection = con;
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+                foreach (var d in MainWindow.urls)
+                {
+                    Guid guid = Guid.NewGuid();
+                    String my_id = guid.ToString();
+                    // Save Data To Database
+                    using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
+                    {
+                        String query = $"INSERT INTO dbo.MyCameras (id,urls,Name) VALUES (@id,@urls,@name)";
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@id", my_id);
+                            command.Parameters.AddWithValue("@urls", d.Key);
+                            command.Parameters.AddWithValue("@name", d.Value);
+                            connection.Open();
+                            int result = command.ExecuteNonQuery();
+                            // Check Error
+                            if (result < 0)
+                                System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        }
+                    }
+                }
+                // Close Settings Window
+                this.Close();
+
+                // Restart App Application
+                MainWindow old_win = MainWindow.main_window;
+                System.Windows.Forms.Application.Restart();
+                old_win.Close();
+
+            }
+        }
+
+
+
+        private void update_settings_page()
+        {
             // Feel the page with the current data
-            var urls_list  = MainWindow.urls.Keys.ToList();
+            var urls_list = MainWindow.urls.Keys.ToList();
             var names_list = MainWindow.urls.Values.ToList();
             if (MainWindow.urls_num > 0)
             {
@@ -89,80 +234,8 @@ namespace IPCamera
                     url_8.Text = urls_list[7];
                     name_8.Text = names_list[7];
                 }
-            }   
+            }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            // Setup a list with the urls and the number of them.
-            if (url_1.Text != "" && name_1.Text != "")
-            {
-                MainWindow.urls.Add(url_1.Text, name_1.Text);
-            }
-            if (url_2.Text != "" && name_2.Text != "")
-            {
-                MainWindow.urls.Add(url_2.Text, name_2.Text);
-            }
-            if (url_3.Text != "" && name_3.Text != "")
-            {
-                MainWindow.urls.Add(url_3.Text, name_3.Text);
-            }
-            if (url_4.Text != "" && name_4.Text != "")
-            {
-                MainWindow.urls.Add(url_4.Text, name_4.Text);
-            }
-            if (url_5.Text != "" && name_5.Text != "")
-            {
-                MainWindow.urls.Add(url_5.Text, name_5.Text);
-            }
-            if (url_6.Text != "" && name_6.Text != "")
-            {
-                MainWindow.urls.Add(url_6.Text, name_6.Text);
-            }
-            if (url_7.Text != "" && name_7.Text != "")
-            {
-                MainWindow.urls.Add(url_7.Text, name_7.Text);
-            }
-            if (url_8.Text != "" && name_8.Text != "")
-            {
-                MainWindow.urls.Add(url_8.Text, name_8.Text);
-            }
-            MainWindow.urls_num = MainWindow.urls.Count;
-            // If urls.Count > 0
-            if (MainWindow.urls_num > 0)
-            {
-                // Clear Database
-                SqlConnection con = new SqlConnection(MainWindow.DB_connection_string);
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "DELETE FROM dbo.MyCameras ";
-                cmd.Connection = con;
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
-                foreach (var d in MainWindow.urls)
-                {
-                    Guid guid = Guid.NewGuid();
-                    String my_id = guid.ToString();
-                    // Save Data To Database
-                    using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
-                    {
-                        String query = $"INSERT INTO dbo.MyCameras (id,urls,Name) VALUES (@id,@urls,@name)";
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@id", my_id);
-                            command.Parameters.AddWithValue("@urls", d.Key);
-                            command.Parameters.AddWithValue("@name", d.Value);
-                            connection.Open();
-                            int result = command.ExecuteNonQuery();
-                            // Check Error
-                            if (result < 0)
-                                Console.WriteLine("Error inserting data into Database!");
-                        }
-                    }
-                }
-                // Close Settings Window
-                this.Close();
-            }
-        }
     }
 }
