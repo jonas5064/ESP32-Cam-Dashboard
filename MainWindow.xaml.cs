@@ -137,6 +137,7 @@ namespace IPCamera
                 Camera_Container.Children.Add(camera);
                 // Add Camera to my Video Captures
                 cameras_list.Add(camera);
+
                 // Create The Panle Buttons                     This manes the same
                 StackPanel button_panel = new StackPanel();
                 //button_panel.Height = 25;
@@ -175,11 +176,6 @@ namespace IPCamera
                     }
                 };
                 button_panel.Children.Add(start_button);
-                // Create Grid Splitter
-                GridSplitter gsp1 = new GridSplitter();
-                gsp1.HorizontalAlignment = HorizontalAlignment.Stretch;
-                gsp1.Width = 7;
-                //button_panel.Children.Add(gsp1);
                 // Create Stop Button
                 Button stop_button = new Button();
                 stop_button.Content = "Stop";
@@ -203,11 +199,6 @@ namespace IPCamera
                     }
                 };
                 button_panel.Children.Add(stop_button);
-                // Create Grid Splitter
-                GridSplitter gsp2 = new GridSplitter();
-                gsp2.HorizontalAlignment = HorizontalAlignment.Stretch;
-                gsp2.Width = 7;
-                //button_panel.Children.Add(gsp2);
                 // Create Settings Button
                 Button settings_button = new Button();
                 settings_button.Content = "Settings";
@@ -236,54 +227,44 @@ namespace IPCamera
             // Tow Camera
             else if (urls_num == 2)
             {
-                /*
-                // Grid Sise
-                Camera_Container.Width = 1000;
-                Camera_Container.Height = 1000;
-                // Grid Columns
-                ColumnDefinition coll_1 = new ColumnDefinition();
-                ColumnDefinition coll_2 = new ColumnDefinition();
-                Camera_Container.ColumnDefinitions.Add(coll_1);
-                Camera_Container.ColumnDefinitions.Add(coll_2);
-                // Grid Rows
-                RowDefinition rowtitle = new RowDefinition();
-                RowDefinition rowvideo = new RowDefinition();
-                Camera_Container.RowDefinitions.Add(rowtitle);
-                Camera_Container.RowDefinitions.Add(rowvideo);
-                // Create Title 1 Label
-                Label title_1 = new Label();
-                title_1.Content = names_list[0];
-                title_1.FontSize = 18;
-                title_1.FontWeight = FontWeights.Bold;
-                Grid.SetColumnSpan(title_1, 1);
-                Grid.SetRow(title_1, 1);
-                Camera_Container.Children.Add(title_1);
-                // Create Title 2 Label
-                Label title_2 = new Label();
-                title_2.Content = names_list[0];
-                title_2.FontSize = 18;
-                title_2.FontWeight = FontWeights.Bold;
-                Grid.SetColumnSpan(title_2, 2);
-                Grid.SetRow(title_2, 1);
-                Camera_Container.Children.Add(title_2);
-                // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture();
-                //camera_1.Name = names_list[0];
-                Grid.SetColumnSpan(camera_1, 1);
-                Grid.SetRow(camera_1, 2);
-                Camera_Container.Children.Add(camera_1);
-                cameras_list.Add(camera_1);
-                // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture();
-                //camera_2.Name = names_list[0];
-                Grid.SetColumnSpan(camera_2, 2);
-                Grid.SetRow(camera_2, 2);
-                Camera_Container.Children.Add(camera_2);
-                // Add Camera to my Video Captures
-                cameras_list.Add(camera_2);
-                */
+                
             }
-            
+            // Three Camera
+            else if (urls_num == 3)
+            {
+
+            }
+            // Four Camera
+            else if (urls_num == 4)
+            {
+
+            }
+            // Five Camera
+            else if (urls_num == 5)
+            {
+
+            }
+            // Six Camera
+            else if (urls_num == 6)
+            {
+
+            }
+            // Seven Camera
+            else if (urls_num == 7)
+            {
+
+            }
+            // Eight Camera
+            else if (urls_num == 8)
+            {
+
+            }
+            else
+            {
+                Settings OP = new Settings();
+                OP.Show();
+            }
+
         }
 
         
