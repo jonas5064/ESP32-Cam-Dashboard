@@ -71,9 +71,9 @@ namespace IPCamera
                     SqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
-                        String id = (string)dataReader["id"];
-                        String url = (string)dataReader["urls"];
-                        String name = (string)dataReader["name"];
+                        String id = dataReader["id"].ToString().Trim();
+                        String url = dataReader["urls"].ToString().Trim();
+                        String name = dataReader["name"].ToString().Trim();
                         String id_cl = String.Concat(id.Where(c => !Char.IsWhiteSpace(c)));
                         String url_cl = String.Concat(url.Where(c => !Char.IsWhiteSpace(c)));
                         //String name_cl = String.Concat(name.Where(c => !Char.IsWhiteSpace(c)));
@@ -128,6 +128,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Bottom,
@@ -256,6 +257,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -267,6 +269,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -406,6 +409,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -417,6 +421,7 @@ namespace IPCamera
                 {
                     Content = names_list[1],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -428,6 +433,7 @@ namespace IPCamera
                 {
                     Content = names_list[2],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -577,6 +583,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -588,6 +595,7 @@ namespace IPCamera
                 {
                     Content = names_list[1],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -599,6 +607,7 @@ namespace IPCamera
                 {
                     Content = names_list[2],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -610,6 +619,7 @@ namespace IPCamera
                 {
                     Content = names_list[3],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -769,6 +779,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -780,6 +791,7 @@ namespace IPCamera
                 {
                     Content = names_list[1],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -791,6 +803,7 @@ namespace IPCamera
                 {
                     Content = names_list[2],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -802,6 +815,7 @@ namespace IPCamera
                 {
                     Content = names_list[3],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -813,6 +827,7 @@ namespace IPCamera
                 {
                     Content = names_list[4],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -981,6 +996,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -992,6 +1008,7 @@ namespace IPCamera
                 {
                     Content = names_list[1],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1003,6 +1020,7 @@ namespace IPCamera
                 {
                     Content = names_list[2],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1014,6 +1032,7 @@ namespace IPCamera
                 {
                     Content = names_list[3],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1025,6 +1044,7 @@ namespace IPCamera
                 {
                     Content = names_list[4],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1036,6 +1056,7 @@ namespace IPCamera
                 {
                     Content = names_list[5],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1215,6 +1236,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1226,6 +1248,7 @@ namespace IPCamera
                 {
                     Content = names_list[1],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1237,6 +1260,7 @@ namespace IPCamera
                 {
                     Content = names_list[2],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1248,6 +1272,7 @@ namespace IPCamera
                 {
                     Content = names_list[3],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1259,6 +1284,7 @@ namespace IPCamera
                 {
                     Content = names_list[4],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1270,6 +1296,7 @@ namespace IPCamera
                 {
                     Content = names_list[5],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1281,6 +1308,7 @@ namespace IPCamera
                 {
                     Content = names_list[6],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1469,6 +1497,7 @@ namespace IPCamera
                 {
                     Content = names_list[0],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1480,7 +1509,8 @@ namespace IPCamera
                 {
                     Content = names_list[1],
                     FontSize = 24,
-                    FontWeight = FontWeights.Bold,
+                    Foreground = Brushes.Gray,
+                FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
                 Grid.SetRow(title_2, 0);
@@ -1491,6 +1521,7 @@ namespace IPCamera
                 {
                     Content = names_list[2],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1502,6 +1533,7 @@ namespace IPCamera
                 {
                     Content = names_list[3],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1513,6 +1545,7 @@ namespace IPCamera
                 {
                     Content = names_list[4],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1524,6 +1557,7 @@ namespace IPCamera
                 {
                     Content = names_list[5],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1535,6 +1569,7 @@ namespace IPCamera
                 {
                     Content = names_list[6],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
@@ -1546,6 +1581,7 @@ namespace IPCamera
                 {
                     Content = names_list[7],
                     FontSize = 24,
+                    Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
