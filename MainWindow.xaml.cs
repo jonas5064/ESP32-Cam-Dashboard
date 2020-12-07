@@ -49,6 +49,8 @@ namespace IPCamera
             createVideosPage();
         }
 
+
+        // Restart Application
         public static void RestartApp()
         {
             MainWindow old_win = main_window;
@@ -57,7 +59,7 @@ namespace IPCamera
         }
 
 
-        // Read From Database
+        // Get The saved Cameras From Database
         public static void updateUrlsFromDB()
         {
             // Save Data To Database
@@ -97,14 +99,14 @@ namespace IPCamera
         
 
 
-
+        // When Click on Video
         private void camerasFocused(object sender, MouseButtonEventArgs e)
         {
             MessageBox.Show("You clicked me at " + e.GetPosition(this).ToString());
         }
 
         
-
+        // When Click Start Button
         private void start_clicked(object sender, RoutedEventArgs e)
         {
             var urls_list = urls.Keys.ToList();
@@ -127,6 +129,7 @@ namespace IPCamera
             }
         }
         
+        // When Clecked Stop Button
         private void stop_clicked(object sender, RoutedEventArgs e)
         {
             this.playing = true;
@@ -143,6 +146,7 @@ namespace IPCamera
             }
         }
         
+        // When Click Settings Button
         private void settings_clicked(object sender, RoutedEventArgs e)
         {
             try
@@ -157,7 +161,7 @@ namespace IPCamera
         }
 
 
-        // Method to create tha right video captures
+        // Find How Many Cameras is connected and open the write UI
         public void createVideosPage()
         {
             // Cameras Names, URLS
