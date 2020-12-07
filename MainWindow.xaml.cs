@@ -50,6 +50,13 @@ namespace IPCamera
 
 
 
+        public static void RestartApp()
+        {
+            MainWindow old_win = main_window;
+            System.Windows.Forms.Application.Restart();
+            old_win.Close();
+        }
+
 
         // Read From Database
         public static void updateUrlsFromDB()
@@ -117,45 +124,47 @@ namespace IPCamera
                 Camera_Container.RowDefinitions.Add(rowbuttons);
                 Camera_Container.RowDefinitions.Add(rowspace);
                 // Create Title Label
-                Label title = new Label();
-                title.Content = names_list[0];
-                title.FontSize = 18;
-                title.FontWeight = FontWeights.Bold;
-                title.HorizontalAlignment = HorizontalAlignment.Center;
-                title.VerticalAlignment = VerticalAlignment.Bottom;
-                title.Padding = new Thickness(167, 0, 0, 0);
+                Label title = new Label
+                {
+                    Content = names_list[0],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    Padding = new Thickness(167, 0, 0, 0)
+                };
                 Grid.SetRow(title, 0);
                 Camera_Container.Children.Add(title);
                 // Create Video Capture
-                VideoCapture camera = new VideoCapture();
-                camera.HorizontalAlignment = HorizontalAlignment.Center;
-                camera.Margin = new Thickness(0,5,0,-804);
-                camera.Width = 883;
-                camera.Height = 800;
+                VideoCapture camera = new VideoCapture
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 5, 0, -804),
+                    Width = 883,
+                    Height = 800
+                };
                 //Grid.SetColumnSpan(camera, 1);
                 Grid.SetRow(camera, 1);
-                Camera_Container.Children.Add(camera);
                 // Add Camera to my Video Captures
                 cameras_list.Add(camera);
-
-                // Create The Panle Buttons                     This manes the same
-                StackPanel button_panel = new StackPanel();
-                //button_panel.Height = 25;
-                //button_panel.Width = 239;
-                //button_panel.Margin = new Thickness(827, 883, 0, -852);
-                button_panel.HorizontalAlignment = HorizontalAlignment.Center;
-                button_panel.VerticalAlignment = VerticalAlignment.Bottom;
-                button_panel.Orientation = Orientation.Horizontal;
-                Grid.SetRow(button_panel, 2);
-                Camera_Container.Children.Add(button_panel);
+                Camera_Container.Children.Add(camera);
+                // Create The Panle Buttons
+                StackPanel button_panel = new StackPanel
+                {
+                    Height = 58,
+                    Width = 550,
+                    Margin = new Thickness(662, 908, 664, 52),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Orientation = Orientation.Horizontal
+                };
+                main_grid.Children.Add(button_panel);
                 // Create The Start Buttons
-                Button start_button = new Button();
-                start_button.Content = "Start";
-                start_button.Padding = new Thickness(0, 0, 5.0, 0);
-                start_button.HorizontalAlignment = HorizontalAlignment.Left;
-                start_button.VerticalAlignment = VerticalAlignment.Top;
-                start_button.Width = 74;
-                //start_button.Padding = new System.Windows.Forms.Padding(3);
+                Button start_button = new Button
+                {
+                    Content = "Start",
+                    Width = 184
+                };
                 start_button.Click += (sender, args) =>
                 {
                     try
@@ -164,7 +173,7 @@ namespace IPCamera
                         foreach (VideoCapture cam in cameras_list)
                         {
                             cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = camera.Audio_RecordAudio = false;
+                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
                             cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
                             cam.Start();
                             counter++;
@@ -177,13 +186,11 @@ namespace IPCamera
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
-                Button stop_button = new Button();
-                stop_button.Content = "Stop";
-                stop_button.Padding = new Thickness(5.0, 0, 5.0, 0);
-                stop_button.HorizontalAlignment = HorizontalAlignment.Left;
-                stop_button.VerticalAlignment = VerticalAlignment.Top;
-                stop_button.Width = 74;
-                //stop_button.Padding = new System.Windows.Forms.Padding(3);
+                Button stop_button = new Button
+                {
+                    Content = "Stop",
+                    Width = 184
+                };
                 stop_button.Click += (sender, args) =>
                 {
                     try
@@ -200,22 +207,17 @@ namespace IPCamera
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
-                Button settings_button = new Button();
-                settings_button.Content = "Settings";
-                settings_button.Padding = new Thickness(5.0, 0, 0, 0);
-                settings_button.HorizontalAlignment = HorizontalAlignment.Left;
-                settings_button.VerticalAlignment = VerticalAlignment.Top;
-                settings_button.Width = 74;
-                //settings_button.Padding = new System.Windows.Forms.Padding(3);
+                Button settings_button = new Button
+                {
+                    Content = "Settings",
+                    Width = 184
+                };
                 settings_button.Click += (sender, args) =>
                 {
                     try
                     {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            Settings OP = new Settings();
-                            OP.Show();
-                        }
+                        Settings OP = new Settings();
+                        OP.Show();
                     }
                     catch
                     {
@@ -227,7 +229,146 @@ namespace IPCamera
             // Tow Camera
             else if (urls_num == 2)
             {
-                
+                // Create tow row for the main grid
+                RowDefinition mainrow_1 = new RowDefinition();
+                mainrow_1.Height = new GridLength(869);
+                RowDefinition mainrow_2 = new RowDefinition();
+                main_grid.RowDefinitions.Add(mainrow_1);
+                main_grid.RowDefinitions.Add(mainrow_2);
+                // Create Grid
+                Grid Camera_Container = new Grid();
+                Grid.SetRow(Camera_Container, 0);
+                main_grid.Children.Add(Camera_Container);
+                // Grid Columns
+                ColumnDefinition colum_1 = new ColumnDefinition();
+                ColumnDefinition colum_2 = new ColumnDefinition();
+                Camera_Container.ColumnDefinitions.Add(colum_1);
+                Camera_Container.ColumnDefinitions.Add(colum_2);
+                // Grid Rows
+                RowDefinition row_1 = new RowDefinition();
+                RowDefinition row_2 = new RowDefinition();
+                row_1.Height = new GridLength(50);
+                row_2.Height = new GridLength(500, GridUnitType.Star);
+                Camera_Container.RowDefinitions.Add(row_1);
+                Camera_Container.RowDefinitions.Add(row_2);
+                // Create Title Label 1
+                Label title_1 = new Label
+                {
+                    Content = names_list[0],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_1, 0);
+                Grid.SetColumn(title_1, 0);
+                Camera_Container.Children.Add(title_1);
+                // Create Title Label 2
+                Label title_2 = new Label
+                {
+                    Content = names_list[0],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_2, 0);
+                Grid.SetColumn(title_2, 1);
+                Camera_Container.Children.Add(title_2);
+                // Create Video Capture 1
+                VideoCapture camera_1 = new VideoCapture
+                {
+                    Width = 900
+                };
+                cameras_list.Add(camera_1);
+                Grid.SetRow(camera_1, 1);
+                Grid.SetColumn(camera_1, 0);
+                Camera_Container.Children.Add(camera_1);
+                // Create Video Capture 2
+                VideoCapture camera_2 = new VideoCapture
+                {
+                    Width = 900
+                };
+                cameras_list.Add(camera_2);
+                Grid.SetRow(camera_2, 1);
+                Grid.SetColumn(camera_2, 1);
+                Camera_Container.Children.Add(camera_2);
+                // Create The Panle Buttons
+                StackPanel button_panel = new StackPanel
+                {
+                    Height = 58,
+                    Width = 550,
+                    Margin = new Thickness(659, 31, 667, 0),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Orientation = Orientation.Horizontal
+                };
+                Grid.SetRow(button_panel, 1);
+                main_grid.Children.Add(button_panel);
+                // Create The Start Buttons
+                Button start_button = new Button
+                {
+                    Content = "Start",
+                    Width = 184
+                };
+                start_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        int counter = 0;
+                        foreach (VideoCapture cam in cameras_list)
+                        {
+                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
+                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                            cam.Start();
+                            counter++;
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(start_button);
+                // Create Stop Button
+                Button stop_button = new Button
+                {
+                    Content = "Stop",
+                    Width = 184
+                };
+                stop_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        foreach (VideoCapture cam in cameras_list)
+                        {
+                            cam.Stop();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(stop_button);
+                // Create Settings Button
+                Button settings_button = new Button
+                {
+                    Content = "Settings",
+                    Width = 184
+                };
+                settings_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                            Settings OP = new Settings();
+                            OP.Show();
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(settings_button);
             }
             // Three Camera
             else if (urls_num == 3)

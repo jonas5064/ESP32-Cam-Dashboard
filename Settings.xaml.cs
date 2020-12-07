@@ -31,6 +31,8 @@ namespace IPCamera
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // Creal Urls List
+            MainWindow.urls.Clear();
             // Setup a list with the urls and the number of them.
             if (url_1.Text != "" && name_1.Text != "")
             {
@@ -126,9 +128,11 @@ namespace IPCamera
             {
                 // Clear Database
                 SqlConnection con = new SqlConnection(MainWindow.DB_connection_string);
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "DELETE FROM dbo.MyCameras ";
-                cmd.Connection = con;
+                SqlCommand cmd = new SqlCommand
+                {
+                    CommandText = "DELETE FROM dbo.MyCameras ",
+                    Connection = con
+                };
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
@@ -157,9 +161,7 @@ namespace IPCamera
                 this.Close();
 
                 // Restart App Application
-                MainWindow old_win = MainWindow.main_window;
-                System.Windows.Forms.Application.Restart();
-                old_win.Close();
+                MainWindow.RestartApp();
 
             }
         }
