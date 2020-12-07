@@ -1178,12 +1178,530 @@ namespace IPCamera
             // Seven Camera
             else if (urls_num == 7)
             {
+                // Create tow row for the main grid
+                RowDefinition mainrow_1 = new RowDefinition();
+                RowDefinition mainrow_2 = new RowDefinition();
+                mainrow_1.Height = new GridLength(923);
+                main_grid.RowDefinitions.Add(mainrow_1);
+                main_grid.RowDefinitions.Add(mainrow_2);
+                // Create Grid
+                Grid Camera_Container = new Grid();
+                Grid.SetRow(Camera_Container, 0);
+                main_grid.Children.Add(Camera_Container);
+                // Grid Columns
+                ColumnDefinition colum_1 = new ColumnDefinition();
+                ColumnDefinition colum_2 = new ColumnDefinition();
+                ColumnDefinition colum_3 = new ColumnDefinition();
+                ColumnDefinition colum_4 = new ColumnDefinition();
+                Camera_Container.ColumnDefinitions.Add(colum_1);
+                Camera_Container.ColumnDefinitions.Add(colum_2);
+                Camera_Container.ColumnDefinitions.Add(colum_3);
+                Camera_Container.ColumnDefinitions.Add(colum_4);
+                // Grid Rows
+                RowDefinition row_1 = new RowDefinition();
+                RowDefinition row_2 = new RowDefinition();
+                RowDefinition row_3 = new RowDefinition();
+                RowDefinition row_4 = new RowDefinition();
+                row_1.Height = new GridLength(40);
+                row_2.Height = new GridLength(420);
+                row_3.Height = new GridLength(40);
+                row_4.Height = new GridLength(420);
+                Camera_Container.RowDefinitions.Add(row_1);
+                Camera_Container.RowDefinitions.Add(row_2);
+                Camera_Container.RowDefinitions.Add(row_3);
+                Camera_Container.RowDefinitions.Add(row_4);
+                // Create Title Label 1
+                Label title_1 = new Label
+                {
+                    Content = names_list[0],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_1, 0);
+                Grid.SetColumn(title_1, 0);
+                Camera_Container.Children.Add(title_1);
+                // Create Title Label 2
+                Label title_2 = new Label
+                {
+                    Content = names_list[1],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_2, 0);
+                Grid.SetColumn(title_2, 1);
+                Camera_Container.Children.Add(title_2);
+                // Create Title Label 3
+                Label title_3 = new Label
+                {
+                    Content = names_list[2],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_3, 2);
+                Grid.SetColumn(title_3, 0);
+                Camera_Container.Children.Add(title_3);
+                // Create Title Label 4
+                Label title_4 = new Label
+                {
+                    Content = names_list[3],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_4, 2);
+                Grid.SetColumn(title_4, 1);
+                Camera_Container.Children.Add(title_4);
+                // Create Title Label 5
+                Label title_5 = new Label
+                {
+                    Content = names_list[4],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_5, 0);
+                Grid.SetColumn(title_5, 2);
+                Camera_Container.Children.Add(title_5);
+                // Create Title Label 6
+                Label title_6 = new Label
+                {
+                    Content = names_list[5],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_6, 2);
+                Grid.SetColumn(title_6, 2);
+                Camera_Container.Children.Add(title_6);
+                // Create Title Label 7
+                Label title_7 = new Label
+                {
+                    Content = names_list[6],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_7, 0);
+                Grid.SetColumn(title_7, 3);
+                Camera_Container.Children.Add(title_7);
+                // Create Video Capture 1
+                VideoCapture camera_1 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_1);
+                Grid.SetRow(camera_1, 1);
+                Grid.SetColumn(camera_1, 0);
+                Camera_Container.Children.Add(camera_1);
+                // Create Video Capture 2
+                VideoCapture camera_2 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_2);
+                Grid.SetRow(camera_2, 1);
+                Grid.SetColumn(camera_2, 1);
+                Camera_Container.Children.Add(camera_2);
+                // Create Video Capture 3
+                VideoCapture camera_3 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_3);
+                Grid.SetRow(camera_3, 3);
+                Grid.SetColumn(camera_3, 0);
+                Camera_Container.Children.Add(camera_3);
+                // Create Video Capture 4
+                VideoCapture camera_4 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_4);
+                Grid.SetRow(camera_4, 3);
+                Grid.SetColumn(camera_4, 1);
+                Camera_Container.Children.Add(camera_4);
+                // Create Video Capture 5
+                VideoCapture camera_5 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_5);
+                Grid.SetRow(camera_5, 1);
+                Grid.SetColumn(camera_5, 2);
+                Camera_Container.Children.Add(camera_5);
+                // Create Video Capture 6
+                VideoCapture camera_6 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_6);
+                Grid.SetRow(camera_6, 3);
+                Grid.SetColumn(camera_6, 2);
+                Camera_Container.Children.Add(camera_6);
+                // Create Video Capture 7
+                VideoCapture camera_7 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_7);
+                Grid.SetRow(camera_7, 1);
+                Grid.SetColumn(camera_7, 3);
+                Camera_Container.Children.Add(camera_7);
+                // Create The Panle Buttons
+                StackPanel button_panel = new StackPanel
+                {
+                    Height = 58,
+                    Width = 550,
+                    Margin = new Thickness(659, 10, 667, 0),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Orientation = Orientation.Horizontal
+                };
+                Grid.SetRow(button_panel, 1);
+                main_grid.Children.Add(button_panel);
+                // Create The Start Buttons
+                Button start_button = new Button
+                {
+                    Content = "Start",
+                    Width = 184
+                };
+                start_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        int counter = 0;
+                        foreach (VideoCapture cam in cameras_list)
+                        {
+                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
+                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                            cam.Start();
+                            counter++;
+                        }
+                    }
+                    catch
+                    {
 
+                    }
+                };
+                button_panel.Children.Add(start_button);
+                // Create Stop Button
+                Button stop_button = new Button
+                {
+                    Content = "Stop",
+                    Width = 184
+                };
+                stop_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        foreach (VideoCapture cam in cameras_list)
+                        {
+                            cam.Stop();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(stop_button);
+                // Create Settings Button
+                Button settings_button = new Button
+                {
+                    Content = "Settings",
+                    Width = 184
+                };
+                settings_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        Settings OP = new Settings();
+                        OP.Show();
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(settings_button);
             }
             // Eight Camera
             else if (urls_num == 8)
             {
+                // Create tow row for the main grid
+                RowDefinition mainrow_1 = new RowDefinition();
+                RowDefinition mainrow_2 = new RowDefinition();
+                mainrow_1.Height = new GridLength(923);
+                main_grid.RowDefinitions.Add(mainrow_1);
+                main_grid.RowDefinitions.Add(mainrow_2);
+                // Create Grid
+                Grid Camera_Container = new Grid();
+                Grid.SetRow(Camera_Container, 0);
+                main_grid.Children.Add(Camera_Container);
+                // Grid Columns
+                ColumnDefinition colum_1 = new ColumnDefinition();
+                ColumnDefinition colum_2 = new ColumnDefinition();
+                ColumnDefinition colum_3 = new ColumnDefinition();
+                ColumnDefinition colum_4 = new ColumnDefinition();
+                Camera_Container.ColumnDefinitions.Add(colum_1);
+                Camera_Container.ColumnDefinitions.Add(colum_2);
+                Camera_Container.ColumnDefinitions.Add(colum_3);
+                Camera_Container.ColumnDefinitions.Add(colum_4);
+                // Grid Rows
+                RowDefinition row_1 = new RowDefinition();
+                RowDefinition row_2 = new RowDefinition();
+                RowDefinition row_3 = new RowDefinition();
+                RowDefinition row_4 = new RowDefinition();
+                row_1.Height = new GridLength(40);
+                row_2.Height = new GridLength(420);
+                row_3.Height = new GridLength(40);
+                row_4.Height = new GridLength(420);
+                Camera_Container.RowDefinitions.Add(row_1);
+                Camera_Container.RowDefinitions.Add(row_2);
+                Camera_Container.RowDefinitions.Add(row_3);
+                Camera_Container.RowDefinitions.Add(row_4);
+                // Create Title Label 1
+                Label title_1 = new Label
+                {
+                    Content = names_list[0],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_1, 0);
+                Grid.SetColumn(title_1, 0);
+                Camera_Container.Children.Add(title_1);
+                // Create Title Label 2
+                Label title_2 = new Label
+                {
+                    Content = names_list[1],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_2, 0);
+                Grid.SetColumn(title_2, 1);
+                Camera_Container.Children.Add(title_2);
+                // Create Title Label 3
+                Label title_3 = new Label
+                {
+                    Content = names_list[2],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_3, 2);
+                Grid.SetColumn(title_3, 0);
+                Camera_Container.Children.Add(title_3);
+                // Create Title Label 4
+                Label title_4 = new Label
+                {
+                    Content = names_list[3],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_4, 2);
+                Grid.SetColumn(title_4, 1);
+                Camera_Container.Children.Add(title_4);
+                // Create Title Label 5
+                Label title_5 = new Label
+                {
+                    Content = names_list[4],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_5, 0);
+                Grid.SetColumn(title_5, 2);
+                Camera_Container.Children.Add(title_5);
+                // Create Title Label 6
+                Label title_6 = new Label
+                {
+                    Content = names_list[5],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_6, 2);
+                Grid.SetColumn(title_6, 2);
+                Camera_Container.Children.Add(title_6);
+                // Create Title Label 7
+                Label title_7 = new Label
+                {
+                    Content = names_list[6],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_7, 0);
+                Grid.SetColumn(title_7, 3);
+                Camera_Container.Children.Add(title_7);
+                // Create Title Label 8
+                Label title_8 = new Label
+                {
+                    Content = names_list[7],
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetRow(title_8, 2);
+                Grid.SetColumn(title_8, 3);
+                Camera_Container.Children.Add(title_8);
+                // Create Video Capture 1
+                VideoCapture camera_1 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_1);
+                Grid.SetRow(camera_1, 1);
+                Grid.SetColumn(camera_1, 0);
+                Camera_Container.Children.Add(camera_1);
+                // Create Video Capture 2
+                VideoCapture camera_2 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_2);
+                Grid.SetRow(camera_2, 1);
+                Grid.SetColumn(camera_2, 1);
+                Camera_Container.Children.Add(camera_2);
+                // Create Video Capture 3
+                VideoCapture camera_3 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_3);
+                Grid.SetRow(camera_3, 3);
+                Grid.SetColumn(camera_3, 0);
+                Camera_Container.Children.Add(camera_3);
+                // Create Video Capture 4
+                VideoCapture camera_4 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_4);
+                Grid.SetRow(camera_4, 3);
+                Grid.SetColumn(camera_4, 1);
+                Camera_Container.Children.Add(camera_4);
+                // Create Video Capture 5
+                VideoCapture camera_5 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_5);
+                Grid.SetRow(camera_5, 1);
+                Grid.SetColumn(camera_5, 2);
+                Camera_Container.Children.Add(camera_5);
+                // Create Video Capture 6
+                VideoCapture camera_6 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_6);
+                Grid.SetRow(camera_6, 3);
+                Grid.SetColumn(camera_6, 2);
+                Camera_Container.Children.Add(camera_6);
+                // Create Video Capture 7
+                VideoCapture camera_7 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_7);
+                Grid.SetRow(camera_7, 1);
+                Grid.SetColumn(camera_7, 3);
+                Camera_Container.Children.Add(camera_7);
+                // Create Video Capture 8
+                VideoCapture camera_8 = new VideoCapture
+                {
+                    Width = 400
+                };
+                cameras_list.Add(camera_8);
+                Grid.SetRow(camera_8, 3);
+                Grid.SetColumn(camera_8, 3);
+                Camera_Container.Children.Add(camera_8);
+                // Create The Panle Buttons
+                StackPanel button_panel = new StackPanel
+                {
+                    Height = 58,
+                    Width = 550,
+                    Margin = new Thickness(659, 10, 667, 0),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Orientation = Orientation.Horizontal
+                };
+                Grid.SetRow(button_panel, 1);
+                main_grid.Children.Add(button_panel);
+                // Create The Start Buttons
+                Button start_button = new Button
+                {
+                    Content = "Start",
+                    Width = 184
+                };
+                start_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        int counter = 0;
+                        foreach (VideoCapture cam in cameras_list)
+                        {
+                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
+                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                            cam.Start();
+                            counter++;
+                        }
+                    }
+                    catch
+                    {
 
+                    }
+                };
+                button_panel.Children.Add(start_button);
+                // Create Stop Button
+                Button stop_button = new Button
+                {
+                    Content = "Stop",
+                    Width = 184
+                };
+                stop_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        foreach (VideoCapture cam in cameras_list)
+                        {
+                            cam.Stop();
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(stop_button);
+                // Create Settings Button
+                Button settings_button = new Button
+                {
+                    Content = "Settings",
+                    Width = 184
+                };
+                settings_button.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        Settings OP = new Settings();
+                        OP.Show();
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                button_panel.Children.Add(settings_button);
             }
             else
             {
