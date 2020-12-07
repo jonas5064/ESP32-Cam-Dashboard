@@ -34,6 +34,7 @@ namespace IPCamera
         public static List<String> id_s = new List<String>();
         private List<VideoCapture> cameras_list = new List<VideoCapture>(); // List whos captures all cameras frames
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
+        private bool playing = false;
 
 
 
@@ -47,8 +48,6 @@ namespace IPCamera
             // Open he Cameras Windows
             createVideosPage();
         }
-
-
 
         public static void RestartApp()
         {
@@ -95,6 +94,67 @@ namespace IPCamera
             }
         }
 
+        
+
+
+
+        private void camerasFocused(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show("You clicked me at " + e.GetPosition(this).ToString());
+        }
+
+        
+
+        private void start_clicked(object sender, RoutedEventArgs e)
+        {
+            var urls_list = urls.Keys.ToList();
+            this.playing = true;
+            try
+            {
+                int counter = 0;
+                foreach (VideoCapture cam in cameras_list)
+                {
+                    cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+                    cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
+                    cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                    cam.Start();
+                    counter++;
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        
+        private void stop_clicked(object sender, RoutedEventArgs e)
+        {
+            this.playing = true;
+            try
+            {
+                foreach (VideoCapture cam in cameras_list)
+                {
+                    cam.Stop();
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        
+        private void settings_clicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Settings OP = new Settings();
+                OP.Show();
+            }
+            catch
+            {
+
+            }
+        }
 
 
         // Method to create tha right video captures
@@ -102,7 +162,6 @@ namespace IPCamera
         {
             // Cameras Names, URLS
             var names_list = urls.Values.ToList();
-            var urls_list = urls.Keys.ToList();
             // One Camera
             if (urls_num == 1)
             {
@@ -131,8 +190,7 @@ namespace IPCamera
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Bottom,
-                    Padding = new Thickness(167, 0, 0, 0)
+                    VerticalAlignment = VerticalAlignment.Bottom
                 };
                 Grid.SetRow(title, 0);
                 Camera_Container.Children.Add(title);
@@ -144,7 +202,10 @@ namespace IPCamera
                     Width = 883,
                     Height = 800
                 };
-                //Grid.SetColumnSpan(camera, 1);
+                camera.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 Grid.SetRow(camera, 1);
                 // Add Camera to my Video Captures
                 cameras_list.Add(camera);
@@ -168,22 +229,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -194,17 +240,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -215,15 +251,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -281,6 +309,10 @@ namespace IPCamera
                 {
                     Width = 900
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                 {
+                     camerasFocused(sender, e);
+                 };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -289,6 +321,10 @@ namespace IPCamera
                 VideoCapture camera_2 = new VideoCapture
                 {
                     Width = 900
+                };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -314,22 +350,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -340,17 +361,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -361,15 +372,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                            Settings OP = new Settings();
-                            OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -446,6 +449,10 @@ namespace IPCamera
                 {
                     Width = 700
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -455,6 +462,10 @@ namespace IPCamera
                 {
                     Width = 700
                 };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
                 Grid.SetColumn(camera_2, 1);
@@ -463,6 +474,10 @@ namespace IPCamera
                 VideoCapture camera_3 = new VideoCapture
                 {
                     Width = 700
+                };
+                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_3);
                 Grid.SetRow(camera_3, 3);
@@ -488,22 +503,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -514,17 +514,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -535,15 +525,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -631,6 +613,10 @@ namespace IPCamera
                 {
                     Width = 700
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -639,6 +625,10 @@ namespace IPCamera
                 VideoCapture camera_2 = new VideoCapture
                 {
                     Width = 700
+                };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -649,6 +639,10 @@ namespace IPCamera
                 {
                     Width = 700
                 };
+                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_3);
                 Grid.SetRow(camera_3, 3);
                 Grid.SetColumn(camera_3, 0);
@@ -657,6 +651,10 @@ namespace IPCamera
                 VideoCapture camera_4 = new VideoCapture
                 {
                     Width = 700
+                };
+                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_4);
                 Grid.SetRow(camera_4, 3);
@@ -682,22 +680,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -708,17 +691,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -729,15 +702,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -839,6 +804,10 @@ namespace IPCamera
                 {
                     Width = 500
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -847,6 +816,10 @@ namespace IPCamera
                 VideoCapture camera_2 = new VideoCapture
                 {
                     Width = 500
+                };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -857,6 +830,10 @@ namespace IPCamera
                 {
                     Width = 500
                 };
+                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_3);
                 Grid.SetRow(camera_3, 3);
                 Grid.SetColumn(camera_3, 0);
@@ -866,6 +843,10 @@ namespace IPCamera
                 {
                     Width = 500
                 };
+                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_4);
                 Grid.SetRow(camera_4, 3);
                 Grid.SetColumn(camera_4, 1);
@@ -874,6 +855,10 @@ namespace IPCamera
                 VideoCapture camera_5 = new VideoCapture
                 {
                     Width = 500
+                };
+                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_5);
                 Grid.SetRow(camera_5, 1);
@@ -899,22 +884,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -925,17 +895,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -946,15 +906,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -1068,6 +1020,10 @@ namespace IPCamera
                 {
                     Width = 500
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -1076,6 +1032,10 @@ namespace IPCamera
                 VideoCapture camera_2 = new VideoCapture
                 {
                     Width = 500
+                };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -1086,6 +1046,10 @@ namespace IPCamera
                 {
                     Width = 500
                 };
+                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_3);
                 Grid.SetRow(camera_3, 3);
                 Grid.SetColumn(camera_3, 0);
@@ -1094,6 +1058,10 @@ namespace IPCamera
                 VideoCapture camera_4 = new VideoCapture
                 {
                     Width = 500
+                };
+                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_4);
                 Grid.SetRow(camera_4, 3);
@@ -1104,6 +1072,10 @@ namespace IPCamera
                 {
                     Width = 500
                 };
+                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_5);
                 Grid.SetRow(camera_5, 1);
                 Grid.SetColumn(camera_5, 2);
@@ -1112,6 +1084,10 @@ namespace IPCamera
                 VideoCapture camera_6 = new VideoCapture
                 {
                     Width = 500
+                };
+                camera_6.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_6);
                 Grid.SetRow(camera_6, 3);
@@ -1137,22 +1113,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -1163,17 +1124,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -1184,15 +1135,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -1320,6 +1263,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -1328,6 +1275,10 @@ namespace IPCamera
                 VideoCapture camera_2 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -1338,6 +1289,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_3);
                 Grid.SetRow(camera_3, 3);
                 Grid.SetColumn(camera_3, 0);
@@ -1346,6 +1301,10 @@ namespace IPCamera
                 VideoCapture camera_4 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_4);
                 Grid.SetRow(camera_4, 3);
@@ -1356,6 +1315,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_5);
                 Grid.SetRow(camera_5, 1);
                 Grid.SetColumn(camera_5, 2);
@@ -1365,6 +1328,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_6.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_6);
                 Grid.SetRow(camera_6, 3);
                 Grid.SetColumn(camera_6, 2);
@@ -1373,6 +1340,10 @@ namespace IPCamera
                 VideoCapture camera_7 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_7.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_7);
                 Grid.SetRow(camera_7, 1);
@@ -1398,22 +1369,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -1424,17 +1380,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -1445,15 +1391,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -1593,6 +1531,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
                 Grid.SetColumn(camera_1, 0);
@@ -1601,6 +1543,10 @@ namespace IPCamera
                 VideoCapture camera_2 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -1611,6 +1557,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_3);
                 Grid.SetRow(camera_3, 3);
                 Grid.SetColumn(camera_3, 0);
@@ -1619,6 +1569,10 @@ namespace IPCamera
                 VideoCapture camera_4 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_4);
                 Grid.SetRow(camera_4, 3);
@@ -1629,6 +1583,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_5);
                 Grid.SetRow(camera_5, 1);
                 Grid.SetColumn(camera_5, 2);
@@ -1637,6 +1595,10 @@ namespace IPCamera
                 VideoCapture camera_6 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_6.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_6);
                 Grid.SetRow(camera_6, 3);
@@ -1647,6 +1609,10 @@ namespace IPCamera
                 {
                     Width = 400
                 };
+                camera_7.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
+                };
                 cameras_list.Add(camera_7);
                 Grid.SetRow(camera_7, 1);
                 Grid.SetColumn(camera_7, 3);
@@ -1655,6 +1621,10 @@ namespace IPCamera
                 VideoCapture camera_8 = new VideoCapture
                 {
                     Width = 400
+                };
+                camera_8.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    camerasFocused(sender, e);
                 };
                 cameras_list.Add(camera_8);
                 Grid.SetRow(camera_8, 3);
@@ -1680,22 +1650,7 @@ namespace IPCamera
                 };
                 start_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        int counter = 0;
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                            cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                            cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                            cam.Start();
-                            counter++;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    start_clicked(sender, args);
                 };
                 button_panel.Children.Add(start_button);
                 // Create Stop Button
@@ -1706,17 +1661,7 @@ namespace IPCamera
                 };
                 stop_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        foreach (VideoCapture cam in cameras_list)
-                        {
-                            cam.Stop();
-                        }
-                    }
-                    catch
-                    {
-
-                    }
+                    stop_clicked(sender, args);
                 };
                 button_panel.Children.Add(stop_button);
                 // Create Settings Button
@@ -1727,15 +1672,7 @@ namespace IPCamera
                 };
                 settings_button.Click += (sender, args) =>
                 {
-                    try
-                    {
-                        Settings OP = new Settings();
-                        OP.Show();
-                    }
-                    catch
-                    {
-
-                    }
+                    settings_clicked(sender, args);
                 };
                 button_panel.Children.Add(settings_button);
             }
@@ -1747,7 +1684,7 @@ namespace IPCamera
 
         }
 
-        
+
     }
 
     

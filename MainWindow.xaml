@@ -16,14 +16,8 @@
     <!-- Icon="icon.ico"-->
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <Grid x:Name="main_grid" Height="1017">
+        <Grid x:Name="main_grid" Height="1017" RenderTransformOrigin="0.5,0.613">
 
-
-
-            
-            
-            
-            
         </Grid>
     </ScrollViewer>
 
