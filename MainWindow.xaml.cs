@@ -136,8 +136,6 @@ namespace IPCamera
             {
                 System.Windows.MessageBox.Show("No cameras has found!");
             }
-            
-            
         }
 
 
@@ -150,10 +148,18 @@ namespace IPCamera
                 int counter = 0;
                 foreach (VideoCapture cam in cameras_list)
                 {
-                    cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                    cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                    cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                    cam.Start();
+                    try
+                    {
+                        cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+                        cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
+                        cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                        cam.Start();
+                    }
+                    catch (Exception)
+                    {
+                        System.Windows.MessageBox.Show("No cameras has found!");
+                    }
+                    
                     counter++;
                 }
             }
