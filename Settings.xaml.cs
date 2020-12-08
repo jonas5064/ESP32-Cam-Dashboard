@@ -157,12 +157,15 @@ namespace IPCamera
                         }
                     }
                 }
-                // Close Settings Window
-                this.Close();
-
-                // Restart App Application
-                MainWindow.RestartApp();
-
+                // Ask to Restart The Application
+                MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
+                if ( res.ToString() == "OK" )
+                {
+                    // Close Settings Window
+                    this.Close();
+                    // Restart App Application
+                    MainWindow.RestartApp();
+                }
             }
         }
 

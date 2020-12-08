@@ -5,6 +5,12 @@
              StartupUri="MainWindow.xaml"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
-         
+
+        <BitmapImage x:Key="up_img"        UriSource="C:\Users\Alexp\source\repos\IPCamera\img\up.png"    />
+        <BitmapImage x:Key="left_img"      UriSource="C:\Users\Alexp\source\repos\IPCamera\img\left.png"  />
+        <BitmapImage x:Key="right_img"     UriSource="C:\Users\Alexp\source\repos\IPCamera\img\right.png" />
+        <BitmapImage x:Key="down_img"      UriSource="C:\Users\Alexp\source\repos\IPCamera\img\down.png"  />
+        <BitmapImage x:Key="take_pic_img"  UriSource="C:\Users\Alexp\source\repos\IPCamera\img\pic.jpg"   />
+
     </Application.Resources>
 </Application>

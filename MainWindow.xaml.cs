@@ -29,12 +29,12 @@ namespace IPCamera
     public partial class MainWindow : Window
     {
         public static MainWindow main_window;
+        private Grid Camera_Container;
         public static Dictionary<String, String> urls = new Dictionary<String, String>();
         public static int urls_num = 0;
         public static List<String> id_s = new List<String>();
         private List<VideoCapture> cameras_list = new List<VideoCapture>(); // List whos captures all cameras frames
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
-        private bool playing = false;
 
 
 
@@ -87,30 +87,64 @@ namespace IPCamera
                         {
 
                         }
-
-
-
                     }
                     urls_num = id_s.Count;
                 }
             }
         }
 
-        
+
 
 
         // When Click on Video
         private void camerasFocused(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("You clicked me at " + e.GetPosition(this).ToString());
+
+            // Get Urls And Names
+            VideoCapture camera = ((VideoCapture)sender);
+            // If this camera is working
+            if (camera.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
+            {
+                try
+                {
+                    Camera_Container.Children.Remove(camera);
+                }
+                catch (System.NullReferenceException nre)
+                {
+                    System.Windows.MessageBox.Show(nre.ToString());
+                }
+                if (!Camera_Container.Children.Contains(camera))
+                {
+                    //System.Windows.MessageBox.Show("Opening EDitor!");
+                    WindowControll win_controll = new WindowControll(camera);
+                    win_controll.Show();
+                }
+                else
+                {
+                    // Ask to Restart The Application
+                    MessageBoxResult res = System.Windows.MessageBox.Show("Error When Opening Editor! Restart ?", "Question", (MessageBoxButton)System.Windows.Forms.MessageBoxButtons.OKCancel);
+                    if (res.ToString() == "OK")
+                    {
+                        // Close Settings Window
+                        this.Close();
+                        // Restart App Application
+                        MainWindow.RestartApp();
+                    }
+                }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("No cameras has found!");
+            }
+            
+            
         }
 
-        
+
         // When Click Start Button
         private void start_clicked(object sender, RoutedEventArgs e)
         {
             var urls_list = urls.Keys.ToList();
-            this.playing = true;
             try
             {
                 int counter = 0;
@@ -128,11 +162,10 @@ namespace IPCamera
 
             }
         }
-        
+
         // When Clecked Stop Button
         private void stop_clicked(object sender, RoutedEventArgs e)
         {
-            this.playing = true;
             try
             {
                 foreach (VideoCapture cam in cameras_list)
@@ -145,7 +178,7 @@ namespace IPCamera
 
             }
         }
-        
+
         // When Click Settings Button
         private void settings_clicked(object sender, RoutedEventArgs e)
         {
@@ -166,11 +199,12 @@ namespace IPCamera
         {
             // Cameras Names, URLS
             var names_list = urls.Values.ToList();
+            // Create Grid
+            Camera_Container = new Grid();
             // One Camera
             if (urls_num == 1)
             {
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Rows
@@ -268,8 +302,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(869);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -299,7 +332,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[0],
+                    Content = names_list[1],
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -316,6 +349,7 @@ namespace IPCamera
                 camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
                  {
                      camerasFocused(sender, e);
+                     Console.WriteLine("Cmera 1 Mouse Event");
                  };
                 cameras_list.Add(camera_1);
                 Grid.SetRow(camera_1, 1);
@@ -329,6 +363,7 @@ namespace IPCamera
                 camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
+                    Console.WriteLine("Cmera 2 Mouse Event");
                 };
                 cameras_list.Add(camera_2);
                 Grid.SetRow(camera_2, 1);
@@ -389,8 +424,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(923);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -542,8 +576,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(923);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -719,8 +752,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(923);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -923,8 +955,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(923);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -1152,8 +1183,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(923);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -1408,8 +1438,7 @@ namespace IPCamera
                 mainrow_1.Height = new GridLength(923);
                 main_grid.RowDefinitions.Add(mainrow_1);
                 main_grid.RowDefinitions.Add(mainrow_2);
-                // Create Grid
-                Grid Camera_Container = new Grid();
+                // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
                 main_grid.Children.Add(Camera_Container);
                 // Grid Columns
@@ -1452,7 +1481,7 @@ namespace IPCamera
                     Content = names_list[1],
                     FontSize = 24,
                     Foreground = Brushes.Gray,
-                FontWeight = FontWeights.Bold,
+                    FontWeight = FontWeights.Bold,
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
                 Grid.SetRow(title_2, 0);
@@ -1691,5 +1720,5 @@ namespace IPCamera
 
     }
 
-    
+
 }
