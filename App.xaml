@@ -13,4 +13,5 @@
         <BitmapImage x:Key="take_pic_img"  UriSource="C:\Users\Alexp\source\repos\IPCamera\img\pic.jpg"   />
 
     </Application.Resources>
+    
 </Application>

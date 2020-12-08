@@ -7,10 +7,9 @@
         mc:Ignorable="d"
         Title="WindowControll"
         Background="#FF151515"
-        WindowState="Maximized"
-        >
+        WindowState="Maximized">
 
-    
+
 
     <Grid >
 
@@ -23,7 +22,7 @@
             <RowDefinition Height="125*"/>
         </Grid.RowDefinitions>
 
-        <!-- Video Grid -->
+        <!-- UP Left Corner Video Grid -->
         <Border x:Name="video_frame" Grid.Column="0" Grid.Row="0" BorderThickness="1" BorderBrush="#FFE2E2E2" CornerRadius="15" Background="Black" Margin="10,10,43,0" >
             <Grid x:Name="vidoe_grid" Margin="9" />
         </Border>
@@ -33,15 +32,36 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            
-            <!-- Camera Controll Buttons Grid -->
+
+            <!-- Grid Contains checkbox Face Detection, Recognition -->
             <Grid Grid.Row="0" Grid.Column="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <CheckBox Grid.Row="2" x:Name="Face_rec" Content="Face Recognition" Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Recognition_Chencked" Unchecked="Face_Recognition_UNChencked" />
+                <CheckBox Grid.Row="3" x:Name="Face_det" Content="Face Detection"   Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Detection_Chencked" Unchecked="Face_Detection_UNChencked"/>
+            </Grid>
+
+
+            <!-- Camera Controll Buttons Grid -->
+            <Grid Grid.Row="1" Grid.Column="0" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -52,11 +72,11 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Image Source="{StaticResource up_img}"       Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <Image Source="{StaticResource left_img}"     Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <Image Source="{StaticResource take_pic_img}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <Image Source="{StaticResource right_img}"    Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                <Image Source="{StaticResource down_img}"     Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                <Image MouseUp="UP_button_click" Source="{StaticResource up_img}"             Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                <Image MouseUp="LEFT_button_click" Source="{StaticResource left_img}"         Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                <Image MouseUp="TAKE_PIC_button_click" Source="{StaticResource take_pic_img}" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                <Image MouseUp="RIGHT_button_click" Source="{StaticResource right_img}"       Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                <Image MouseUp="DOWN_button_click" Source="{StaticResource down_img}"         Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Grid>
         </Grid>
 

@@ -54,5 +54,55 @@ namespace IPCamera
             vidoe_grid.Children.Add(this.camera);
         }
 
+
+
+        private void Face_Detection_Chencked(object sender, EventArgs e)
+        {
+            System.Windows.MessageBox.Show("Face_Detection_Chencked!");
+            // Update DataBase this Camera Object field Face Detection 1
+        }
+        private void Face_Detection_UNChencked(object sender, EventArgs e)
+        {
+            System.Windows.MessageBox.Show("Face_Detection_UNChencked!");
+            // Update DataBase this Camera Object field Face Detection 0
+        }
+
+        private void Face_Recognition_Chencked(object sender, EventArgs e)
+        {
+            System.Windows.MessageBox.Show("Face_Recognition_Chencked!");
+            // Update DataBase this Camera Object field Face Recognition 1
+        }
+        private void Face_Recognition_UNChencked(object sender, EventArgs e)
+        {
+            System.Windows.MessageBox.Show("Face_Recognition_UNChencked!");
+            // Update DataBase this Camera Object field Face Recognition 0
+        }
+
+
+        private void UP_button_click(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.MessageBox.Show("Mouse UP!");
+        }
+
+        private void DOWN_button_click(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.MessageBox.Show("Mouse DOWN!");
+        }
+
+        private void LEFT_button_click(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.MessageBox.Show("Mouse LEFT!");
+        }
+
+        private void RIGHT_button_click(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.MessageBox.Show("Mouse RIGHT!");
+        }
+
+        private void TAKE_PIC_button_click(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.MessageBox.Show("Mouse TAKE PICTURE!");
+        }
+
     }
 }
