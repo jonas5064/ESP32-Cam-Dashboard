@@ -33,7 +33,7 @@ namespace IPCamera
         public static Dictionary<String, String> urls = new Dictionary<String, String>();
         public static int urls_num = 0;
         public static List<String> id_s = new List<String>();
-        private List<VideoCapture> cameras_list = new List<VideoCapture>(); // List whos captures all cameras frames
+        public static List<VideoCapture> cameras_list = new List<VideoCapture>(); // List whos captures all cameras frames
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
 
 

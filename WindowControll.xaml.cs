@@ -23,6 +23,8 @@ namespace IPCamera
     {
 
         private VideoCapture camera;
+        private String name;
+        private String url;
 
         public WindowControll(VideoCapture cam)
         {
@@ -30,8 +32,20 @@ namespace IPCamera
             this.DataContext = this;
             this.camera = cam;
             Start_cam();
-
-            
+            // Setup name and url
+            var urls_list = MainWindow.urls.Keys.ToList();
+            var names_list = MainWindow.urls.Values.ToList();
+            int counter = 0;
+            foreach(VideoCapture ca in MainWindow.cameras_list)
+            {
+                if(this.camera == ca)
+                {
+                    this.name = names_list[counter];
+                    this.url = urls_list[counter];
+                    break;
+                }
+                counter++;
+            }
         }
 
         protected override void OnClosed(EventArgs e)
