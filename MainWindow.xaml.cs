@@ -35,7 +35,8 @@ namespace IPCamera
         public static List<String> id_s = new List<String>();
         public static List<VideoCapture> cameras_list = new List<VideoCapture>(); // List whos captures all cameras frames
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
-
+        public String face_recognition = "false";
+        public String face_detection = "false";
 
 
         public MainWindow()
@@ -60,7 +61,7 @@ namespace IPCamera
 
 
         // Get The saved Cameras From Database
-        public static void updateUrlsFromDB()
+        public void updateUrlsFromDB()
         {
             // Save Data To Database
             using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
@@ -75,13 +76,12 @@ namespace IPCamera
                         String id = dataReader["id"].ToString().Trim();
                         String url = dataReader["urls"].ToString().Trim();
                         String name = dataReader["name"].ToString().Trim();
-                        String id_cl = String.Concat(id.Where(c => !Char.IsWhiteSpace(c)));
-                        String url_cl = String.Concat(url.Where(c => !Char.IsWhiteSpace(c)));
-                        //String name_cl = String.Concat(name.Where(c => !Char.IsWhiteSpace(c)));
+                        //String detection = dataReader["Face_Detection"].ToString().Trim();
+                        //String recognition = dataReader["Face_Recognition"].ToString().Trim();
                         try
                         {
-                            urls.Add(url_cl, name);
-                            id_s.Add(id_cl);
+                            urls.Add(url, name);
+                            id_s.Add(id);
                         }
                         catch (System.ArgumentException)
                         {
@@ -92,7 +92,6 @@ namespace IPCamera
                 }
             }
         }
-
 
 
 

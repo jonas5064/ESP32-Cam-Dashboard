@@ -48,7 +48,7 @@ namespace IPCamera
                 counter++;
             }
             // Chech if Face_Recognition, Face Detection  is checked
-            setCheckBoxes();
+            updateFaceDetecRecog();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -58,7 +58,7 @@ namespace IPCamera
         }
 
         // Check the database and set the values to checkboxes
-        private void setCheckBoxes()
+        public void updateFaceDetecRecog()
         {
             String detection = "";
             String recognition = "";
@@ -85,22 +85,8 @@ namespace IPCamera
                 System.Windows.MessageBox.Show("Error selecting Face_Detection and Face_Recognition from Database!  [ERROR CODE]: " + se);
             }
             // Set the CheckBoxes
-            if (detection == "True")
-            {
-                Face_det.IsChecked = true;
-            }
-            else
-            {
-                Face_det.IsChecked = false;
-            }
-            if (recognition == "True")
-            {
-                Face_rec.IsChecked = true;
-            }
-            else
-            {
-                Face_rec.IsChecked = false;
-            }
+            Face_det.IsChecked = (detection == "True" ? true : false);
+            Face_rec.IsChecked = (recognition == "True"? true : false);
         }
 
 
