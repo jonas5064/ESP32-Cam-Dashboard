@@ -22,33 +22,18 @@ namespace IPCamera
     /// </summary>
     public partial class WindowControll : Window
     {
+        private Camera camera;
+        //private VideoCapture camera;
 
-        private VideoCapture camera;
-        private String name;
-        private String url;
-
-        public WindowControll(VideoCapture cam)
+        public WindowControll(Camera cam)
         {
             InitializeComponent();
             this.DataContext = this;
+            // Setup this_camera
             this.camera = cam;
-            Start_cam();
-            // Setup name and url
-            var urls_list = MainWindow.urls.Keys.ToList();
-            var names_list = MainWindow.urls.Values.ToList();
-            int counter = 0;
-            foreach(VideoCapture ca in MainWindow.cameras_list)
-            {
-                if(this.camera == ca)
-                {
-                    this.name = names_list[counter];
-                    this.url = urls_list[counter];
-                    break;
-                }
-                counter++;
-            }
             // Chech if Face_Recognition, Face Detection  is checked
             updateFaceDetecRecog();
+            Start_cam();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -66,7 +51,7 @@ namespace IPCamera
             {
                 // Select from database Face_Detection and Face_Recognition
                 SqlConnection cn = new SqlConnection(MainWindow.DB_connection_string);
-                String query = $"SELECT TOP 1 Face_Detection, Face_Recognition FROM dbo.MyCameras WHERE urls='{this.url}' AND Name='{name}'";
+                String query = $"SELECT TOP 1 Face_Detection, Face_Recognition FROM dbo.MyCameras WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 var reader = cmd.ExecuteReader();
@@ -93,12 +78,12 @@ namespace IPCamera
         // Create And Start Video Capture
         private void Start_cam()
         {
-            this.camera.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
-            this.camera.VerticalAlignment = VerticalAlignment.Stretch;
-            this.camera.Margin = new Thickness(0, 0, 0, 0);
-            this.camera.Width = Double.NaN;
-            this.camera.Height = Double.NaN;
-            vidoe_grid.Children.Add(this.camera);
+            this.camera.video.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+            this.camera.video.VerticalAlignment = VerticalAlignment.Stretch;
+            this.camera.video.Margin = new Thickness(0, 0, 0, 0);
+            this.camera.video.Width = Double.NaN;
+            this.camera.video.Height = Double.NaN;
+            vidoe_grid.Children.Add(this.camera.video);
         }
 
 
@@ -109,7 +94,7 @@ namespace IPCamera
             {
                 // Update DataBase this Camera Object field Face Detection 1
                 SqlConnection cn = new SqlConnection(MainWindow.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Detection='{1}' WHERE urls='{this.url}' AND Name='{name}'";
+                String query = $"UPDATE dbo.MyCameras SET Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
@@ -128,7 +113,7 @@ namespace IPCamera
             {
                 // Update DataBase this Camera Object field Face Detection 0
                 SqlConnection cn = new SqlConnection(MainWindow.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Detection='{0}' WHERE urls='{this.url}' AND Name='{name}'";
+                String query = $"UPDATE dbo.MyCameras SET Face_Detection='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
@@ -148,7 +133,7 @@ namespace IPCamera
             {
                 // Update DataBase this Camera Object field Face Detection 1
                 SqlConnection cn = new SqlConnection(MainWindow.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}' WHERE urls='{this.url}' AND Name='{name}'";
+                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
@@ -167,7 +152,7 @@ namespace IPCamera
             {
                 // Update DataBase this Camera Object field Face Detection 0
                 SqlConnection cn = new SqlConnection(MainWindow.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{0}' WHERE urls='{this.url}' AND Name='{name}'";
+                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();

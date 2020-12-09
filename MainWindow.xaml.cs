@@ -28,15 +28,11 @@ namespace IPCamera
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public static MainWindow main_window;
         private Grid Camera_Container;
-        public static Dictionary<String, String> urls = new Dictionary<String, String>();
-        public static int urls_num = 0;
-        public static List<String> id_s = new List<String>();
-        public static List<VideoCapture> cameras_list = new List<VideoCapture>(); // List whos captures all cameras frames
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
-        public String face_recognition = "false";
-        public String face_detection = "false";
+        public static List<Camera> cameras = new List<Camera>();
 
 
         public MainWindow()
@@ -66,7 +62,7 @@ namespace IPCamera
             // Save Data To Database
             using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
             {
-                String query = "SELECT id, urls, name FROM dbo.MyCameras";
+                String query = "SELECT id, urls, name, Face_Detection, Face_Recognition FROM dbo.MyCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -76,19 +72,21 @@ namespace IPCamera
                         String id = dataReader["id"].ToString().Trim();
                         String url = dataReader["urls"].ToString().Trim();
                         String name = dataReader["name"].ToString().Trim();
-                        //String detection = dataReader["Face_Detection"].ToString().Trim();
-                        //String recognition = dataReader["Face_Recognition"].ToString().Trim();
+                        String detection = dataReader["Face_Detection"].ToString().Trim();
+                        String recognition = dataReader["Face_Recognition"].ToString().Trim();
                         try
                         {
-                            urls.Add(url, name);
-                            id_s.Add(id);
+                            //urls.Add(url, name);
+                            //id_s.Add(id);
+                            bool dec = (detection == "True"? true : false);
+                            bool rec = (recognition == "True" ? true : false);
+                            cameras.Add(new Camera(url, name, id, dec, rec));
                         }
                         catch (System.ArgumentException)
                         {
 
                         }
                     }
-                    urls_num = id_s.Count;
                 }
             }
         }
@@ -98,7 +96,6 @@ namespace IPCamera
         // When Click on Video
         private void camerasFocused(object sender, MouseButtonEventArgs e)
         {
-
             // Get Urls And Names
             VideoCapture camera = ((VideoCapture)sender);
             // If this camera is working
@@ -114,9 +111,14 @@ namespace IPCamera
                 }
                 if (!Camera_Container.Children.Contains(camera))
                 {
-                    //System.Windows.MessageBox.Show("Opening EDitor!");
-                    WindowControll win_controll = new WindowControll(camera);
-                    win_controll.Show();
+                    foreach (Camera  cam in cameras)
+                    {
+                        if (cam.video.Equals(camera))
+                        {
+                            WindowControll win_controll = new WindowControll(cam);
+                            win_controll.Show();
+                        }
+                    }
                 }
                 else
                 {
@@ -141,18 +143,17 @@ namespace IPCamera
         // When Click Start Button
         private void start_clicked(object sender, RoutedEventArgs e)
         {
-            var urls_list = urls.Keys.ToList();
             try
             {
                 int counter = 0;
-                foreach (VideoCapture cam in cameras_list)
+                foreach (Camera cam in cameras)
                 {
                     try
                     {
-                        cam.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = urls_list[counter], Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                        cam.Audio_PlayAudio = cam.Audio_RecordAudio = false;
-                        cam.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                        cam.Start();
+                        cam.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = cameras[counter].url, Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+                        cam.video.Audio_PlayAudio = cam.video.Audio_RecordAudio = false;
+                        cam.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                        cam.video.Start();
                     }
                     catch (Exception)
                     {
@@ -173,9 +174,9 @@ namespace IPCamera
         {
             try
             {
-                foreach (VideoCapture cam in cameras_list)
+                foreach (Camera cam in cameras)
                 {
-                    cam.Stop();
+                    cam.video.Stop();
                 }
             }
             catch
@@ -202,12 +203,10 @@ namespace IPCamera
         // Find How Many Cameras is connected and open the write UI
         public void createVideosPage()
         {
-            // Cameras Names, URLS
-            var names_list = urls.Values.ToList();
             // Create Grid
             Camera_Container = new Grid();
             // One Camera
-            if (urls_num == 1)
+            if (Camera.count == 1)
             {
                 // Setup Grid
                 Grid.SetRow(Camera_Container, 0);
@@ -228,7 +227,7 @@ namespace IPCamera
                 // Create Title Label
                 Label title = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -238,21 +237,19 @@ namespace IPCamera
                 Grid.SetRow(title, 0);
                 Camera_Container.Children.Add(title);
                 // Create Video Capture
-                VideoCapture camera = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     HorizontalAlignment = HorizontalAlignment.Center,
                     Margin = new Thickness(0, 5, 0, -804),
                     Width = 883,
                     Height = 800
                 };
-                camera.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                Grid.SetRow(camera, 1);
-                // Add Camera to my Video Captures
-                cameras_list.Add(camera);
-                Camera_Container.Children.Add(camera);
+                Grid.SetRow(cameras[0].video, 1);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -299,7 +296,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Tow Camera
-            else if (urls_num == 2)
+            else if (Camera.count == 2)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -325,7 +322,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -337,7 +334,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -347,33 +344,31 @@ namespace IPCamera
                 Grid.SetColumn(title_2, 1);
                 Camera_Container.Children.Add(title_2);
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 900
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                  {
                      camerasFocused(sender, e);
                      Console.WriteLine("Cmera 1 Mouse Event");
                  };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 900
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                     Console.WriteLine("Cmera 2 Mouse Event");
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -421,7 +416,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Three Camera
-            else if (urls_num == 3)
+            else if (Camera.count == 3)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -453,7 +448,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -465,7 +460,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -477,7 +472,7 @@ namespace IPCamera
                 // Create Title Label 3
                 Label title_3 = new Label
                 {
-                    Content = names_list[2],
+                    Content = cameras[2].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -488,44 +483,41 @@ namespace IPCamera
                 Camera_Container.Children.Add(title_3);
 
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create Video Capture 3
-                VideoCapture camera_3 = new VideoCapture
+                cameras[2].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_3);
-                Grid.SetRow(camera_3, 3);
-                Grid.SetColumn(camera_3, 0);
-                Camera_Container.Children.Add(camera_3);
+                Grid.SetRow(cameras[2].video, 3);
+                Grid.SetColumn(cameras[2].video, 0);
+                Camera_Container.Children.Add(cameras[2].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -573,7 +565,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Four Camera
-            else if (urls_num == 4)
+            else if (Camera.count == 4)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -605,7 +597,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -617,7 +609,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -629,7 +621,7 @@ namespace IPCamera
                 // Create Title Label 3
                 Label title_3 = new Label
                 {
-                    Content = names_list[2],
+                    Content = cameras[2].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -641,7 +633,7 @@ namespace IPCamera
                 // Create Title Label 4
                 Label title_4 = new Label
                 {
-                    Content = names_list[3],
+                    Content = cameras[3].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -651,57 +643,53 @@ namespace IPCamera
                 Grid.SetColumn(title_4, 1);
                 Camera_Container.Children.Add(title_4);
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create Video Capture 3
-                VideoCapture camera_3 = new VideoCapture
+                cameras[2].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_3);
-                Grid.SetRow(camera_3, 3);
-                Grid.SetColumn(camera_3, 0);
-                Camera_Container.Children.Add(camera_3);
+                Grid.SetRow(cameras[2].video, 3);
+                Grid.SetColumn(cameras[2].video, 0);
+                Camera_Container.Children.Add(cameras[2].video);
                 // Create Video Capture 4
-                VideoCapture camera_4 = new VideoCapture
+                cameras[3].video = new VideoCapture
                 {
                     Width = 700
                 };
-                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_4);
-                Grid.SetRow(camera_4, 3);
-                Grid.SetColumn(camera_4, 1);
-                Camera_Container.Children.Add(camera_4);
+                Grid.SetRow(cameras[3].video, 3);
+                Grid.SetColumn(cameras[3].video, 1);
+                Camera_Container.Children.Add(cameras[3].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -749,7 +737,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Five Camera
-            else if (urls_num == 5)
+            else if (Camera.count == 5)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -783,7 +771,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -795,7 +783,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -807,7 +795,7 @@ namespace IPCamera
                 // Create Title Label 3
                 Label title_3 = new Label
                 {
-                    Content = names_list[2],
+                    Content = cameras[2].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -819,7 +807,7 @@ namespace IPCamera
                 // Create Title Label 4
                 Label title_4 = new Label
                 {
-                    Content = names_list[3],
+                    Content = cameras[3].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -831,7 +819,7 @@ namespace IPCamera
                 // Create Title Label 5
                 Label title_5 = new Label
                 {
-                    Content = names_list[4],
+                    Content = cameras[4].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -841,70 +829,65 @@ namespace IPCamera
                 Grid.SetColumn(title_5, 2);
                 Camera_Container.Children.Add(title_5);
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create Video Capture 3
-                VideoCapture camera_3 = new VideoCapture
+                cameras[2].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_3);
-                Grid.SetRow(camera_3, 3);
-                Grid.SetColumn(camera_3, 0);
-                Camera_Container.Children.Add(camera_3);
+                Grid.SetRow(cameras[2].video, 3);
+                Grid.SetColumn(cameras[2].video, 0);
+                Camera_Container.Children.Add(cameras[2].video);
                 // Create Video Capture 4
-                VideoCapture camera_4 = new VideoCapture
+                cameras[3].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_4);
-                Grid.SetRow(camera_4, 3);
-                Grid.SetColumn(camera_4, 1);
-                Camera_Container.Children.Add(camera_4);
+                Grid.SetRow(cameras[3].video, 3);
+                Grid.SetColumn(cameras[3].video, 1);
+                Camera_Container.Children.Add(cameras[3].video);
                 // Create Video Capture 5
-                VideoCapture camera_5 = new VideoCapture
+                cameras[4].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_5);
-                Grid.SetRow(camera_5, 1);
-                Grid.SetColumn(camera_5, 2);
-                Camera_Container.Children.Add(camera_5);
+                Grid.SetRow(cameras[4].video, 1);
+                Grid.SetColumn(cameras[4].video, 2);
+                Camera_Container.Children.Add(cameras[4].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -952,7 +935,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Six Camera
-            else if (urls_num == 6)
+            else if (Camera.count == 6)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -986,7 +969,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -998,7 +981,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1010,7 +993,7 @@ namespace IPCamera
                 // Create Title Label 3
                 Label title_3 = new Label
                 {
-                    Content = names_list[2],
+                    Content = cameras[2].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1022,7 +1005,7 @@ namespace IPCamera
                 // Create Title Label 4
                 Label title_4 = new Label
                 {
-                    Content = names_list[3],
+                    Content = cameras[3].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1034,7 +1017,7 @@ namespace IPCamera
                 // Create Title Label 5
                 Label title_5 = new Label
                 {
-                    Content = names_list[4],
+                    Content = cameras[4].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1046,7 +1029,7 @@ namespace IPCamera
                 // Create Title Label 6
                 Label title_6 = new Label
                 {
-                    Content = names_list[5],
+                    Content = cameras[5].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1056,83 +1039,77 @@ namespace IPCamera
                 Grid.SetColumn(title_6, 2);
                 Camera_Container.Children.Add(title_6);
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create Video Capture 3
-                VideoCapture camera_3 = new VideoCapture
+                cameras[2].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_3);
-                Grid.SetRow(camera_3, 3);
-                Grid.SetColumn(camera_3, 0);
-                Camera_Container.Children.Add(camera_3);
+                Grid.SetRow(cameras[2].video, 3);
+                Grid.SetColumn(cameras[2].video, 0);
+                Camera_Container.Children.Add(cameras[2].video);
                 // Create Video Capture 4
-                VideoCapture camera_4 = new VideoCapture
+                cameras[3].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_4);
-                Grid.SetRow(camera_4, 3);
-                Grid.SetColumn(camera_4, 1);
-                Camera_Container.Children.Add(camera_4);
+                Grid.SetRow(cameras[3].video, 3);
+                Grid.SetColumn(cameras[3].video, 1);
+                Camera_Container.Children.Add(cameras[3].video);
                 // Create Video Capture 5
-                VideoCapture camera_5 = new VideoCapture
+                cameras[4].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_5);
-                Grid.SetRow(camera_5, 1);
-                Grid.SetColumn(camera_5, 2);
-                Camera_Container.Children.Add(camera_5);
+                Grid.SetRow(cameras[4].video, 1);
+                Grid.SetColumn(cameras[4].video, 2);
+                Camera_Container.Children.Add(cameras[4].video);
                 // Create Video Capture 6
-                VideoCapture camera_6 = new VideoCapture
+                cameras[5].video = new VideoCapture
                 {
                     Width = 500
                 };
-                camera_6.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[5].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_6);
-                Grid.SetRow(camera_6, 3);
-                Grid.SetColumn(camera_6, 2);
-                Camera_Container.Children.Add(camera_6);
+                Grid.SetRow(cameras[5].video, 3);
+                Grid.SetColumn(cameras[5].video, 2);
+                Camera_Container.Children.Add(cameras[5].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -1180,7 +1157,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Seven Camera
-            else if (urls_num == 7)
+            else if (Camera.count == 7)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -1216,7 +1193,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1228,7 +1205,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1240,7 +1217,7 @@ namespace IPCamera
                 // Create Title Label 3
                 Label title_3 = new Label
                 {
-                    Content = names_list[2],
+                    Content = cameras[2].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1252,7 +1229,7 @@ namespace IPCamera
                 // Create Title Label 4
                 Label title_4 = new Label
                 {
-                    Content = names_list[3],
+                    Content = cameras[3].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1264,7 +1241,7 @@ namespace IPCamera
                 // Create Title Label 5
                 Label title_5 = new Label
                 {
-                    Content = names_list[4],
+                    Content = cameras[4].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1276,7 +1253,7 @@ namespace IPCamera
                 // Create Title Label 6
                 Label title_6 = new Label
                 {
-                    Content = names_list[5],
+                    Content = cameras[5].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1288,7 +1265,7 @@ namespace IPCamera
                 // Create Title Label 7
                 Label title_7 = new Label
                 {
-                    Content = names_list[6],
+                    Content = cameras[6].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1298,96 +1275,89 @@ namespace IPCamera
                 Grid.SetColumn(title_7, 3);
                 Camera_Container.Children.Add(title_7);
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create Video Capture 3
-                VideoCapture camera_3 = new VideoCapture
+                cameras[2].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_3);
-                Grid.SetRow(camera_3, 3);
-                Grid.SetColumn(camera_3, 0);
-                Camera_Container.Children.Add(camera_3);
+                Grid.SetRow(cameras[2].video, 3);
+                Grid.SetColumn(cameras[2].video, 0);
+                Camera_Container.Children.Add(cameras[2].video);
                 // Create Video Capture 4
-                VideoCapture camera_4 = new VideoCapture
+                cameras[3].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_4);
-                Grid.SetRow(camera_4, 3);
-                Grid.SetColumn(camera_4, 1);
-                Camera_Container.Children.Add(camera_4);
+                Grid.SetRow(cameras[3].video, 3);
+                Grid.SetColumn(cameras[3].video, 1);
+                Camera_Container.Children.Add(cameras[3].video);
                 // Create Video Capture 5
-                VideoCapture camera_5 = new VideoCapture
+                cameras[4].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_5);
-                Grid.SetRow(camera_5, 1);
-                Grid.SetColumn(camera_5, 2);
-                Camera_Container.Children.Add(camera_5);
+                Grid.SetRow(cameras[4].video, 1);
+                Grid.SetColumn(cameras[4].video, 2);
+                Camera_Container.Children.Add(cameras[4].video);
                 // Create Video Capture 6
-                VideoCapture camera_6 = new VideoCapture
+                cameras[5].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_6.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[5].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_6);
-                Grid.SetRow(camera_6, 3);
-                Grid.SetColumn(camera_6, 2);
-                Camera_Container.Children.Add(camera_6);
+                Grid.SetRow(cameras[5].video, 3);
+                Grid.SetColumn(cameras[5].video, 2);
+                Camera_Container.Children.Add(cameras[5].video);
                 // Create Video Capture 7
-                VideoCapture camera_7 = new VideoCapture
+                cameras[6].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_7.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[6].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_7);
-                Grid.SetRow(camera_7, 1);
-                Grid.SetColumn(camera_7, 3);
-                Camera_Container.Children.Add(camera_7);
+                Grid.SetRow(cameras[6].video, 1);
+                Grid.SetColumn(cameras[6].video, 3);
+                Camera_Container.Children.Add(cameras[6].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
@@ -1435,7 +1405,7 @@ namespace IPCamera
                 button_panel.Children.Add(settings_button);
             }
             // Eight Camera
-            else if (urls_num == 8)
+            else if (Camera.count == 8)
             {
                 // Create tow row for the main grid
                 RowDefinition mainrow_1 = new RowDefinition();
@@ -1471,7 +1441,7 @@ namespace IPCamera
                 // Create Title Label 1
                 Label title_1 = new Label
                 {
-                    Content = names_list[0],
+                    Content = cameras[0].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1483,7 +1453,7 @@ namespace IPCamera
                 // Create Title Label 2
                 Label title_2 = new Label
                 {
-                    Content = names_list[1],
+                    Content = cameras[1].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1495,7 +1465,7 @@ namespace IPCamera
                 // Create Title Label 3
                 Label title_3 = new Label
                 {
-                    Content = names_list[2],
+                    Content = cameras[2].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1507,7 +1477,7 @@ namespace IPCamera
                 // Create Title Label 4
                 Label title_4 = new Label
                 {
-                    Content = names_list[3],
+                    Content = cameras[3].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1519,7 +1489,7 @@ namespace IPCamera
                 // Create Title Label 5
                 Label title_5 = new Label
                 {
-                    Content = names_list[4],
+                    Content = cameras[4].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1531,7 +1501,7 @@ namespace IPCamera
                 // Create Title Label 6
                 Label title_6 = new Label
                 {
-                    Content = names_list[5],
+                    Content = cameras[5].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1543,7 +1513,7 @@ namespace IPCamera
                 // Create Title Label 7
                 Label title_7 = new Label
                 {
-                    Content = names_list[6],
+                    Content = cameras[6].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1555,7 +1525,7 @@ namespace IPCamera
                 // Create Title Label 8
                 Label title_8 = new Label
                 {
-                    Content = names_list[7],
+                    Content = cameras[7].name,
                     FontSize = 24,
                     Foreground = Brushes.Gray,
                     FontWeight = FontWeights.Bold,
@@ -1565,109 +1535,101 @@ namespace IPCamera
                 Grid.SetColumn(title_8, 3);
                 Camera_Container.Children.Add(title_8);
                 // Create Video Capture 1
-                VideoCapture camera_1 = new VideoCapture
+                cameras[0].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_1.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_1);
-                Grid.SetRow(camera_1, 1);
-                Grid.SetColumn(camera_1, 0);
-                Camera_Container.Children.Add(camera_1);
+                Grid.SetRow(cameras[0].video, 1);
+                Grid.SetColumn(cameras[0].video, 0);
+                Camera_Container.Children.Add(cameras[0].video);
                 // Create Video Capture 2
-                VideoCapture camera_2 = new VideoCapture
+                cameras[1].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_2.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_2);
-                Grid.SetRow(camera_2, 1);
-                Grid.SetColumn(camera_2, 1);
-                Camera_Container.Children.Add(camera_2);
+                Grid.SetRow(cameras[1].video, 1);
+                Grid.SetColumn(cameras[1].video, 1);
+                Camera_Container.Children.Add(cameras[1].video);
                 // Create Video Capture 3
-                VideoCapture camera_3 = new VideoCapture
+                cameras[2].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_3.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_3);
-                Grid.SetRow(camera_3, 3);
-                Grid.SetColumn(camera_3, 0);
-                Camera_Container.Children.Add(camera_3);
+                Grid.SetRow(cameras[2].video, 3);
+                Grid.SetColumn(cameras[2].video, 0);
+                Camera_Container.Children.Add(cameras[2].video);
                 // Create Video Capture 4
-                VideoCapture camera_4 = new VideoCapture
+                cameras[3].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_4.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_4);
-                Grid.SetRow(camera_4, 3);
-                Grid.SetColumn(camera_4, 1);
-                Camera_Container.Children.Add(camera_4);
+                Grid.SetRow(cameras[3].video, 3);
+                Grid.SetColumn(cameras[3].video, 1);
+                Camera_Container.Children.Add(cameras[3].video);
                 // Create Video Capture 5
-                VideoCapture camera_5 = new VideoCapture
+                cameras[4].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_5.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_5);
-                Grid.SetRow(camera_5, 1);
-                Grid.SetColumn(camera_5, 2);
-                Camera_Container.Children.Add(camera_5);
+                Grid.SetRow(cameras[4].video, 1);
+                Grid.SetColumn(cameras[4].video, 2);
+                Camera_Container.Children.Add(cameras[4].video);
                 // Create Video Capture 6
-                VideoCapture camera_6 = new VideoCapture
+                cameras[5].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_6.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[5].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_6);
-                Grid.SetRow(camera_6, 3);
-                Grid.SetColumn(camera_6, 2);
-                Camera_Container.Children.Add(camera_6);
+                Grid.SetRow(cameras[5].video, 3);
+                Grid.SetColumn(cameras[5].video, 2);
+                Camera_Container.Children.Add(cameras[5].video);
                 // Create Video Capture 7
-                VideoCapture camera_7 = new VideoCapture
+                cameras[6].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_7.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[6].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_7);
-                Grid.SetRow(camera_7, 1);
-                Grid.SetColumn(camera_7, 3);
-                Camera_Container.Children.Add(camera_7);
+                Grid.SetRow(cameras[6].video, 1);
+                Grid.SetColumn(cameras[6].video, 3);
+                Camera_Container.Children.Add(cameras[6].video);
                 // Create Video Capture 8
-                VideoCapture camera_8 = new VideoCapture
+                cameras[7].video = new VideoCapture
                 {
                     Width = 400
                 };
-                camera_8.MouseUp += (object sender, MouseButtonEventArgs e) =>
+                cameras[7].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
-                cameras_list.Add(camera_8);
-                Grid.SetRow(camera_8, 3);
-                Grid.SetColumn(camera_8, 3);
-                Camera_Container.Children.Add(camera_8);
+                Grid.SetRow(cameras[7].video, 3);
+                Grid.SetColumn(cameras[7].video, 3);
+                Camera_Container.Children.Add(cameras[7].video);
                 // Create The Panle Buttons
                 StackPanel button_panel = new StackPanel
                 {
