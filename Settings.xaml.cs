@@ -124,7 +124,7 @@ namespace IPCamera
             if (urls_num > 0)
             {
                 // Clear Database
-                SqlConnection con = new SqlConnection(MainWindow.DB_connection_string);
+                SqlConnection con = new SqlConnection(Camera.DB_connection_string);
                 SqlCommand cmd = new SqlCommand
                 {
                     CommandText = "DELETE FROM dbo.MyCameras ",
@@ -138,7 +138,7 @@ namespace IPCamera
                     Guid guid = Guid.NewGuid();
                     String my_id = guid.ToString();
                     // Save Data To Database
-                    using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
+                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                     {
                         String query = $"INSERT INTO dbo.MyCameras (id,urls,Name) VALUES (@id,@urls,@name)";
                         using (SqlCommand command = new SqlCommand(query, connection))

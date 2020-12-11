@@ -89,6 +89,8 @@
                     <!-- Header Tab -->
                     <Label>Second Tab</Label>
                 </TabItem.Header>
+                
+                
             </TabItem>
         </TabControl>
 

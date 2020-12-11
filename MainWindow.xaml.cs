@@ -16,9 +16,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VisioForge.Controls.UI.WPF;
 using VisioForge.Types.OutputFormat;
 using VisioForge.Types.VideoEffects;
+using VisioForge.Controls.UI.WPF;
+//using VisioForge.Controls.UI.WinForms;
 
 
 namespace IPCamera
@@ -31,7 +32,6 @@ namespace IPCamera
 
         public static MainWindow main_window;
         private Grid Camera_Container;
-        public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
         public static List<Camera> cameras = new List<Camera>();
 
 
@@ -41,7 +41,7 @@ namespace IPCamera
             // Set a Hundeler for this main window
             main_window = this;
             // Update Urls From Database
-            updateUrlsFromDB();
+            updatesFromDB();
             // Open he Cameras Windows
             createVideosPage();
         }
@@ -57,12 +57,13 @@ namespace IPCamera
 
 
         // Get The saved Cameras From Database
-        public void updateUrlsFromDB()
+        public void updatesFromDB()
         {
             // Save Data To Database
-            using (SqlConnection connection = new SqlConnection(MainWindow.DB_connection_string))
+            using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
             {
-                String query = "SELECT id, urls, name, Face_Detection, Face_Recognition FROM dbo.MyCameras";
+                String query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
+                    "Brightness, Contrast FROM dbo.MyCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -74,13 +75,16 @@ namespace IPCamera
                         String name = dataReader["name"].ToString().Trim();
                         String detection = dataReader["Face_Detection"].ToString().Trim();
                         String recognition = dataReader["Face_Recognition"].ToString().Trim();
+                        int brightness = (int)dataReader["Brightness"];
+                        int contrast = (int)dataReader["Contrast"];
                         try
                         {
-                            //urls.Add(url, name);
-                            //id_s.Add(id);
                             bool dec = (detection == "True"? true : false);
                             bool rec = (recognition == "True" ? true : false);
-                            cameras.Add(new Camera(url, name, id, dec, rec));
+                            Camera cam = new Camera(url, name, id, dec, rec);
+                            cam.Brightness = brightness;
+                            cam.Contrast = contrast;
+                            cameras.Add(cam);
                         }
                         catch (System.ArgumentException)
                         {
@@ -145,22 +149,9 @@ namespace IPCamera
         {
             try
             {
-                int counter = 0;
                 foreach (Camera cam in cameras)
                 {
-                    try
-                    {
-                        cam.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = cameras[counter].url, Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
-                        cam.video.Audio_PlayAudio = cam.video.Audio_RecordAudio = false;
-                        cam.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                        cam.video.Start();
-                    }
-                    catch (Exception)
-                    {
-                        System.Windows.MessageBox.Show("No cameras has found!");
-                    }
-                    
-                    counter++;
+                    cam.start();
                 }
             }
             catch
@@ -176,7 +167,7 @@ namespace IPCamera
             {
                 foreach (Camera cam in cameras)
                 {
-                    cam.video.Stop();
+                    cam.stop();
                 }
             }
             catch
@@ -197,6 +188,15 @@ namespace IPCamera
             {
 
             }
+        }
+
+
+
+        // On Error EVnt
+        private void Video_OnError(object sender, VisioForge.Types.ErrorsEventArgs e)
+        {
+            System.Windows.MessageBox.Show("Camera not found!");
+            //throw new NotImplementedException();
         }
 
 
@@ -236,18 +236,16 @@ namespace IPCamera
                 };
                 Grid.SetRow(title, 0);
                 Camera_Container.Children.Add(title);
-                // Create Video Capture
-                cameras[0].video = new VideoCapture
-                {
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    Margin = new Thickness(0, 5, 0, -804),
-                    Width = 883,
-                    Height = 800
-                };
+                // Setup the Camera
+                cameras[0].video.HorizontalAlignment = HorizontalAlignment.Center;
+                cameras[0].video.Margin = new Thickness(0, 5, 0, -804);
+                cameras[0].video.Width = 883;
+                cameras[0].video.Height = 800;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Camera_Container.Children.Add(cameras[0].video);
                 // Create The Panle Buttons
@@ -343,29 +341,25 @@ namespace IPCamera
                 Grid.SetRow(title_2, 0);
                 Grid.SetColumn(title_2, 1);
                 Camera_Container.Children.Add(title_2);
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 900
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 900;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                  {
                      camerasFocused(sender, e);
                      Console.WriteLine("Cmera 1 Mouse Event");
                  };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 900
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 900;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                     Console.WriteLine("Cmera 2 Mouse Event");
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
@@ -481,40 +475,33 @@ namespace IPCamera
                 Grid.SetRow(title_3, 2);
                 Grid.SetColumn(title_3, 0);
                 Camera_Container.Children.Add(title_3);
-
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 700;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 700;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
-                // Create Video Capture 3
-                cameras[2].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[2].video.Width = 700;
                 cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[2].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[2].video, 3);
                 Grid.SetColumn(cameras[2].video, 0);
                 Camera_Container.Children.Add(cameras[2].video);
@@ -642,51 +629,43 @@ namespace IPCamera
                 Grid.SetRow(title_4, 2);
                 Grid.SetColumn(title_4, 1);
                 Camera_Container.Children.Add(title_4);
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 700;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 700;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
-                // Create Video Capture 3
-                cameras[2].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[2].video.Width = 700;
                 cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[2].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[2].video, 3);
                 Grid.SetColumn(cameras[2].video, 0);
                 Camera_Container.Children.Add(cameras[2].video);
-                // Create Video Capture 4
-                cameras[3].video = new VideoCapture
-                {
-                    Width = 700
-                };
+                // Setup the Camera
+                cameras[3].video.Width = 700;
                 cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[3].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[3].video, 3);
                 Grid.SetColumn(cameras[3].video, 1);
                 Camera_Container.Children.Add(cameras[3].video);
@@ -828,63 +807,53 @@ namespace IPCamera
                 Grid.SetRow(title_5, 0);
                 Grid.SetColumn(title_5, 2);
                 Camera_Container.Children.Add(title_5);
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 500;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 500;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
-                // Create Video Capture 3
-                cameras[2].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[2].video.Width = 500;
                 cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[2].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[2].video, 3);
                 Grid.SetColumn(cameras[2].video, 0);
                 Camera_Container.Children.Add(cameras[2].video);
-                // Create Video Capture 4
-                cameras[3].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[3].video.Width = 500;
                 cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[3].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[3].video, 3);
                 Grid.SetColumn(cameras[3].video, 1);
                 Camera_Container.Children.Add(cameras[3].video);
-                // Create Video Capture 5
-                cameras[4].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[4].video.Width = 500;
                 cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[4].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[4].video, 1);
                 Grid.SetColumn(cameras[4].video, 2);
                 Camera_Container.Children.Add(cameras[4].video);
@@ -1038,75 +1007,63 @@ namespace IPCamera
                 Grid.SetRow(title_6, 2);
                 Grid.SetColumn(title_6, 2);
                 Camera_Container.Children.Add(title_6);
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 500;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 500;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
-                // Create Video Capture 3
-                cameras[2].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[2].video.Width = 500;
                 cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[2].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[2].video, 3);
                 Grid.SetColumn(cameras[2].video, 0);
                 Camera_Container.Children.Add(cameras[2].video);
-                // Create Video Capture 4
-                cameras[3].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[3].video.Width = 500;
                 cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[3].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[3].video, 3);
                 Grid.SetColumn(cameras[3].video, 1);
                 Camera_Container.Children.Add(cameras[3].video);
-                // Create Video Capture 5
-                cameras[4].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[4].video.Width = 500;
                 cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[4].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[4].video, 1);
                 Grid.SetColumn(cameras[4].video, 2);
                 Camera_Container.Children.Add(cameras[4].video);
-                // Create Video Capture 6
-                cameras[5].video = new VideoCapture
-                {
-                    Width = 500
-                };
+                // Setup the Camera
+                cameras[5].video.Width = 500;
                 cameras[5].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[5].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[5].video, 3);
                 Grid.SetColumn(cameras[5].video, 2);
                 Camera_Container.Children.Add(cameras[5].video);
@@ -1274,87 +1231,73 @@ namespace IPCamera
                 Grid.SetRow(title_7, 0);
                 Grid.SetColumn(title_7, 3);
                 Camera_Container.Children.Add(title_7);
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 400;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 400;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
-                // Create Video Capture 3
-                cameras[2].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[2].video.Width = 400;
                 cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[2].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[2].video, 3);
                 Grid.SetColumn(cameras[2].video, 0);
                 Camera_Container.Children.Add(cameras[2].video);
-                // Create Video Capture 4
-                cameras[3].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[3].video.Width = 400;
                 cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[3].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[3].video, 3);
                 Grid.SetColumn(cameras[3].video, 1);
                 Camera_Container.Children.Add(cameras[3].video);
-                // Create Video Capture 5
-                cameras[4].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[4].video.Width = 400;
                 cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[4].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[4].video, 1);
                 Grid.SetColumn(cameras[4].video, 2);
                 Camera_Container.Children.Add(cameras[4].video);
-                // Create Video Capture 6
-                cameras[5].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[5].video.Width = 400;
                 cameras[5].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[5].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[5].video, 3);
                 Grid.SetColumn(cameras[5].video, 2);
                 Camera_Container.Children.Add(cameras[5].video);
-                // Create Video Capture 7
-                cameras[6].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[6].video.Width = 400;
                 cameras[6].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[6].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[6].video, 1);
                 Grid.SetColumn(cameras[6].video, 3);
                 Camera_Container.Children.Add(cameras[6].video);
@@ -1534,99 +1477,83 @@ namespace IPCamera
                 Grid.SetRow(title_8, 2);
                 Grid.SetColumn(title_8, 3);
                 Camera_Container.Children.Add(title_8);
-                // Create Video Capture 1
-                cameras[0].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[0].video.Width = 400;
                 cameras[0].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[0].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[0].video, 1);
                 Grid.SetColumn(cameras[0].video, 0);
                 Camera_Container.Children.Add(cameras[0].video);
-                // Create Video Capture 2
-                cameras[1].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[1].video.Width = 400;
                 cameras[1].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[1].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[1].video, 1);
                 Grid.SetColumn(cameras[1].video, 1);
                 Camera_Container.Children.Add(cameras[1].video);
-                // Create Video Capture 3
-                cameras[2].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[2].video.Width = 400;
                 cameras[2].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[2].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[2].video, 3);
                 Grid.SetColumn(cameras[2].video, 0);
                 Camera_Container.Children.Add(cameras[2].video);
-                // Create Video Capture 4
-                cameras[3].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[3].video.Width = 400;
                 cameras[3].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[3].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[3].video, 3);
                 Grid.SetColumn(cameras[3].video, 1);
                 Camera_Container.Children.Add(cameras[3].video);
-                // Create Video Capture 5
-                cameras[4].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[4].video.Width = 400;
                 cameras[4].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[4].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[4].video, 1);
                 Grid.SetColumn(cameras[4].video, 2);
                 Camera_Container.Children.Add(cameras[4].video);
-                // Create Video Capture 6
-                cameras[5].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[5].video.Width = 400;
                 cameras[5].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[5].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[5].video, 3);
                 Grid.SetColumn(cameras[5].video, 2);
                 Camera_Container.Children.Add(cameras[5].video);
-                // Create Video Capture 7
-                cameras[6].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[6].video.Width = 400;
                 cameras[6].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[6].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[6].video, 1);
                 Grid.SetColumn(cameras[6].video, 3);
                 Camera_Container.Children.Add(cameras[6].video);
-                // Create Video Capture 8
-                cameras[7].video = new VideoCapture
-                {
-                    Width = 400
-                };
+                // Setup the Camera
+                cameras[7].video.Width = 400;
                 cameras[7].video.MouseUp += (object sender, MouseButtonEventArgs e) =>
                 {
                     camerasFocused(sender, e);
                 };
+                cameras[7].video.OnError += Video_OnError;
                 Grid.SetRow(cameras[7].video, 3);
                 Grid.SetColumn(cameras[7].video, 3);
                 Camera_Container.Children.Add(cameras[7].video);
@@ -1683,7 +1610,6 @@ namespace IPCamera
             }
 
         }
-
 
     }
 

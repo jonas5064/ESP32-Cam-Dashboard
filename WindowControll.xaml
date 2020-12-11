@@ -30,9 +30,9 @@
         <!-- Up Right Corner -->
         <Grid Grid.Column="1" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="76*" />
+                <ColumnDefinition Width="144*" />
+                <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -58,6 +58,31 @@
                 <CheckBox Grid.Row="2" x:Name="Face_rec" Content="Face Recognition" Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Recognition_Chencked" Unchecked="Face_Recognition_UNChencked" />
                 <CheckBox Grid.Row="3" x:Name="Face_det" Content="Face Detection"   Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Detection_Chencked" Unchecked="Face_Detection_UNChencked"/>
             </Grid>
+
+
+            <!-- brightness Slider -->
+            <Grid Grid.Row="0" Grid.Column="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+
+                <Label  Grid.Row="1" x:Name="brightness_label" Foreground="#FFC9C9C9" />
+                <Slider Grid.Row="2" x:Name="brightness_slider" Minimum="0" Maximum="255" ValueChanged="brightness_func" />
+
+                <Label  Grid.Row="4" x:Name="contrast_label" Foreground="#FFC9C9C9" />
+                <Slider Grid.Row="5" x:Name="contrast_slider" Minimum="0" Maximum="255" ValueChanged="contrast_func" />
+            </Grid>
+
+
 
 
             <!-- Camera Controll Buttons Grid -->
