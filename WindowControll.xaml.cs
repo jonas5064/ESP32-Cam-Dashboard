@@ -8,12 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
-
+using System.Windows.Input;
 
 namespace IPCamera
 {
@@ -23,9 +22,6 @@ namespace IPCamera
     public partial class WindowControll : Window
     {
         private Camera camera;
-        public int brightness = 0;
-
-
 
         public WindowControll(Camera cam)
         {
@@ -54,6 +50,19 @@ namespace IPCamera
         {
             MainWindow.RestartApp();
             this.Close();
+            /*
+            vidoe_grid.Children.Remove(this.camera.video);
+            if (!vidoe_grid.Children.Contains(this.camera.video))
+            {
+                this.Close();
+                MainWindow.main_window.updatesFromDB();
+                MainWindow.main_window.createVideosPage();
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("OnClosed cant removethe video from grid.");
+            }
+            */
         }
 
 
@@ -65,6 +74,7 @@ namespace IPCamera
             this.camera.video.Margin = new Thickness(0, 0, 0, 0);
             this.camera.video.Width = Double.NaN;
             this.camera.video.Height = Double.NaN;
+            this.camera.video.MouseUp -= MainWindow.main_window.camerasFocused;
             vidoe_grid.Children.Add(this.camera.video);
         }
 
@@ -72,6 +82,7 @@ namespace IPCamera
         // Face Detection Checked
         private void Face_Detection_Chencked(object sender, EventArgs e)
         {
+            this.camera.Detection = true;
             try
             {
                 // Update DataBase this Camera Object field Face Detection 1
@@ -93,6 +104,7 @@ namespace IPCamera
         // Face Detection Unchecked
         private void Face_Detection_UNChencked(object sender, EventArgs e)
         {
+            this.camera.Detection = false;
             try
             {
                 // Update DataBase this Camera Object field Face Detection 0
@@ -114,6 +126,7 @@ namespace IPCamera
         // Face Recognition Chekced
         private void Face_Recognition_Chencked(object sender, EventArgs e)
         {
+            this.camera.Recognition = true;
             try
             {
                 // Update DataBase this Camera Object field Face Detection 1
@@ -135,6 +148,7 @@ namespace IPCamera
         // Face Recognition Unchecked
         private void Face_Recognition_UNChencked(object sender, EventArgs e)
         {
+            this.camera.Recognition = false;
             try
             {
                 // Update DataBase this Camera Object field Face Detection 0

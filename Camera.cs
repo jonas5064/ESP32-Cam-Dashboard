@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 //using VisioForge.Controls.UI.WinForms;
 using VisioForge.Controls.UI.WPF;
@@ -31,16 +32,6 @@ namespace IPCamera
             this.url = url;
             this.name = name;
             this.id = id;
-            count++;
-        }
-
-        public Camera(String url, String name, String id, bool detection, bool recognition)
-        {
-            this.url = url;
-            this.name = name;
-            this.id = id;
-            this.detection = detection;
-            this.recognition = recognition;
 
             // Create an VideoCapture
             this.video = new VideoCapture();
@@ -131,6 +122,27 @@ namespace IPCamera
                 }
             }
         }
+
+        public bool Detection
+        {
+            get
+            { return this.detection; }
+            set
+            {
+                this.detection = value;
+            }
+        }
+
+        public bool Recognition
+        {
+            get { return this.recognition; }
+            set
+            {
+                this.recognition = value;
+            }
+        }
+
+        public Action<object, MouseButtonEventArgs> MouseUp { get; internal set; }
 
         public void start()
         {

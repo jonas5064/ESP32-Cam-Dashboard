@@ -13,12 +13,16 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace IPCamera
 {
     public partial class Settings : Window
 
     {
+
+        private String pictures_dir;
+        private String videos_dir;
 
         public Settings()
         {
@@ -27,7 +31,47 @@ namespace IPCamera
             update_settings_page();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+
+
+
+        private void button_pictures_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result.ToString().Equals("OK"))
+                {
+                    if(dialog.SelectedPath != "")
+                    {
+                        this.pictures_dir = dialog.SelectedPath;
+                        txtEditor_pictures.Text = this.pictures_dir;
+                    }
+                }
+            }
+        }
+
+
+
+        private void button_videos_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result.ToString().Equals("OK"))
+                {
+                    if (dialog.SelectedPath != "")
+                    {
+                        this.videos_dir = dialog.SelectedPath;
+                        txtEditor_videos.Text = this.videos_dir;
+                    }
+                }
+            }
+        }
+
+
+
+
+        private void Apply_Click(object sender, RoutedEventArgs e)
         {
             Dictionary<String, String> urls = new Dictionary<String, String>();
             // Setup a list with the urls and the number of them.
