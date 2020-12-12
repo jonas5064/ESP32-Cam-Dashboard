@@ -21,6 +21,7 @@ namespace IPCamera
         public bool recognition = false;
         public int brightness = 0;
         public int contrast = 0;
+        public int darkness = 0;
         public VideoCapture video;
         public static int count = 0;
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
@@ -46,6 +47,7 @@ namespace IPCamera
             this.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = this.url, Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
             this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+            this.video.Video_Effects_Enabled = true; // Enable Video Effects
 
             count++;
         }
@@ -61,7 +63,22 @@ namespace IPCamera
             set
             {
                 this.brightness = value;
-                this.video.Video_Effects_Add(new VFVideoEffectLightness(true, this.brightness));
+                // Add the efect
+                IVFVideoEffectLightness lightness;
+                var effect_l = this.video.Video_Effects_Get("Lightness");
+                if (effect_l == null)
+                {
+                    lightness = new VFVideoEffectLightness(true, this.brightness, 0, "Lightness");
+                    this.video.Video_Effects_Add(lightness);
+                }
+                else
+                {
+                    lightness = effect_l as IVFVideoEffectLightness;
+                    if (lightness != null)
+                    {
+                        lightness.Value = this.brightness;
+                    }
+                }
             }
         }
 
@@ -71,7 +88,47 @@ namespace IPCamera
             set
             {
                 this.contrast = value;
-                this.video.Video_Effects_Add(new VFVideoEffectContrast(true, this.contrast));
+                // Add the efect
+                IVFVideoEffectContrast contrast;
+                var effect_c = this.video.Video_Effects_Get("Contrast");
+                if (effect_c == null)
+                {
+                    contrast = new VFVideoEffectContrast(true, this.contrast, 0, "Contrast");
+                    this.video.Video_Effects_Add(contrast);
+                }
+                else
+                {
+                    contrast = effect_c as IVFVideoEffectContrast;
+                    if (contrast != null)
+                    {
+                        contrast.Value = this.contrast;
+                    }
+                }
+            }
+        }
+
+        public int Darkness
+        {
+            get { return this.darkness; }
+            set
+            {
+                this.darkness = value;
+                // Add the efect
+                IVFVideoEffectDarkness darkness;
+                var effect_d = this.video.Video_Effects_Get("Darkness");
+                if (effect_d == null)
+                {
+                    darkness = new VFVideoEffectDarkness(true, this.darkness, 0, "Darkness");
+                    this.video.Video_Effects_Add(darkness);
+                }
+                else
+                {
+                    darkness = effect_d as IVFVideoEffectDarkness;
+                    if (darkness != null)
+                    {
+                        darkness.Value = this.darkness;
+                    }
+                }
             }
         }
 

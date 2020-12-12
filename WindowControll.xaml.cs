@@ -40,8 +40,10 @@ namespace IPCamera
             // Setup Brightness and Contrast Labels and Sliders
             brightness_label.Content = $"Brightness: {this.camera.Brightness.ToString()}";
             contrast_label.Content   = $"Contrast:   {this.camera.Contrast.ToString()}";
+            darkness_label.Content   = $"Darkness:   {this.camera.Darkness.ToString()}";
             brightness_slider.Value  = this.camera.Brightness;
             contrast_slider.Value    = this.camera.Contrast;
+            darkness_slider.Value    = this.camera.Darkness;
             // Start Camera
             Start_cam();
         }
@@ -190,6 +192,31 @@ namespace IPCamera
                 // Update DataBase this Camera Object field Face Detection 1
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
                 String query = $"UPDATE dbo.MyCameras SET Contrast='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+
+        // Darkness slider function
+        private void darkness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int val = Convert.ToInt32(e.NewValue);
+            darkness_label.Content = $"Darkness: {val}";
+            this.camera.Darkness = val;
+            // Save data to Database
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.MyCameras SET Darkness='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();

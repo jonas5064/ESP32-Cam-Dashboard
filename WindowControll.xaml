@@ -31,14 +31,14 @@
         <Grid Grid.Column="1" Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="76*" />
-                <ColumnDefinition Width="144*" />
+                <ColumnDefinition Width="141*" />
                 <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="133*" />
+                <RowDefinition Height="96*" />
+                <RowDefinition Height="73*" />
+                <RowDefinition Height="77*" />
             </Grid.RowDefinitions>
 
             <!-- Grid Contains checkbox Face Detection, Recognition -->
@@ -67,7 +67,6 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
-
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
@@ -78,8 +77,11 @@
                 <Label  Grid.Row="1" x:Name="brightness_label" Foreground="#FFC9C9C9" />
                 <Slider Grid.Row="2" x:Name="brightness_slider" Minimum="0" Maximum="255" ValueChanged="brightness_func" />
 
-                <Label  Grid.Row="4" x:Name="contrast_label" Foreground="#FFC9C9C9" />
-                <Slider Grid.Row="5" x:Name="contrast_slider" Minimum="0" Maximum="255" ValueChanged="contrast_func" />
+                <Label  Grid.Row="3" x:Name="contrast_label" Foreground="#FFC9C9C9" />
+                <Slider Grid.Row="4" x:Name="contrast_slider" Minimum="0" Maximum="255" ValueChanged="contrast_func" />
+
+                <Label  Grid.Row="5" x:Name="darkness_label" Foreground="#FFC9C9C9" />
+                <Slider Grid.Row="6" x:Name="darkness_slider" Minimum="0" Maximum="255" ValueChanged="darkness_func" />
             </Grid>
 
 

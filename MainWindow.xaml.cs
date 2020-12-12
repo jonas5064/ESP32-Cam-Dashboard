@@ -63,7 +63,7 @@ namespace IPCamera
             using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
             {
                 String query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
-                    "Brightness, Contrast FROM dbo.MyCameras";
+                    "Brightness, Contrast, Darkness FROM dbo.MyCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -77,6 +77,7 @@ namespace IPCamera
                         String recognition = dataReader["Face_Recognition"].ToString().Trim();
                         int brightness = (int)dataReader["Brightness"];
                         int contrast = (int)dataReader["Contrast"];
+                        int darkness = (int)dataReader["Darkness"];
                         try
                         {
                             bool dec = (detection == "True"? true : false);
@@ -84,6 +85,7 @@ namespace IPCamera
                             Camera cam = new Camera(url, name, id, dec, rec);
                             cam.Brightness = brightness;
                             cam.Contrast = contrast;
+                            cam.Darkness = darkness;
                             cameras.Add(cam);
                         }
                         catch (System.ArgumentException)
