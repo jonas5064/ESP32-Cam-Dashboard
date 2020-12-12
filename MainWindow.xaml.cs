@@ -33,6 +33,8 @@ namespace IPCamera
         public static MainWindow main_window;
         private Grid Camera_Container;
         public static List<Camera> cameras = new List<Camera>();
+        public static String picture_path = "";
+        public static String videos_path = "";
 
 
         public MainWindow()
@@ -63,6 +65,7 @@ namespace IPCamera
             // Save Data To Database
             using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
             {
+                // Insert Camera Data
                 String query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
                     "Brightness, Contrast, Darkness FROM dbo.MyCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -95,6 +98,22 @@ namespace IPCamera
                         }
                     }
                 }
+                connection.Close();
+                // Insert Data Paths
+                query = "SELECT Name, Path FROM dbo.FilesDirs";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        String name = dataReader["Name"].ToString().Trim();
+                        String path = dataReader["Path"].ToString().Trim();
+                        if (name == "Pictures") { picture_path = path; }
+                        else if (name == "Videos") { videos_path = path; }
+                    }
+                }
+                connection.Close();
             }
         }
 

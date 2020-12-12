@@ -73,6 +73,53 @@ namespace IPCamera
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
+            // Save Paths
+            if (txtEditor_pictures.Text != "" && txtEditor_videos.Text != "")
+            {
+                // Clear DataBase
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = "DELETE FROM dbo.FilesDirs";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Save to DataBase Pictures
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    query = $"INSERT INTO dbo.FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", 1);
+                        command.Parameters.AddWithValue("@name", "Pictures");
+                        command.Parameters.AddWithValue("@path", txtEditor_pictures.Text);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                }
+                // Save to DataBase Videos
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    query = $"INSERT INTO dbo.FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", 2);
+                        command.Parameters.AddWithValue("@name", "Videos");
+                        command.Parameters.AddWithValue("@path", txtEditor_videos.Text);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                }
+            }
+
+            // Save URLS
             Dictionary<String, String> urls = new Dictionary<String, String>();
             // Setup a list with the urls and the number of them.
             if (url_1.Text != "" && name_1.Text != "")
@@ -214,7 +261,10 @@ namespace IPCamera
 
         private void update_settings_page()
         {
-            // Feel the page with the current data
+            // Feel files paths
+            txtEditor_pictures.Text = MainWindow.picture_path;
+            txtEditor_videos.Text = MainWindow.videos_path;
+            // Feel the urls
             if (Camera.count > 0)
             {
                 if (MainWindow.cameras[0].url != "" && MainWindow.cameras[0].name != "")
