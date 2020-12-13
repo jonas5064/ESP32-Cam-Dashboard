@@ -33,8 +33,6 @@ namespace IPCamera
         public static MainWindow main_window;
         private Grid Camera_Container;
         public static List<Camera> cameras = new List<Camera>();
-        public static String picture_path = "";
-        public static String videos_path = "";
 
 
         public MainWindow()
@@ -109,8 +107,8 @@ namespace IPCamera
                     {
                         String name = dataReader["Name"].ToString().Trim();
                         String path = dataReader["Path"].ToString().Trim();
-                        if (name == "Pictures") { picture_path = path; }
-                        else if (name == "Videos") { videos_path = path; }
+                        if (name == "Pictures") { Camera.pictures_dir = path; }
+                        else if (name == "Videos") { Camera.videos_dir = path; }
                     }
                 }
                 connection.Close();
@@ -210,7 +208,7 @@ namespace IPCamera
         // On Error EVnt
         private void Video_OnError(object sender, VisioForge.Types.ErrorsEventArgs e)
         {
-            System.Windows.MessageBox.Show("Camera not found!");
+            System.Windows.MessageBox.Show($"[OnError]   {e.Message}");
             //throw new NotImplementedException();
         }
 

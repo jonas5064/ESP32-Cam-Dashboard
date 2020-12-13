@@ -8,6 +8,7 @@ using System.Windows.Input;
 
 //using VisioForge.Controls.UI.WinForms;
 using VisioForge.Controls.UI.WPF;
+using VisioForge.Types;
 // https://help.visioforge.com/sdks_net/html/T_VisioForge_Controls_UI_WPF_VideoCapture.htm
 using VisioForge.Types.VideoEffects;
 
@@ -26,6 +27,9 @@ namespace IPCamera
         public VideoCapture video;
         public static int count = 0;
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
+
+        public static String pictures_dir;
+        public static String videos_dir;
 
         public Camera(String url, String name, String id)
         {
@@ -168,6 +172,12 @@ namespace IPCamera
             {
                 //System.Windows.MessageBox.Show("No cameras has found!");
             }
+        }
+
+        public void take_pic()
+        {
+            String file = Camera.pictures_dir + "\\frame.jpeg";
+            this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
     }
 }

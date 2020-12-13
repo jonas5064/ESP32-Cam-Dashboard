@@ -1,28 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.IO;
+
 
 namespace IPCamera
 {
     public partial class Settings : Window
 
     {
-
-        private String pictures_dir;
-        private String videos_dir;
 
         public Settings()
         {
@@ -43,8 +30,8 @@ namespace IPCamera
                 {
                     if(dialog.SelectedPath != "")
                     {
-                        this.pictures_dir = dialog.SelectedPath;
-                        txtEditor_pictures.Text = this.pictures_dir;
+                        Camera.pictures_dir = dialog.SelectedPath;
+                        txtEditor_pictures.Text = Camera.pictures_dir;
                     }
                 }
             }
@@ -61,8 +48,8 @@ namespace IPCamera
                 {
                     if (dialog.SelectedPath != "")
                     {
-                        this.videos_dir = dialog.SelectedPath;
-                        txtEditor_videos.Text = this.videos_dir;
+                        Camera.videos_dir = dialog.SelectedPath;
+                        txtEditor_videos.Text = Camera.videos_dir;
                     }
                 }
             }
@@ -262,8 +249,8 @@ namespace IPCamera
         private void update_settings_page()
         {
             // Feel files paths
-            txtEditor_pictures.Text = MainWindow.picture_path;
-            txtEditor_videos.Text = MainWindow.videos_path;
+            txtEditor_pictures.Text = Camera.pictures_dir;
+            txtEditor_videos.Text = Camera.videos_dir;
             // Feel the urls
             if (Camera.count > 0)
             {

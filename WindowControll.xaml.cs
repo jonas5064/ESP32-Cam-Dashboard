@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Data.SqlClient;
 using System.Windows.Input;
+using VisioForge.Types;
 
 namespace IPCamera
 {
@@ -267,7 +257,7 @@ namespace IPCamera
 
         private void TAKE_PIC_button_click(object sender, MouseButtonEventArgs e)
         {
-            System.Windows.MessageBox.Show("Mouse TAKE PICTURE!");
+            this.camera.take_pic();
         }
 
     }
