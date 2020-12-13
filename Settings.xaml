@@ -176,6 +176,17 @@
 
                 </Grid>
             </TabItem>
+
+            <!-- Thierd Tab -->
+            <TabItem FontSize="18">
+                <TabItem.Header>
+                    <!-- Header Tab -->
+                    <Label>Arrows http/mqtt request</Label>
+                </TabItem.Header>
+                
+                
+            </TabItem>
+            
         </TabControl>
 
 
