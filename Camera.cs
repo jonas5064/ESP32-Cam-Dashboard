@@ -176,7 +176,12 @@ namespace IPCamera
 
         public void take_pic()
         {
-            String file = Camera.pictures_dir + "\\frame.jpeg";
+            DateTime now = DateTime.Now;
+            String name = now.ToString("F");
+            name = name.Replace(":", ".");
+            //name = name.Replace(" ", "_");
+            String file = Camera.pictures_dir + "\\" + name + ".jpg";
+            System.Windows.MessageBox.Show($"Save Picture  {file}");
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
     }
