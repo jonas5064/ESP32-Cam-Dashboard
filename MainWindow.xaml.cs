@@ -65,7 +65,7 @@ namespace IPCamera
             {
                 // Insert Camera Data
                 String query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
-                    "Brightness, Contrast, Darkness FROM dbo.MyCameras";
+                    "Brightness, Contrast, Darkness, Recording FROM dbo.MyCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -77,6 +77,7 @@ namespace IPCamera
                         String name = dataReader["name"].ToString().Trim();
                         String detection = dataReader["Face_Detection"].ToString().Trim();
                         String recognition = dataReader["Face_Recognition"].ToString().Trim();
+                        String recording = dataReader["Recording"].ToString().Trim();
                         int brightness = (int)dataReader["Brightness"];
                         int contrast = (int)dataReader["Contrast"];
                         int darkness = (int)dataReader["Darkness"];
@@ -88,6 +89,7 @@ namespace IPCamera
                             cam.Darkness = darkness;
                             cam.Detection = (detection == "True" ? true : false);
                             cam.Recognition = (recognition == "True" ? true : false);
+                            cam.Recording = (recording == "True" ? true : false);
                             cameras.Add(cam);
                         }
                         catch (System.ArgumentException)

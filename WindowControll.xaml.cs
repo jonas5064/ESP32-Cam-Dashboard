@@ -3,6 +3,7 @@ using System.Windows;
 using System.Data.SqlClient;
 using System.Windows.Input;
 using VisioForge.Types;
+using System.Windows.Media;
 
 namespace IPCamera
 {
@@ -17,7 +18,7 @@ namespace IPCamera
         {
             InitializeComponent();
             this.DataContext = this;
-
+           
             // Setup this_camera
             this.camera = cam;
             // Chech if Face_Recognition, Face Detection  is checked
@@ -30,6 +31,17 @@ namespace IPCamera
             brightness_slider.Value  = this.camera.Brightness;
             contrast_slider.Value    = this.camera.Contrast;
             darkness_slider.Value    = this.camera.Darkness;
+            // Setup recording Button
+            if (this.camera.Recording)
+            {
+                rec_label.Content = "Recording";
+                rec_label.Foreground = Brushes.Red;
+            }
+            else
+            {
+                rec_label.Content = "Stop Recording";
+                rec_label.Foreground = Brushes.Gray;
+            }
             // Start Camera
             Start_cam();
         }
@@ -40,19 +52,6 @@ namespace IPCamera
         {
             MainWindow.RestartApp();
             this.Close();
-            /*
-            vidoe_grid.Children.Remove(this.camera.video);
-            if (!vidoe_grid.Children.Contains(this.camera.video))
-            {
-                this.Close();
-                MainWindow.main_window.updatesFromDB();
-                MainWindow.main_window.createVideosPage();
-            }
-            else
-            {
-                System.Windows.MessageBox.Show("OnClosed cant removethe video from grid.");
-            }
-            */
         }
 
 
@@ -260,5 +259,42 @@ namespace IPCamera
             this.camera.take_pic();
         }
 
+        private void start_REC_button_click(object sender, MouseButtonEventArgs e)
+        {
+            this.camera.Recording = true;
+            if (this.camera.Recording)
+            {
+                rec_label.Content = "Recording";
+                rec_label.Foreground = Brushes.Red;
+                // Update DataBase this Camera Object field Recording 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.MyCameras SET Recording='{true}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+        }
+
+        private void stop_REC_button_click(object sender, MouseButtonEventArgs e)
+        {
+            this.camera.Recording = false;
+            if ( this.camera.Recording == false)
+            {
+                rec_label.Content = "Stop Recording";
+                rec_label.Foreground = Brushes.Gray;
+                // Update DataBase this Camera Object field Recording 0
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.MyCameras SET Recording='{false}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+        }
     }
 }

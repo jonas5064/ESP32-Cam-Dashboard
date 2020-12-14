@@ -105,6 +105,26 @@
                 <Image MouseUp="RIGHT_button_click" Source="{StaticResource right_img}"       Grid.Column="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
                 <Image MouseUp="DOWN_button_click" Source="{StaticResource down_img}"         Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Grid>
+
+            <Grid Grid.Column="0" Grid.Row="2" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="31*" />
+                    <RowDefinition Height="18*" />
+                    <RowDefinition Height="24*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" >
+                    <Label Foreground="#FFC9C9C9" x:Name="rec_label"/>
+                </Grid>
+                <Grid Grid.Row="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" MouseUp="start_REC_button_click" Source="{StaticResource start_recording_button_img}" />
+                    <Image Grid.Column="1" MouseUp="stop_REC_button_click"  Source="{StaticResource stop_recording_button_img}" />
+                </Grid>
+            </Grid>
+
         </Grid>
 
 

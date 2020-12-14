@@ -24,6 +24,7 @@ namespace IPCamera
         public int brightness = 0;
         public int contrast = 0;
         public int darkness = 0;
+        public bool recording = false;
         public VideoCapture video;
         public static int count = 0;
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
@@ -146,6 +147,27 @@ namespace IPCamera
             }
         }
 
+        // Start / Stop Recording
+        public bool Recording
+        {
+            get { return this.recording; }
+            set
+            {
+                this.recording = value;
+                if (value == true) // Recording
+                {
+                    // Save to DataBase
+
+                }
+                else // No Recording
+                {
+                    // Save to DataBase
+
+                }
+            }
+        }
+
+
         public Action<object, MouseButtonEventArgs> MouseUp { get; internal set; }
 
         public void start()
@@ -184,5 +206,6 @@ namespace IPCamera
             System.Windows.MessageBox.Show($"Save Picture  {file}");
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
+
     }
 }
