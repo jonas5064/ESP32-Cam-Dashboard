@@ -156,12 +156,10 @@ namespace IPCamera
                 this.recording = value;
                 if (value == true) // Recording
                 {
-                    // Save to DataBase
 
                 }
                 else // No Recording
                 {
-                    // Save to DataBase
 
                 }
             }
