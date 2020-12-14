@@ -10,6 +10,7 @@ using System.Windows.Input;
 //using VisioForge.Controls.UI.WinForms;
 using VisioForge.Controls.UI.WPF;
 using VisioForge.Types;
+using VisioForge.Types.OutputFormat;
 // https://help.visioforge.com/sdks_net/html/T_VisioForge_Controls_UI_WPF_VideoCapture.htm
 using VisioForge.Types.VideoEffects;
 
@@ -33,7 +34,7 @@ namespace IPCamera
         public static String pictures_dir;
         public static String videos_dir;
 
-        public Camera(String url, String name, String id)
+        public Camera(String url, String name, String id, bool rec)
         {
             this.url = url;
             this.name = name;
@@ -43,8 +44,8 @@ namespace IPCamera
             this.video = new VideoCapture();
             this.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = this.url, Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
-            this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             this.video.Video_Effects_Enabled = true; // Enable Video Effects
+            this.Recording = rec;
 
             count++;
         }
@@ -157,11 +158,25 @@ namespace IPCamera
                 this.recording = value;
                 if (value == true) // Recording
                 {
-
+                    DateTime now = DateTime.Now;
+                    String date = now.ToString("F");
+                    date = date.Replace(":", ".");
+                    String dir_path = Camera.videos_dir + "\\" + this.name;
+                    if (!Directory.Exists(dir_path))
+                    {
+                        Directory.CreateDirectory(dir_path);
+                    }
+                    String file = dir_path + "\\" + date + ".mp4";
+                    //System.Windows.MessageBox.Show($"Video Recording File:  {file}!");
+                    // Start Recording
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFAVIOutput();
+                    this.video.Mode = VFVideoCaptureMode.IPCapture;
+                    
                 }
                 else // No Recording
                 {
-
+                    this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
                 }
             }
         }
@@ -198,15 +213,15 @@ namespace IPCamera
         public void take_pic()
         {
             DateTime now = DateTime.Now;
-            String name = now.ToString("F");
-            name = name.Replace(":", ".");
+            String date = now.ToString("F");
+            date = date.Replace(":", ".");
             String dir_path = Camera.pictures_dir + "\\" + this.name;
             if (! Directory.Exists(dir_path))
             {
                 Directory.CreateDirectory(dir_path);
             }
-            String file = dir_path + "\\" + name + ".jpg";
-            /System.Windows.MessageBox.Show($"Save Picture  {file}");
+            String file = dir_path + "\\" + date + ".jpg";
+            //System.Windows.MessageBox.Show($"Save Picture  {file}");
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 

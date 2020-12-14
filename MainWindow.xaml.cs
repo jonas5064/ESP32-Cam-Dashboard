@@ -63,8 +63,31 @@ namespace IPCamera
             // Save Data To Database
             using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
             {
+
+                // Insert Data Paths
+                String query = "SELECT Name, Path FROM dbo.FilesDirs";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        String name = dataReader["Name"].ToString().Trim();
+                        String path = dataReader["Path"].ToString().Trim();
+                        if (name == "Pictures")
+                        {
+                            Camera.pictures_dir = path;
+                        }
+                        if (name == "Videos")
+                        {
+                            Camera.videos_dir = path;
+                        }
+                    }
+                }
+                connection.Close();
+
                 // Insert Camera Data
-                String query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
+                query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
                     "Brightness, Contrast, Darkness, Recording FROM dbo.MyCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -83,34 +106,19 @@ namespace IPCamera
                         int darkness = (int)dataReader["Darkness"];
                         try
                         {
-                            Camera cam = new Camera(url, name, id);
+                            bool rec = (recording == "True" ? true : false);
+                            Camera cam = new Camera(url, name, id, rec);
                             cam.Brightness = brightness;
                             cam.Contrast = contrast;
                             cam.Darkness = darkness;
                             cam.Detection = (detection == "True" ? true : false);
                             cam.Recognition = (recognition == "True" ? true : false);
-                            cam.Recording = (recording == "True" ? true : false);
                             cameras.Add(cam);
                         }
                         catch (System.ArgumentException)
                         {
 
                         }
-                    }
-                }
-                connection.Close();
-                // Insert Data Paths
-                query = "SELECT Name, Path FROM dbo.FilesDirs";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
-                    while (dataReader.Read())
-                    {
-                        String name = dataReader["Name"].ToString().Trim();
-                        String path = dataReader["Path"].ToString().Trim();
-                        if (name == "Pictures") { Camera.pictures_dir = path; }
-                        else if (name == "Videos") { Camera.videos_dir = path; }
                     }
                 }
                 connection.Close();
