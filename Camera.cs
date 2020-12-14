@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -199,9 +200,13 @@ namespace IPCamera
             DateTime now = DateTime.Now;
             String name = now.ToString("F");
             name = name.Replace(":", ".");
-            //name = name.Replace(" ", "_");
-            String file = Camera.pictures_dir + "\\" + name + ".jpg";
-            System.Windows.MessageBox.Show($"Save Picture  {file}");
+            String dir_path = Camera.pictures_dir + "\\" + this.name;
+            if (! Directory.Exists(dir_path))
+            {
+                Directory.CreateDirectory(dir_path);
+            }
+            String file = dir_path + "\\" + name + ".jpg";
+            /System.Windows.MessageBox.Show($"Save Picture  {file}");
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 
