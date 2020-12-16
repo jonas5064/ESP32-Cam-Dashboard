@@ -19,7 +19,6 @@ using System.Windows.Shapes;
 using VisioForge.Types.OutputFormat;
 using VisioForge.Types.VideoEffects;
 using VisioForge.Controls.UI.WPF;
-//using VisioForge.Controls.UI.WinForms;
 
 
 namespace IPCamera
@@ -150,85 +149,58 @@ namespace IPCamera
         {
             // Get Urls And Names
             VideoCapture camera = ((VideoCapture)sender);            
-            // If this camera is working
-            if (camera.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
+
+            Camera_Container.Children.Remove(camera);
+            if (!Camera_Container.Children.Contains(camera))
             {
-                Camera_Container.Children.Remove(camera);
-                if (!Camera_Container.Children.Contains(camera))
+                foreach (Camera  cam in cameras)
                 {
-                    foreach (Camera  cam in cameras)
+                    if (cam.video.Equals(camera))
                     {
-                        if (cam.video.Equals(camera))
-                        {
-                            WindowControll win_controll = new WindowControll(cam);
-                            win_controll.Show();
-                        }
-                    }
-                }
-                else
-                {
-                    // Ask to Restart The Application
-                    MessageBoxResult res = System.Windows.MessageBox.Show("Error When Opening Editor! Restart ?", "Question", (MessageBoxButton)System.Windows.Forms.MessageBoxButtons.OKCancel);
-                    if (res.ToString() == "OK")
-                    {
-                        // Close Settings Window
-                        this.Close();
-                        // Restart App Application
-                        MainWindow.RestartApp();
+                        WindowControll win_controll = new WindowControll(cam);
+                        win_controll.Show();
                     }
                 }
             }
             else
             {
-                System.Windows.MessageBox.Show("No cameras has found!");
+                // Ask to Restart The Application
+                MessageBoxResult res = System.Windows.MessageBox.Show("Error When Opening Editor! Restart ?", "Question", (MessageBoxButton)System.Windows.Forms.MessageBoxButtons.OKCancel);
+                if (res.ToString() == "OK")
+                {
+                    // Close Settings Window
+                    this.Close();
+                    // Restart App Application
+                    MainWindow.RestartApp();
+                }
             }
+
         }
 
 
         // When Click Start Button
         private void start_clicked(object sender, RoutedEventArgs e)
         {
-            try
+            foreach (Camera cam in cameras)
             {
-                foreach (Camera cam in cameras)
-                {
-                    cam.start();
-                }
-            }
-            catch
-            {
-
+                cam.start();
             }
         }
 
         // When Clecked Stop Button
         private void stop_clicked(object sender, RoutedEventArgs e)
         {
-            try
+            foreach (Camera cam in cameras)
             {
-                foreach (Camera cam in cameras)
-                {
-                    cam.stop();
-                }
-            }
-            catch
-            {
-
+                cam.stop();
             }
         }
 
         // When Click Settings Button
         private void settings_clicked(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                Settings OP = new Settings();
-                OP.Show();
-            }
-            catch
-            {
-
-            }
+            Settings settings = new Settings();
+            settings.Show();
         }
 
 
@@ -1539,10 +1511,11 @@ namespace IPCamera
                 Settings OP = new Settings();
                 OP.Show();
             }
-
         }
 
-    }
+
+
+    } // Stop Main
 
 
 }

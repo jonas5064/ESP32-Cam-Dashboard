@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -44,9 +45,10 @@ namespace IPCamera
 
             // Create an VideoCapture
             this.video = new VideoCapture();
-            this.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = this.url, Type = VisioForge.Types.VFIPSource.RTSP_HTTP_FFMPEG };
+            this.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = this.url, Type = VisioForge.Types.VFIPSource.Auto_FFMPEG };
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
             this.video.Video_Effects_Enabled = true; // Enable Video Effects
+            this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             this.Recording = rec;
 
             count++;
@@ -55,6 +57,12 @@ namespace IPCamera
         ~Camera()
         {
             count--;
+        }
+
+        // Return this video capture
+        public VideoCapture get()
+        {
+            return this.video;
         }
 
         public int Brightness
@@ -164,15 +172,12 @@ namespace IPCamera
                     String date = now.ToString("F");
                     date = date.Replace(":", ".");
                     String dir_path = Camera.videos_dir + "\\" + this.name;
-                    if (!Directory.Exists(dir_path))
+                    if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                     {
                         Directory.CreateDirectory(dir_path);
                     }
-
                     // Start Recording
-                    this.video.Video_FrameRate = 25;
                     this.video.Mode = VFVideoCaptureMode.IPCapture;
-
                     // AVI
                     if (avi_format)
                     {
@@ -181,18 +186,13 @@ namespace IPCamera
                         VFAVIOutput aviout = new VFAVIOutput();
                         this.video.Output_Format = aviout;
                     }
-
                     // MP4
                     if (mp4_format)
                     {
                         String file = dir_path + "\\" + date + ".mp4";
                         this.video.Output_Filename = file;
-                        //this.video.Output_Format = new VFMP4v8v10Output();
-                        VFMP4v8v10Output mp4Output = new VFMP4v8v10Output();
-                        mp4Output.MP4Mode = VFMP4Mode.v8;
-                        this.video.Output_Format = mp4Output;
+                        this.video.Output_Format = new VFMP4v8v10Output();
                     }
-
                     // WEBM
                     if (webm_format)
                     {
@@ -201,45 +201,26 @@ namespace IPCamera
                         this.video.Output_Filename = file;
                         VFWebMOutput webmout = new VFWebMOutput();
                         this.video.Output_Format = webmout;
-                    }
-
-
-                    
-                    
-                }
-                else // No Recording
-                {
-                    this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                    }      
                 }
             }
         }
 
-
-        public Action<object, MouseButtonEventArgs> MouseUp { get; internal set; }
-
         public void start()
         {
-            try
+            if (this.video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 this.video.Start();
                 //this.video.StartAsync();
-            }
-            catch (Exception)
-            {
-                System.Windows.MessageBox.Show("No cameras has found!");
             }
         }
 
         public void stop()
         {
-            try
+            if (this.video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
             {
-                //this.video.Stop();
-                this.video.StopAsync();
-            }
-            catch (Exception)
-            {
-                //System.Windows.MessageBox.Show("No cameras has found!");
+                this.video.Stop();
+                //this.video.StopAsync();
             }
         }
 
@@ -254,7 +235,6 @@ namespace IPCamera
                 Directory.CreateDirectory(dir_path);
             }
             String file = dir_path + "\\" + date + ".jpg";
-            //System.Windows.MessageBox.Show($"Save Picture  {file}");
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 
