@@ -48,7 +48,6 @@ namespace IPCamera
             this.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = this.url, Type = VisioForge.Types.VFIPSource.Auto_FFMPEG };
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
             this.video.Video_Effects_Enabled = true; // Enable Video Effects
-            this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             this.Recording = rec;
 
             count++;
@@ -142,74 +141,30 @@ namespace IPCamera
 
         public bool Detection
         {
-            get
-            { return this.detection; }
-            set
-            {
-                this.detection = value;
-            }
+            get { return this.detection; }
+            set { this.detection = value; }
         }
 
         public bool Recognition
         {
             get { return this.recognition; }
-            set
-            {
-                this.recognition = value;
-            }
+            set { this.recognition = value; }
         }
 
         // Start / Stop Recording
         public bool Recording
         {
             get { return this.recording; }
-            set
-            {
-                this.recording = value;
-                if (value == true) // Recording
-                {
-                    DateTime now = DateTime.Now;
-                    String date = now.ToString("F");
-                    date = date.Replace(":", ".");
-                    String dir_path = Camera.videos_dir + "\\" + this.name;
-                    if (!Directory.Exists(dir_path)) // Directory with the name of the camera
-                    {
-                        Directory.CreateDirectory(dir_path);
-                    }
-                    // Start Recording
-                    this.video.Mode = VFVideoCaptureMode.IPCapture;
-                    // AVI
-                    if (avi_format)
-                    {
-                        String file = dir_path + "\\" + date + ".avi";
-                        this.video.Output_Filename = file;
-                        VFAVIOutput aviout = new VFAVIOutput();
-                        this.video.Output_Format = aviout;
-                    }
-                    // MP4
-                    if (mp4_format)
-                    {
-                        String file = dir_path + "\\" + date + ".mp4";
-                        this.video.Output_Filename = file;
-                        this.video.Output_Format = new VFMP4v8v10Output();
-                    }
-                    // WEBM
-                    if (webm_format)
-                    {
-                        String file = dir_path + "\\" + date + ".webm";
-                        System.Windows.MessageBox.Show(file);
-                        this.video.Output_Filename = file;
-                        VFWebMOutput webmout = new VFWebMOutput();
-                        this.video.Output_Format = webmout;
-                    }      
-                }
-            }
+            set { this.recording = value; }
         }
 
         public void start()
         {
             if (this.video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
             {
+                // If Rcording is enable setup recording mode
+                setup_recording_mode();
+                // Start Cameres
                 this.video.Start();
                 //this.video.StartAsync();
             }
@@ -224,6 +179,7 @@ namespace IPCamera
             }
         }
 
+        // Take Picture
         public void take_pic()
         {
             DateTime now = DateTime.Now;
@@ -236,6 +192,53 @@ namespace IPCamera
             }
             String file = dir_path + "\\" + date + ".jpg";
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
+        }
+
+        // Setup Recording Mode
+        private void setup_recording_mode()
+        {
+            if (this.Recording)
+            {
+                // Video mode == capture
+                this.video.Mode = VFVideoCaptureMode.IPCapture;
+                // Setup the right file name
+                DateTime now = DateTime.Now;
+                String date = now.ToString("F");
+                date = date.Replace(":", ".");
+                String dir_path = Camera.videos_dir + "\\" + this.name;
+                if (!Directory.Exists(dir_path)) // Directory with the name of the camera
+                {
+                    Directory.CreateDirectory(dir_path);
+                }
+                // Start Recording
+                // AVI
+                if (avi_format)
+                {
+                    String file = dir_path + "\\" + date + ".avi";
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFAVIOutput();
+                }
+                // MP4
+                if (mp4_format)
+                {
+                    String file = dir_path + "\\" + date + ".mp4";
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFMP4v8v10Output();
+                }
+                // WEBM
+                if (webm_format)
+                {
+                    String file = dir_path + "\\" + date + ".webm";
+                    System.Windows.MessageBox.Show(file);
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFWebMOutput();
+                }
+            }
+            else
+            {
+                // Setup video mode to preview
+                this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+            }
         }
 
     }
