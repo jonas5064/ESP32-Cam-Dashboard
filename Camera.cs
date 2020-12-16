@@ -166,13 +166,30 @@ namespace IPCamera
                     {
                         Directory.CreateDirectory(dir_path);
                     }
-                    String file = dir_path + "\\" + date + ".mp4";
-                    //System.Windows.MessageBox.Show($"Video Recording File:  {file}!");
+
                     // Start Recording
+
+                    // AVI
+                    /*
+                    String file = dir_path + "\\" + date + ".avi";
                     this.video.Output_Filename = file;
                     this.video.Output_Format = new VFAVIOutput();
+                    */
+
+                    // MP4
+                    String file = dir_path + "\\" + date + ".mp4";
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFMP4v8v10Output();
+                    /*
+                    VFMP4v8v10Output mp4Output = new VFMP4v8v10Output();
+                    mp4Output.MP4Mode = VFMP4Mode.v10;
+                    mp4Output.Video.Profile = VFH264Profile.ProfileMain; // H264 profile
+                    mp4Output.Video.Level = VFH264Level.Level4; // H264 level
+                    mp4Output.Video.Bitrate = 2000; // bitrate
+                    this.video.Output_Format = mp4Output;
+                    */
+
                     this.video.Mode = VFVideoCaptureMode.IPCapture;
-                    
                 }
                 else // No Recording
                 {
