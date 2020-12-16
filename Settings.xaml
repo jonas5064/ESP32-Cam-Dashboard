@@ -143,6 +143,37 @@
 
 
                     <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20*" />
+                            <RowDefinition Height="32*" />
+                            <RowDefinition Height="35*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Column="0" Grid.Row="0">
+                            <Label Content="Created Format Files:" Foreground="#FFB4B4B4" />
+                        </Grid>
+
+
+                        <Grid Grid.Column="0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox x:Name="avi_checkbox" Checked="avi_chencked" Unchecked="avi_unchencked"  Grid.Column="1" Grid.Row="0" Content="AVI" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="mp4_checkbox" Checked="mp4_chencked" Unchecked="mp4_unchencked"  Grid.Column="1" Grid.Row="1" Content="MP4" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="webm_checkbox" Checked="webm_chencked" Unchecked="webm_unchencked"  Grid.Column="2" Grid.Row="0" Content="WEBM" Foreground="#FFB4B4B4" />
+                        </Grid>
 
                     </Grid>
 
@@ -183,10 +214,10 @@
                     <!-- Header Tab -->
                     <Label>Arrows http/mqtt request</Label>
                 </TabItem.Header>
-                
-                
+
+
             </TabItem>
-            
+
         </TabControl>
 
 

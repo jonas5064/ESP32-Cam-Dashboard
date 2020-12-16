@@ -22,8 +22,8 @@ namespace IPCamera
             // Setup this_camera
             this.camera = cam;
             // Chech if Face_Recognition, Face Detection  is checked
-            Face_det.IsChecked = (camera.detection ? true : false);
-            Face_rec.IsChecked = (camera.recognition ? true : false);
+            Face_det.IsChecked = (this.camera.detection ? true : false);
+            Face_rec.IsChecked = (this.camera.recognition ? true : false);
             // Setup Brightness and Contrast Labels and Sliders
             brightness_label.Content = $"Brightness: {this.camera.Brightness.ToString()}";
             contrast_label.Content   = $"Contrast:   {this.camera.Contrast.ToString()}";

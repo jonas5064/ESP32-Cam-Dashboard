@@ -30,9 +30,11 @@ namespace IPCamera
         public VideoCapture video;
         public static int count = 0;
         public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
-
         public static String pictures_dir;
         public static String videos_dir;
+        public static bool avi_format = false;
+        public static bool mp4_format = false;
+        public static bool webm_format = false;
 
         public Camera(String url, String name, String id, bool rec)
         {
@@ -168,28 +170,42 @@ namespace IPCamera
                     }
 
                     // Start Recording
+                    this.video.Video_FrameRate = 25;
+                    this.video.Mode = VFVideoCaptureMode.IPCapture;
 
                     // AVI
-                    /*
-                    String file = dir_path + "\\" + date + ".avi";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFAVIOutput();
-                    */
+                    if (avi_format)
+                    {
+                        String file = dir_path + "\\" + date + ".avi";
+                        this.video.Output_Filename = file;
+                        VFAVIOutput aviout = new VFAVIOutput();
+                        this.video.Output_Format = aviout;
+                    }
 
                     // MP4
-                    String file = dir_path + "\\" + date + ".mp4";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFMP4v8v10Output();
-                    /*
-                    VFMP4v8v10Output mp4Output = new VFMP4v8v10Output();
-                    mp4Output.MP4Mode = VFMP4Mode.v10;
-                    mp4Output.Video.Profile = VFH264Profile.ProfileMain; // H264 profile
-                    mp4Output.Video.Level = VFH264Level.Level4; // H264 level
-                    mp4Output.Video.Bitrate = 2000; // bitrate
-                    this.video.Output_Format = mp4Output;
-                    */
+                    if (mp4_format)
+                    {
+                        String file = dir_path + "\\" + date + ".mp4";
+                        this.video.Output_Filename = file;
+                        //this.video.Output_Format = new VFMP4v8v10Output();
+                        VFMP4v8v10Output mp4Output = new VFMP4v8v10Output();
+                        mp4Output.MP4Mode = VFMP4Mode.v8;
+                        this.video.Output_Format = mp4Output;
+                    }
 
-                    this.video.Mode = VFVideoCaptureMode.IPCapture;
+                    // WEBM
+                    if (webm_format)
+                    {
+                        String file = dir_path + "\\" + date + ".webm";
+                        System.Windows.MessageBox.Show(file);
+                        this.video.Output_Filename = file;
+                        VFWebMOutput webmout = new VFWebMOutput();
+                        this.video.Output_Format = webmout;
+                    }
+
+
+                    
+                    
                 }
                 else // No Recording
                 {

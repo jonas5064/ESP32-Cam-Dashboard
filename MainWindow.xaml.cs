@@ -86,6 +86,24 @@ namespace IPCamera
                 }
                 connection.Close();
 
+                // Insert Saved Files Format
+                query = "SELECT avi, mp4, webm FROM dbo.FilesFormats";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        String avi = dataReader["avi"].ToString().Trim();
+                        String mp4 = dataReader["mp4"].ToString().Trim();
+                        String webm = dataReader["webm"].ToString().Trim();
+                        Camera.avi_format = (avi == "True" ? true : false);
+                        Camera.mp4_format = (mp4 == "True" ? true : false);
+                        Camera.webm_format = (webm == "True" ? true : false);
+                    }
+                }
+                connection.Close();
+
                 // Insert Camera Data
                 query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
                     "Brightness, Contrast, Darkness, Recording FROM dbo.MyCameras";

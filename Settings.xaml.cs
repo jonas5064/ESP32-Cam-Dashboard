@@ -251,6 +251,10 @@ namespace IPCamera
             // Feel files paths
             txtEditor_pictures.Text = Camera.pictures_dir;
             txtEditor_videos.Text = Camera.videos_dir;
+            // Saved Files Formats
+            avi_checkbox.IsChecked = Camera.avi_format;
+            mp4_checkbox.IsChecked = Camera.mp4_format;
+            webm_checkbox.IsChecked = Camera.webm_format;
             // Feel the urls
             if (Camera.count > 0)
             {
@@ -317,6 +321,147 @@ namespace IPCamera
                 }
             }
         }
+
+
+
+
+        // Files format checkboxes
+        private void avi_chencked(object sender, EventArgs e)
+        {
+            Camera.avi_format = true;
+            Camera.mp4_format = false;
+            Camera.webm_format = false;
+            mp4_checkbox.IsChecked = false;
+            webm_checkbox.IsChecked = false;
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.FilesFormats SET avi='{1}', mp4='{0}', webm='{0}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+        private void avi_unchencked(object sender, EventArgs e)
+        {
+            Camera.avi_format = false;
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.FilesFormats SET avi='{0}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+
+        private void mp4_chencked(object sender, EventArgs e)
+        {
+            Camera.mp4_format = true;
+            Camera.avi_format = false;
+            Camera.webm_format = false;
+            avi_checkbox.IsChecked = false;
+            webm_checkbox.IsChecked = false;
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.FilesFormats SET mp4='{1}', avi='{0}', webm='{0}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+        private void mp4_unchencked(object sender, EventArgs e)
+        {
+            Camera.mp4_format = false;
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.FilesFormats SET mp4='{0}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+
+        private void webm_chencked(object sender, EventArgs e)
+        {
+            Camera.webm_format = true;
+            Camera.mp4_format = false;
+            Camera.avi_format = false;
+            mp4_checkbox.IsChecked = false;
+            avi_checkbox.IsChecked = false;
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.FilesFormats SET webm='{1}', avi='{0}', mp4='{0}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+        private void webm_unchencked(object sender, EventArgs e)
+        {
+            Camera.webm_format = false;
+            try
+            {
+                // Update DataBase this Camera Object field Face Detection 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.FilesFormats SET webm='{0}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+            }
+        }
+
+
 
     }
 }
