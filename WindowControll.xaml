@@ -75,13 +75,13 @@
 
 
                 <Label  Grid.Row="1" x:Name="brightness_label" Foreground="#FFC9C9C9" />
-                <Slider Grid.Row="2" x:Name="brightness_slider" Minimum="0" Maximum="255" ValueChanged="brightness_func" />
+                <Slider Grid.Row="2" x:Name="brightness_slider" Minimum="0" Maximum="255" ValueChanged="Brightness_func" />
 
                 <Label  Grid.Row="3" x:Name="contrast_label" Foreground="#FFC9C9C9" />
-                <Slider Grid.Row="4" x:Name="contrast_slider" Minimum="0" Maximum="255" ValueChanged="contrast_func" />
+                <Slider Grid.Row="4" x:Name="contrast_slider" Minimum="0" Maximum="255" ValueChanged="Contrast_func" />
 
                 <Label  Grid.Row="5" x:Name="darkness_label" Foreground="#FFC9C9C9" />
-                <Slider Grid.Row="6" x:Name="darkness_slider" Minimum="0" Maximum="255" ValueChanged="darkness_func" />
+                <Slider Grid.Row="6" x:Name="darkness_slider" Minimum="0" Maximum="255" ValueChanged="Darkness_func" />
             </Grid>
 
 
@@ -120,8 +120,8 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" MouseUp="start_REC_button_click" Source="{StaticResource start_recording_button_img}" />
-                    <Image Grid.Column="1" MouseUp="stop_REC_button_click"  Source="{StaticResource stop_recording_button_img}" />
+                    <Image Grid.Column="0" MouseUp="Start_REC_button_click" Source="{StaticResource start_recording_button_img}" />
+                    <Image Grid.Column="1" MouseUp="Stop_REC_button_click"  Source="{StaticResource stop_recording_button_img}" />
                 </Grid>
             </Grid>
 

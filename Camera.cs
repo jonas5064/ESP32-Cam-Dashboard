@@ -44,14 +44,23 @@ namespace IPCamera
             this.id = id;
 
             // Create an VideoCapture
-            this.video = new VideoCapture();
-            this.video.IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings() { URL = this.url, Type = VisioForge.Types.VFIPSource.Auto_FFMPEG };
+            this.video = new VideoCapture
+            {
+                IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
+                {
+                    URL = this.url,
+                    Type = VisioForge.Types.VFIPSource.Auto_FFMPEG
+                }
+            };
+            this.video.OnError += OnError;
+            this.video.MouseUp += CamerasFocused;
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
-            this.video.Video_Effects_Enabled = true; // Enable Video Effects
+            this.video.Video_Effects_Enabled = true;
             this.Recording = rec;
 
             count++;
         }
+
 
         ~Camera()
         {
@@ -59,7 +68,7 @@ namespace IPCamera
         }
 
         // Return this video capture
-        public VideoCapture get()
+        public VideoCapture Get()
         {
             return this.video;
         }
@@ -158,19 +167,19 @@ namespace IPCamera
             set { this.recording = value; }
         }
 
-        public void start()
+        public void Start()
         {
             if (this.video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 // If Rcording is enable setup recording mode
-                setup_recording_mode();
+                Setup_recording_mode();
                 // Start Cameres
                 this.video.Start();
                 //this.video.StartAsync();
             }
         }
 
-        public void stop()
+        public void Stop()
         {
             if (this.video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
             {
@@ -180,7 +189,7 @@ namespace IPCamera
         }
 
         // Take Picture
-        public void take_pic()
+        public void Take_pic()
         {
             DateTime now = DateTime.Now;
             String date = now.ToString("F");
@@ -195,7 +204,7 @@ namespace IPCamera
         }
 
         // Setup Recording Mode
-        private void setup_recording_mode()
+        private void Setup_recording_mode()
         {
             if (this.Recording)
             {
@@ -229,7 +238,6 @@ namespace IPCamera
                 if (webm_format)
                 {
                     String file = dir_path + "\\" + date + ".webm";
-                    System.Windows.MessageBox.Show(file);
                     this.video.Output_Filename = file;
                     this.video.Output_Format = new VFWebMOutput();
                 }
@@ -238,6 +246,25 @@ namespace IPCamera
             {
                 // Setup video mode to preview
                 this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+            }
+        }
+
+
+        // On Error EVnt
+        private void OnError(object sender, VisioForge.Types.ErrorsEventArgs e)
+        {
+            System.Windows.MessageBox.Show($"[OnError]   {e.Message}");
+            //throw new NotImplementedException();
+        }
+
+        private void CamerasFocused(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.cams_grid.Children.Remove(this.video);
+            if (!MainWindow.cams_grid.Children.Contains(this.video))
+            {
+                this.video.MouseUp -= this.CamerasFocused;
+                WindowControll win_controll = new WindowControll(this);
+                win_controll.Show();
             }
         }
 

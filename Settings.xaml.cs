@@ -15,13 +15,13 @@ namespace IPCamera
         {
             InitializeComponent();
 
-            update_settings_page();
+            Update_settings_page();
         }
 
 
 
 
-        private void button_pictures_Click(object sender, RoutedEventArgs e)
+        private void Button_pictures_Click(object sender, RoutedEventArgs e)
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
@@ -39,7 +39,7 @@ namespace IPCamera
 
 
 
-        private void button_videos_Click(object sender, RoutedEventArgs e)
+        private void Button_videos_Click(object sender, RoutedEventArgs e)
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
@@ -246,7 +246,7 @@ namespace IPCamera
 
 
 
-        private void update_settings_page()
+        private void Update_settings_page()
         {
             // Feel files paths
             txtEditor_pictures.Text = Camera.pictures_dir;
@@ -326,7 +326,7 @@ namespace IPCamera
 
 
         // Files format checkboxes
-        private void avi_chencked(object sender, EventArgs e)
+        private void AVI_chencked(object sender, EventArgs e)
         {
             Camera.avi_format = true;
             Camera.mp4_format = false;
@@ -350,7 +350,7 @@ namespace IPCamera
                 System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
             }
         }
-        private void avi_unchencked(object sender, EventArgs e)
+        private void AVI_unchencked(object sender, EventArgs e)
         {
             Camera.avi_format = false;
             try
@@ -371,7 +371,7 @@ namespace IPCamera
             }
         }
 
-        private void mp4_chencked(object sender, EventArgs e)
+        private void MP4_chencked(object sender, EventArgs e)
         {
             Camera.mp4_format = true;
             Camera.avi_format = false;
@@ -395,7 +395,7 @@ namespace IPCamera
                 System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
             }
         }
-        private void mp4_unchencked(object sender, EventArgs e)
+        private void MP4_unchencked(object sender, EventArgs e)
         {
             Camera.mp4_format = false;
             try
@@ -416,7 +416,7 @@ namespace IPCamera
             }
         }
 
-        private void webm_chencked(object sender, EventArgs e)
+        private void WEBM_chencked(object sender, EventArgs e)
         {
             Camera.webm_format = true;
             Camera.mp4_format = false;
@@ -440,7 +440,7 @@ namespace IPCamera
                 System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
             }
         }
-        private void webm_unchencked(object sender, EventArgs e)
+        private void WEBM_unchencked(object sender, EventArgs e)
         {
             Camera.webm_format = false;
             try

@@ -12,7 +12,7 @@ namespace IPCamera
     /// </summary>
     public partial class WindowControll : Window
     {
-        private Camera camera;
+        public Camera camera;
 
         public WindowControll(Camera cam)
         {
@@ -22,12 +22,12 @@ namespace IPCamera
             // Setup this_camera
             this.camera = cam;
             // Chech if Face_Recognition, Face Detection  is checked
-            Face_det.IsChecked = (this.camera.detection ? true : false);
-            Face_rec.IsChecked = (this.camera.recognition ? true : false);
+            Face_det.IsChecked = (this.camera.detection);
+            Face_rec.IsChecked = (this.camera.recognition);
             // Setup Brightness and Contrast Labels and Sliders
-            brightness_label.Content = $"Brightness: {this.camera.Brightness.ToString()}";
-            contrast_label.Content   = $"Contrast:   {this.camera.Contrast.ToString()}";
-            darkness_label.Content   = $"Darkness:   {this.camera.Darkness.ToString()}";
+            brightness_label.Content = $"Brightness: {this.camera.Brightness}";
+            contrast_label.Content   = $"Contrast:   {this.camera.Contrast}";
+            darkness_label.Content   = $"Darkness:   {this.camera.Darkness}";
             brightness_slider.Value  = this.camera.Brightness;
             contrast_slider.Value    = this.camera.Contrast;
             darkness_slider.Value    = this.camera.Darkness;
@@ -63,7 +63,6 @@ namespace IPCamera
             this.camera.video.Margin = new Thickness(0, 0, 0, 0);
             this.camera.video.Width = Double.NaN;
             this.camera.video.Height = Double.NaN;
-            this.camera.video.MouseUp -= MainWindow.main_window.camerasFocused;
             vidoe_grid.Children.Add(this.camera.video);
         }
 
@@ -158,7 +157,7 @@ namespace IPCamera
 
 
         // Britness slider function
-        private void brightness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Brightness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             brightness_label.Content = $"Brightness: {val}";
@@ -184,7 +183,7 @@ namespace IPCamera
 
 
         // Contrast slider function
-        private void contrast_func(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Contrast_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             contrast_label.Content = $"Contrast: {val}";
@@ -209,7 +208,7 @@ namespace IPCamera
         }
 
         // Darkness slider function
-        private void darkness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Darkness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             darkness_label.Content = $"Darkness: {val}";
@@ -256,10 +255,10 @@ namespace IPCamera
 
         private void TAKE_PIC_button_click(object sender, MouseButtonEventArgs e)
         {
-            this.camera.take_pic();
+            this.camera.Take_pic();
         }
 
-        private void start_REC_button_click(object sender, MouseButtonEventArgs e)
+        private void Start_REC_button_click(object sender, MouseButtonEventArgs e)
         {
             this.camera.Recording = true;
             if (this.camera.Recording)
@@ -278,7 +277,7 @@ namespace IPCamera
             }
         }
 
-        private void stop_REC_button_click(object sender, MouseButtonEventArgs e)
+        private void Stop_REC_button_click(object sender, MouseButtonEventArgs e)
         {
             this.camera.Recording = false;
             if ( this.camera.Recording == false)

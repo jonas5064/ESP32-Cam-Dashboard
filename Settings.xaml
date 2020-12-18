@@ -123,7 +123,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Foreground="#FFB4B4B4" >Pictures Folder:</Label>
                             <TextBox Grid.Column="1" Name="txtEditor_pictures" />
-                            <Button Grid.Column="3" Name="button_cam_1" Click="button_pictures_Click">Open file</Button>
+                            <Button Grid.Column="3" Name="button_cam_1" Click="Button_pictures_Click">Open file</Button>
                         </Grid>
                         <!-- Saved Videos Directory -->
                         <Grid Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
@@ -135,7 +135,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Foreground="#FFB4B4B4" >Videos Folder:</Label>
                             <TextBox Grid.Column="1" Name="txtEditor_videos" />
-                            <Button Grid.Column="3" Name="button_cam_2" Click="button_videos_Click">Open file</Button>
+                            <Button Grid.Column="3" Name="button_cam_2" Click="Button_videos_Click">Open file</Button>
                         </Grid>
                     </Grid>
 
@@ -170,9 +170,9 @@
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <CheckBox x:Name="avi_checkbox" Checked="avi_chencked" Unchecked="avi_unchencked"  Grid.Column="1" Grid.Row="0" Content="AVI" Foreground="#FFB4B4B4" />
-                            <CheckBox x:Name="mp4_checkbox" Checked="mp4_chencked" Unchecked="mp4_unchencked"  Grid.Column="1" Grid.Row="1" Content="MP4" Foreground="#FFB4B4B4" />
-                            <CheckBox x:Name="webm_checkbox" Checked="webm_chencked" Unchecked="webm_unchencked"  Grid.Column="2" Grid.Row="0" Content="WEBM" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="avi_checkbox" Checked="AVI_chencked" Unchecked="AVI_unchencked"  Grid.Column="1" Grid.Row="0" Content="AVI" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="mp4_checkbox" Checked="MP4_chencked" Unchecked="MP4_unchencked"  Grid.Column="1" Grid.Row="1" Content="MP4" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="webm_checkbox" Checked="WEBM_chencked" Unchecked="WEBM_unchencked"  Grid.Column="2" Grid.Row="0" Content="WEBM" Foreground="#FFB4B4B4" />
                         </Grid>
 
                     </Grid>
