@@ -42,6 +42,8 @@ namespace IPCamera
                 rec_label.Content = "Stop Recording";
                 rec_label.Foreground = Brushes.Gray;
             }
+            // Add Title
+            cameras_title.Content = this.camera.name;
             // Add Camera to this grid
             //video_grid.Children.Add(this.camera.video);
         }

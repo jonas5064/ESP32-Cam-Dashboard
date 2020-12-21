@@ -164,7 +164,7 @@ namespace IPCamera
         // On Close Button
         protected override void OnClosed(EventArgs e)
         {
-            
+           
         }
 
         // When Click Settings Button

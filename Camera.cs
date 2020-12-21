@@ -290,15 +290,6 @@ namespace IPCamera
         {
             WindowControll win_controll = new WindowControll(this);
             win_controll.Show();
-            /*
-            MainWindow.cams_grid.Children.Remove(this.video);
-            if (!MainWindow.cams_grid.Children.Contains(this.video))
-            {
-                this.video.MouseUp -= this.CamerasFocused;
-                WindowControll win_controll = new WindowControll(this);
-                win_controll.Show();
-            }
-            */
         }
 
     }
