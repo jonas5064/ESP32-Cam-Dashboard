@@ -166,25 +166,19 @@ namespace IPCamera
                 {
                     this.video.Face_Tracking = new FaceTrackingSettings
                     {
-                        ColorMode = CamshiftMode.Mixed,
+                        ColorMode = CamshiftMode.RGB,
                         Highlight = true,
                         MinimumWindowSize = 25,
                         ScalingMode = ObjectDetectorScalingMode.GreaterToSmaller,
-                        SearchMode = ObjectDetectorSearchMode.Average
+                        ScaleFactor = (float)1.7,
+                        SearchMode = ObjectDetectorSearchMode.Single
                     };
-                    //this.video.OnFaceDetected += FaceDelegateMethod;
                     this.video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) =>
                     {
-                        //System.Windows.MessageBox.Show("Face Detected!");
-                        Console.WriteLine($"{e.FaceRectangles.Length}");
-                        /*
                         foreach (Rectangle faceRectangle in e.FaceRectangles)
                         {
-                            Console.WriteLine($"Face Detection:   ({faceRectangle.Left}, " +
-                                                                    $"{faceRectangle.Top})  ({faceRectangle.Width}, " +
-                                                                    $"{faceRectangle.Height})  {Environment.NewLine}");
+                            Console.WriteLine($"Face Detection:   left-right({faceRectangle.Left}, {faceRectangle.Right}), top-bottom({faceRectangle.Top}, {faceRectangle.Bottom}),  width-height({faceRectangle.Width}, {faceRectangle.Height})  {Environment.NewLine}");
                         }
-                        */
                     };
                 }
                 else
