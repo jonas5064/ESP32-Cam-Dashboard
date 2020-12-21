@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="WindowControll"
         Background="#FF151515"
-        WindowState="Maximized">
-
+        Width="1000" Height="700">
+    <!-- WindowState="Maximized" -->
 
 
     <Grid >
@@ -18,21 +18,22 @@
             <ColumnDefinition Width="227*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="379*"/>
-            <RowDefinition Height="125*"/>
+            <RowDefinition Height="575*"/>
+            <RowDefinition Height="94*"/>
         </Grid.RowDefinitions>
 
         <!-- UP Left Corner Video Grid -->
+        <!--
         <Border x:Name="video_frame" Grid.Column="0" Grid.Row="0" BorderThickness="1" BorderBrush="#FFE2E2E2" CornerRadius="15" Background="Black" Margin="10,10,43,0" >
-            <Grid x:Name="vidoe_grid" Margin="9" />
+            <Grid x:Name="video_grid" Margin="9" />
         </Border>
-
+        -->
         <!-- Up Right Corner -->
-        <Grid Grid.Column="1" Grid.Row="0">
+        <Grid Grid.Column="0" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="76*" />
-                <ColumnDefinition Width="141*" />
-                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="105*" />
+                <ColumnDefinition Width="411*" />
+                <ColumnDefinition Width="17*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="133*" />

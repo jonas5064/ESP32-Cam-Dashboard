@@ -13,19 +13,14 @@
 
     <!-- Main Grid -->
     <Grid x:Name="main_grid" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="490*"/>
-            <ColumnDefinition Width="253*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="26*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="13*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
         <!-- Cameras Grid -->
-        <Grid x:Name="cameras_grid" Grid.Row="0" Grid.ColumnSpan="2">
+        <Grid x:Name="cameras_grid" Grid.Row="0" Grid.ColumnSpan="2"/>
 
-        </Grid>
 
         <!-- Buttons Grid-->
         <Grid Grid.Row="1" Grid.ColumnSpan="2">

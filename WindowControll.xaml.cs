@@ -42,28 +42,19 @@ namespace IPCamera
                 rec_label.Content = "Stop Recording";
                 rec_label.Foreground = Brushes.Gray;
             }
-            // Start Camera
-            Start_cam();
+            // Add Camera to this grid
+            //video_grid.Children.Add(this.camera.video);
         }
 
 
 
         protected override void OnClosed(EventArgs e)
         {
-            MainWindow.RestartApp();
+            
+            //MainWindow.RestartApp();
             this.Close();
-        }
-
-
-        // Create And Start Video Capture
-        private void Start_cam()
-        {
-            this.camera.video.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
-            this.camera.video.VerticalAlignment = VerticalAlignment.Stretch;
-            this.camera.video.Margin = new Thickness(0, 0, 0, 0);
-            this.camera.video.Width = Double.NaN;
-            this.camera.video.Height = Double.NaN;
-            vidoe_grid.Children.Add(this.camera.video);
+            //MainWindow main = new MainWindow();
+            //MainWindow.main_window.Close();
         }
 
 
@@ -267,7 +258,7 @@ namespace IPCamera
                 rec_label.Foreground = Brushes.Red;
                 // Update DataBase this Camera Object field Recording 1
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Recording='{true}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                String query = $"UPDATE dbo.myCameras SET Recording='{true}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
@@ -286,7 +277,7 @@ namespace IPCamera
                 rec_label.Foreground = Brushes.Gray;
                 // Update DataBase this Camera Object field Recording 0
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Recording='{false}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                String query = $"UPDATE dbo.myCameras SET Recording='{false}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();

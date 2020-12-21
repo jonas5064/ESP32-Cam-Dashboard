@@ -22,6 +22,8 @@ namespace IPCamera
         public String url = "";
         public string name = "";
         public string id = "";
+        public int row = 0;
+        public int coll = 0;
         public bool detection = false;
         public bool recognition = false;
         public int brightness = 0;
@@ -48,14 +50,15 @@ namespace IPCamera
             {
                 IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
                 {
-                    URL = this.url,
-                    Type = VisioForge.Types.VFIPSource.Auto_FFMPEG
+                    URL = this.url/*,
+                    Type = VisioForge.Types.VFIPSource.Auto_LAV*/
                 }
             };
             this.video.OnError += OnError;
             this.video.MouseUp += CamerasFocused;
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
             this.video.Video_Effects_Enabled = true;
+            this.video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
             this.Recording = rec;
 
             count++;
@@ -73,6 +76,7 @@ namespace IPCamera
             return this.video;
         }
 
+        // Setup Brightness Effext
         public int Brightness
         {
             get { return this.brightness; }
@@ -98,6 +102,7 @@ namespace IPCamera
             }
         }
 
+        // Setup Contrast Effext
         public int Contrast
         {
             get { return this.contrast; }
@@ -123,6 +128,7 @@ namespace IPCamera
             }
         }
 
+        // Setup Drkness Effext
         public int Darkness
         {
             get { return this.darkness; }
@@ -164,27 +170,48 @@ namespace IPCamera
         public bool Recording
         {
             get { return this.recording; }
-            set { this.recording = value; }
+            set { 
+                this.recording = value;
+                this.Stop();
+                this.Start();
+            }
         }
 
+        // Start the Camera
         public void Start()
         {
             if (this.video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
             {
-                // If Rcording is enable setup recording mode
-                Setup_recording_mode();
-                // Start Cameres
-                this.video.Start();
-                //this.video.StartAsync();
+                try
+                {
+                    // If Rcording is enable setup recording mode
+                    Setup_recording_mode();
+                    // Start Cameres
+                    this.video.Start();
+                    //this.video.StartAsync();
+                }
+                catch (System.AccessViolationException e)
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
 
+        // Stop The Camera
         public void Stop()
         {
             if (this.video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
             {
-                this.video.Stop();
-                //this.video.StopAsync();
+                try
+                {
+                    this.video.Stop();
+                    //this.video.StopAsync();
+                }
+                catch (System.AccessViolationException e)
+                {
+                    throw new NotImplementedException();
+                }
+                
             }
         }
 
@@ -203,6 +230,7 @@ namespace IPCamera
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 
+        
         // Setup Recording Mode
         private void Setup_recording_mode()
         {
@@ -248,7 +276,7 @@ namespace IPCamera
                 this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             }
         }
-
+        
 
         // On Error EVnt
         private void OnError(object sender, VisioForge.Types.ErrorsEventArgs e)
@@ -257,8 +285,12 @@ namespace IPCamera
             //throw new NotImplementedException();
         }
 
-        private void CamerasFocused(object sender, MouseButtonEventArgs e)
+        // When click on camera
+        public void CamerasFocused(object sender, MouseButtonEventArgs e)
         {
+            WindowControll win_controll = new WindowControll(this);
+            win_controll.Show();
+            /*
             MainWindow.cams_grid.Children.Remove(this.video);
             if (!MainWindow.cams_grid.Children.Contains(this.video))
             {
@@ -266,6 +298,7 @@ namespace IPCamera
                 WindowControll win_controll = new WindowControll(this);
                 win_controll.Show();
             }
+            */
         }
 
     }

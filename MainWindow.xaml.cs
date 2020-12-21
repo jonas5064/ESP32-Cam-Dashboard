@@ -23,9 +23,7 @@ using VisioForge.Controls.UI.WPF;
 
 namespace IPCamera
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
 
@@ -97,16 +95,16 @@ namespace IPCamera
                         // String avi = dataReader["avi"].ToString().Trim();
                         //String mp4 = dataReader["mp4"].ToString().Trim();
                         //String webm = dataReader["webm"].ToString().Trim();
-                        Camera.avi_format  = ( dataReader["avi"].ToString().Trim() == "True" );
-                        Camera.mp4_format  = ( dataReader["mp4"].ToString().Trim()  == "True" );
-                        Camera.webm_format = ( dataReader["webm"].ToString().Trim() == "True" );
+                        Camera.avi_format = (dataReader["avi"].ToString().Trim() == "True");
+                        Camera.mp4_format = (dataReader["mp4"].ToString().Trim() == "True");
+                        Camera.webm_format = (dataReader["webm"].ToString().Trim() == "True");
                     }
                 }
                 connection.Close();
 
                 // Insert Camera Data
                 query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
-                    "Brightness, Contrast, Darkness, Recording FROM dbo.MyCameras";
+                    "Brightness, Contrast, Darkness, Recording FROM dbo.myCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -163,6 +161,12 @@ namespace IPCamera
             }
         }
 
+        // On Close Button
+        protected override void OnClosed(EventArgs e)
+        {
+            
+        }
+
         // When Click Settings Button
         private void Settings_clicked(object sender, RoutedEventArgs e)
         {
@@ -185,14 +189,18 @@ namespace IPCamera
                     cameras_grid.RowDefinitions.Add(new RowDefinition());
                     count_rows++;
                     Grid.SetColumn(cam.video, counter);
+                    cam.coll = counter;
                     Grid.SetRow(cam.video, count_rows);
+                    cam.row = count_rows;
                     cameras_grid.Children.Add(cam.video);
                     counter = 0;
                 }
                 else
                 {
                     Grid.SetColumn(cam.video, counter);
+                    cam.coll = counter;
                     Grid.SetRow(cam.video, count_rows);
+                    cam.row = count_rows;
                     cameras_grid.Children.Add(cam.video);
                     cameras_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     counter++;
@@ -200,6 +208,6 @@ namespace IPCamera
             }  
         }
 
-    } // Stop Main
+    } // Stop Class
 
 }
