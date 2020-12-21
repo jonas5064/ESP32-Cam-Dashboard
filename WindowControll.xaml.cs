@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Windows.Input;
 using VisioForge.Types;
 using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace IPCamera
 {
@@ -44,19 +45,13 @@ namespace IPCamera
             }
             // Add Title
             cameras_title.Content = this.camera.name;
-            // Add Camera to this grid
-            //video_grid.Children.Add(this.camera.video);
         }
 
 
 
         protected override void OnClosed(EventArgs e)
         {
-            
-            //MainWindow.RestartApp();
             this.Close();
-            //MainWindow main = new MainWindow();
-            //MainWindow.main_window.Close();
         }
 
 

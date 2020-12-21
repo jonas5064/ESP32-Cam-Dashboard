@@ -102,6 +102,7 @@
                 <Image MouseUp="DOWN_button_click" Source="{StaticResource down_img}"         Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Grid>
 
+            <!-- Recording Grid -->
             <Grid Grid.Column="0" Grid.Row="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="31*" />

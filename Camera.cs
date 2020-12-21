@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,7 @@ namespace IPCamera
         public static bool avi_format = false;
         public static bool mp4_format = false;
         public static bool webm_format = false;
+
 
         public Camera(String url, String name, String id, bool rec)
         {
@@ -157,8 +159,42 @@ namespace IPCamera
         public bool Detection
         {
             get { return this.detection; }
-            set { this.detection = value; }
+            set
+            {
+                this.detection = value;
+                if (this.detection)
+                {
+                    this.video.Face_Tracking = new FaceTrackingSettings
+                    {
+                        ColorMode = CamshiftMode.Mixed,
+                        Highlight = true,
+                        MinimumWindowSize = 25,
+                        ScalingMode = ObjectDetectorScalingMode.GreaterToSmaller,
+                        SearchMode = ObjectDetectorSearchMode.Average
+                    };
+                    //this.video.OnFaceDetected += FaceDelegateMethod;
+                    this.video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) =>
+                    {
+                        //System.Windows.MessageBox.Show("Face Detected!");
+                        Console.WriteLine($"{e.FaceRectangles.Length}");
+                        /*
+                        foreach (Rectangle faceRectangle in e.FaceRectangles)
+                        {
+                            Console.WriteLine($"Face Detection:   ({faceRectangle.Left}, " +
+                                                                    $"{faceRectangle.Top})  ({faceRectangle.Width}, " +
+                                                                    $"{faceRectangle.Height})  {Environment.NewLine}");
+                        }
+                        */
+                    };
+                }
+                else
+                {
+                }
+                this.Stop();
+                this.Start();
+            }
         }
+
 
         public bool Recognition
         {
@@ -190,7 +226,7 @@ namespace IPCamera
                     this.video.Start();
                     //this.video.StartAsync();
                 }
-                catch (System.AccessViolationException e)
+                catch (System.AccessViolationException)
                 {
                     throw new NotImplementedException();
                 }
@@ -207,7 +243,7 @@ namespace IPCamera
                     this.video.Stop();
                     //this.video.StopAsync();
                 }
-                catch (System.AccessViolationException e)
+                catch (System.AccessViolationException)
                 {
                     throw new NotImplementedException();
                 }
