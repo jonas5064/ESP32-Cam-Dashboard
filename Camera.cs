@@ -164,6 +164,7 @@ namespace IPCamera
                 this.detection = value;
                 if (this.detection)
                 {
+                    /*
                     this.video.Face_Tracking = new FaceTrackingSettings
                     {
                         ColorMode = CamshiftMode.RGB,
@@ -173,19 +174,32 @@ namespace IPCamera
                         ScaleFactor = (float)1.7,
                         SearchMode = ObjectDetectorSearchMode.Single
                     };
+                    */
+                    this.video.Face_Tracking = new FaceTrackingSettings()
+                    {
+                        Highlight = true
+                    };
                     this.video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) =>
                     {
                         foreach (Rectangle faceRectangle in e.FaceRectangles)
                         {
-                            Console.WriteLine($"Face Detection:   left-right({faceRectangle.Left}, {faceRectangle.Right}), top-bottom({faceRectangle.Top}, {faceRectangle.Bottom}),  width-height({faceRectangle.Width}, {faceRectangle.Height})  {Environment.NewLine}");
+                            // If Recognition is enable
+                            if (this.recognition)
+                            {
+
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Face Detection:   left-right({faceRectangle.Left}, {faceRectangle.Right}), " +
+                                    $"top-bottom({faceRectangle.Top}, {faceRectangle.Bottom}),  width-height({faceRectangle.Width}, " +
+                                    $"{faceRectangle.Height})  {Environment.NewLine}");
+                            }
                         }
                     };
                 }
                 else
                 {
                 }
-                this.Stop();
-                this.Start();
             }
         }
 
@@ -202,8 +216,6 @@ namespace IPCamera
             get { return this.recording; }
             set { 
                 this.recording = value;
-                this.Stop();
-                this.Start();
             }
         }
 

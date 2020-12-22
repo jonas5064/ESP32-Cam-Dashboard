@@ -75,6 +75,9 @@ namespace IPCamera
             {
                 System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
             }
+            // Restart Camera
+            this.camera.Stop();
+            this.camera.Start();
         }
 
         // Face Detection Unchecked
@@ -97,17 +100,24 @@ namespace IPCamera
             {
                 System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
             }
+            // Restart Camera
+            this.camera.Stop();
+            this.camera.Start();
         }
 
         // Face Recognition Chekced
         private void Face_Recognition_Chencked(object sender, EventArgs e)
         {
             this.camera.Recognition = true;
+            if(!this.camera.Detection)
+            {
+                this.camera.Detection = true;
+            }
             try
             {
                 // Update DataBase this Camera Object field Face Detection 1
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}', Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
@@ -263,6 +273,9 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
+            // Restart Camera
+            this.camera.Stop();
+            this.camera.Start();
         }
 
         private void Stop_REC_button_click(object sender, MouseButtonEventArgs e)
@@ -282,6 +295,9 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
+            // Restart Camera
+            this.camera.Stop();
+            this.camera.Start();
         }
     }
 }
