@@ -164,7 +164,11 @@ namespace IPCamera
         // On Close Button
         protected override void OnClosed(EventArgs e)
         {
-           
+            foreach (Camera cam in cameras)
+            {
+                cam.Stop();
+            }
+            this.Close();
         }
 
         // When Click Settings Button

@@ -58,98 +58,122 @@ namespace IPCamera
         // Face Detection Checked
         private void Face_Detection_Chencked(object sender, EventArgs e)
         {
-            this.camera.Detection = true;
-            try
+            if (!this.camera.Detection)
             {
-                // Update DataBase this Camera Object field Face Detection 1
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
+                this.camera.Detection = true;
+                try
+                {
+                    // Update DataBase this Camera Object field Face Detection 1
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"UPDATE dbo.MyCameras SET Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
+                catch (System.Data.SqlClient.SqlException se)
+                {
+                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                }
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
             }
-            catch (System.Data.SqlClient.SqlException se)
-            {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
-            }
-            // Restart Camera
-            this.camera.Stop();
-            this.camera.Start();
         }
 
         // Face Detection Unchecked
         private void Face_Detection_UNChencked(object sender, EventArgs e)
         {
-            this.camera.Detection = false;
-            try
+            if (this.camera.Detection)
             {
-                // Update DataBase this Camera Object field Face Detection 0
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Detection='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
+                this.camera.Detection = false;
+                if (this.camera.Recognition)
+                {
+                    this.camera.Recognition = false;
+                    Face_rec.IsChecked = (this.camera.recognition);
+                }
+                try
+                {
+                    // Update DataBase this Camera Object field Face Detection 0
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"UPDATE dbo.MyCameras SET Face_Detection='{0}', Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
+                catch (System.Data.SqlClient.SqlException se)
+                {
+                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                }
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
             }
-            catch (System.Data.SqlClient.SqlException se)
-            {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
-            }
-            // Restart Camera
-            this.camera.Stop();
-            this.camera.Start();
         }
 
         // Face Recognition Chekced
         private void Face_Recognition_Chencked(object sender, EventArgs e)
         {
-            this.camera.Recognition = true;
-            if(!this.camera.Detection)
+            if (!this.camera.Recognition)
             {
-                this.camera.Detection = true;
-            }
-            try
-            {
-                // Update DataBase this Camera Object field Face Detection 1
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}', Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
-            }
-            catch (System.Data.SqlClient.SqlException se)
-            {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                this.camera.Recognition = true;
+                if (!this.camera.Detection)
+                {
+                    this.camera.Detection = true;
+                    Face_det.IsChecked = (this.camera.detection);
+                }
+                try
+                {
+                    // Update DataBase this Camera Object field Face Detection 1
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}', Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
+                catch (System.Data.SqlClient.SqlException se)
+                {
+                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                }
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
             }
         }
 
         // Face Recognition Unchecked
         private void Face_Recognition_UNChencked(object sender, EventArgs e)
         {
-            this.camera.Recognition = false;
-            try
+            if (this.camera.Recognition)
             {
-                // Update DataBase this Camera Object field Face Detection 0
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
-            }
-            catch (System.Data.SqlClient.SqlException se)
-            {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                this.camera.Recognition = false;
+                try
+                {
+                    // Update DataBase this Camera Object field Face Detection 0
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
+                catch (System.Data.SqlClient.SqlException se)
+                {
+                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                }
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
             }
         }
 

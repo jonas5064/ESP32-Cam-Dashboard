@@ -199,6 +199,8 @@ namespace IPCamera
                 }
                 else
                 {
+                    this.video.Face_Tracking = new FaceTrackingSettings();
+                    this.video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) => { };
                 }
             }
         }
