@@ -462,6 +462,25 @@ namespace IPCamera
         }
 
 
+        // Email CheckBoxes
+        private void email_chencked(object sender, EventArgs e)
+        {
+
+        }
+        private void email_unchencked(object sender, EventArgs e)
+        {
+
+        }
+
+        //SMS CheckBoxes
+        private void sms_chencked(object sender, EventArgs e)
+        {
+
+        }
+        private void sms_unchencked(object sender, EventArgs e)
+        {
+
+        }
 
     }
 }

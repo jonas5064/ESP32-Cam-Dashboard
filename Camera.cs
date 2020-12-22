@@ -27,6 +27,7 @@ namespace IPCamera
         public int coll = 0;
         public bool detection = false;
         public bool recognition = false;
+        public bool movement = false;
         public int brightness = 0;
         public int contrast = 0;
         public int darkness = 0;
@@ -218,6 +219,30 @@ namespace IPCamera
             get { return this.recording; }
             set { 
                 this.recording = value;
+            }
+        }
+
+        // When Camera show a movement
+        public bool Movement
+        {
+            get { return this.movement; }
+            set
+            {
+                this.movement = value;
+                if (this.movement)
+                {
+                    this.video.OnMotion += (object sender, MotionDetectionEventArgs e) =>
+                    {
+                        // If Emai Is Checked Send Email
+                        // If SMS Is Checked Send SMS
+                        // If Picture Is Checked Take a Picture
+                        // If Video Is Checked Record 5 minutes After the last movement
+                    };
+                }
+                else
+                {
+                    this.video.OnMotion += (object sender, MotionDetectionEventArgs e) => { };
+                }
             }
         }
 

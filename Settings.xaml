@@ -89,7 +89,7 @@
             <TabItem FontSize="18">
                 <TabItem.Header>
                     <!-- Header Tab -->
-                    <Label>Files Seetings</Label>
+                    <Label>Tracking</Label>
                 </TabItem.Header>
 
                 <Grid>
@@ -99,6 +99,7 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
+                    <!-- Save Files Directory -->
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="13*" />
@@ -140,13 +141,11 @@
                     </Grid>
 
 
-
-
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="329*" />
+                            <ColumnDefinition Width="488*" />
+                            <ColumnDefinition Width="169*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20*" />
@@ -154,11 +153,10 @@
                             <RowDefinition Height="35*" />
                         </Grid.RowDefinitions>
 
+                        <!-- Video File format -->
                         <Grid Grid.Column="0" Grid.Row="0">
                             <Label Content="Created Format Files:" Foreground="#FFB4B4B4" />
                         </Grid>
-
-
                         <Grid Grid.Column="0" Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -175,9 +173,43 @@
                             <CheckBox x:Name="webm_checkbox" Checked="WEBM_chencked" Unchecked="WEBM_unchencked"  Grid.Column="2" Grid.Row="0" Content="WEBM" Foreground="#FFB4B4B4" />
                         </Grid>
 
+                        <!-- On Movement -->
+                        <Grid Grid.Column="1" Grid.Row="0">
+                            <Label Content="On Movement:" Foreground="#FFB4B4B4" />
+                        </Grid>
+                        <Grid Grid.Column="1" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="91*" />
+                                <ColumnDefinition Width="305*" />
+                                <ColumnDefinition Width="12*" />
+                                <ColumnDefinition Width="80*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0" Content="SMS:" Foreground="#FFB4B4B4" />
+                            <TextBox x:Name="sms_textbox"  Grid.Column="1" Grid.Row="0"/>
+                            <CheckBox x:Name="sms_checkbox" Grid.Column="3" Grid.Row="0" Content="Enable" Foreground="#FFB4B4B4" />
+
+                            <Label Grid.Column="0" Grid.Row="1" Content="EMAIL:" Foreground="#FFB4B4B4" />
+                            <TextBox x:Name="email_textbox"  Grid.Column="1" Grid.Row="1"/>
+                            <CheckBox x:Name="email_checkbox" Grid.Column="3" Grid.Row="1" Content="Enable" Foreground="#FFB4B4B4" />
+                        </Grid>
+                        <Grid Grid.Column="2" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30*" />
+                                <ColumnDefinition Width="139*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <CheckBox x:Name="pic_checkbox" Grid.Column="1" Grid.Row="0" Content="Take Picture" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="rec_checkbox" Grid.Column="1" Grid.Row="1" Content="Recording" Foreground="#FFB4B4B4" />
+                        </Grid>
+
                     </Grid>
-
-
 
 
 
