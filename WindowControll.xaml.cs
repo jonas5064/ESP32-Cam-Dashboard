@@ -23,8 +23,8 @@ namespace IPCamera
             // Setup this_camera
             this.camera = cam;
             // Chech if Face_Recognition, Face Detection  is checked
-            Face_det.IsChecked = (this.camera.detection);
-            Face_rec.IsChecked = (this.camera.recognition);
+            Face_det.IsChecked = (this.camera.Detection);
+            Face_rec.IsChecked = (this.camera.Recognition);
             // Setup Brightness and Contrast Labels and Sliders
             brightness_label.Content = $"Brightness: {this.camera.Brightness}";
             contrast_label.Content   = $"Contrast:   {this.camera.Contrast}";
@@ -43,6 +43,11 @@ namespace IPCamera
                 rec_label.Content = "Stop Recording";
                 rec_label.Foreground = Brushes.Gray;
             }
+            // Setup On Movement checkboxes
+            sms_checkbox.IsChecked = (this.camera.On_move_sms);
+            email_checkbox.IsChecked = (this.camera.On_move_email);
+            pic_checkbox.IsChecked = (this.camera.On_move_pic);
+            rec_checkbox.IsChecked = (this.camera.On_move_rec);
             // Add Title
             cameras_title.Content = this.camera.name;
         }
@@ -280,11 +285,12 @@ namespace IPCamera
             this.camera.Take_pic();
         }
 
+        // Start Recording is checked
         private void Start_REC_button_click(object sender, MouseButtonEventArgs e)
         {
-            this.camera.Recording = true;
-            if (this.camera.Recording)
+            if (!this.camera.Recording)
             {
+                this.camera.Recording = true;
                 rec_label.Content = "Recording";
                 rec_label.Foreground = Brushes.Red;
                 // Update DataBase this Camera Object field Recording 1
@@ -296,17 +302,18 @@ namespace IPCamera
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
             }
-            // Restart Camera
-            this.camera.Stop();
-            this.camera.Start();
         }
 
+        // Stop Recording is Checked
         private void Stop_REC_button_click(object sender, MouseButtonEventArgs e)
         {
-            this.camera.Recording = false;
-            if ( this.camera.Recording == false)
+            if ( this.camera.Recording)
             {
+                this.camera.Recording = false;
                 rec_label.Content = "Stop Recording";
                 rec_label.Foreground = Brushes.Gray;
                 // Update DataBase this Camera Object field Recording 0
@@ -318,10 +325,173 @@ namespace IPCamera
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
             }
-            // Restart Camera
-            this.camera.Stop();
-            this.camera.Start();
         }
+
+
+
+        // SMS CheckBoxes
+        private void sms_chencked(object sender, EventArgs e)
+        {
+            if (!this.camera.On_move_sms)
+            {
+                this.camera.On_move_sms = true;
+                // Update DataBase this Camera Object field On_Move_SMS 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_SMS='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+        private void sms_unchencked(object sender, EventArgs e)
+        {
+            if (this.camera.On_move_sms)
+            {
+                this.camera.On_move_sms = false;
+                // Update DataBase this Camera Object field On_Move_SMS 0
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_SMS='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+
+        // Email CheckBoxes
+        private void email_chencked(object sender, EventArgs e)
+        {
+            if (!this.camera.On_move_email)
+            {
+                this.camera.On_move_email = true;
+                // Update DataBase this Camera Object field On_Move_EMAIL 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_EMAIL='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+        private void email_unchencked(object sender, EventArgs e)
+        {
+            if (this.camera.On_move_email)
+            {
+                this.camera.On_move_email = false;
+                // Update DataBase this Camera Object field On_Move_EMAIL 0
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_EMAIL='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+
+        // Picture Checkbox
+        private void pic_chencked(object sender, EventArgs e)
+        {
+            if (!this.camera.On_move_pic)
+            {
+                this.camera.On_move_pic = true;
+                // Update DataBase this Camera Object field On_Move_Pic 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_Pic='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+        private void pic_unchencked(object sender, EventArgs e)
+        {
+            if (this.camera.On_move_pic)
+            {
+                this.camera.On_move_pic = false;
+                // Update DataBase this Camera Object field On_Move_Pic 0
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_Pic='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+
+        // Recording Checkbox
+        private void rec_chencked(object sender, EventArgs e)
+        {
+            if (!this.camera.On_move_rec)
+            {
+                this.camera.On_move_rec = true;
+                // Update DataBase this Camera Object field On_Move_Rec 1
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_Rec='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+        private void rec_unchencked(object sender, EventArgs e)
+        {
+            if (this.camera.On_move_rec)
+            {
+                this.camera.On_move_rec = false;
+                // Update DataBase this Camera Object field On_Move_Rec 0
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET On_Move_Rec='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Restart Camera
+                this.camera.Stop();
+                this.camera.Start();
+            }
+        }
+
     }
 }

@@ -104,7 +104,8 @@ namespace IPCamera
 
                 // Insert Camera Data
                 query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
-                    "Brightness, Contrast, Darkness, Recording FROM dbo.myCameras";
+                    "Brightness, Contrast, Darkness, Recording, On_Move_SMS, " +
+                    "On_Move_EMAIL, On_Move_Pic, On_Move_Rec FROM dbo.myCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -117,6 +118,12 @@ namespace IPCamera
                         String detection = dataReader["Face_Detection"].ToString().Trim();
                         String recognition = dataReader["Face_Recognition"].ToString().Trim();
                         String recording = dataReader["Recording"].ToString().Trim();
+
+                        String on_move_sms = dataReader["On_Move_SMS"].ToString().Trim();
+                        String on_move_email = dataReader["On_Move_EMAIL"].ToString().Trim();
+                        String on_move_pic = dataReader["On_Move_Pic"].ToString().Trim();
+                        String on_move_rec = dataReader["On_Move_Rec"].ToString().Trim();
+
                         int brightness = (int)dataReader["Brightness"];
                         int contrast = (int)dataReader["Contrast"];
                         int darkness = (int)dataReader["Darkness"];
@@ -129,7 +136,11 @@ namespace IPCamera
                                 Contrast = contrast,
                                 Darkness = darkness,
                                 Detection = (detection == "True"),
-                                Recognition = (recognition == "True")
+                                Recognition = (recognition == "True"),
+                                On_move_sms = (on_move_sms == "True"),
+                                On_move_email = (on_move_email == "True"),
+                                On_move_pic = (on_move_pic == "True"),
+                                On_move_rec = (on_move_rec == "True")
                             };
                             cameras.Add(cam);
                         }

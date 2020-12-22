@@ -27,7 +27,10 @@ namespace IPCamera
         public int coll = 0;
         public bool detection = false;
         public bool recognition = false;
-        public bool movement = false;
+        public bool on_move_sms = false;
+        public bool on_move_email = false;
+        public bool on_move_pic = false;
+        public bool on_move_rec = false;
         public int brightness = 0;
         public int contrast = 0;
         public int darkness = 0;
@@ -157,6 +160,7 @@ namespace IPCamera
             }
         }
 
+        // When Change Detection
         public bool Detection
         {
             get { return this.detection; }
@@ -206,7 +210,7 @@ namespace IPCamera
             }
         }
 
-
+        // When Change recognition
         public bool Recognition
         {
             get { return this.recognition; }
@@ -222,26 +226,74 @@ namespace IPCamera
             }
         }
 
-        // When Camera show a movement
-        public bool Movement
+        // On Move SmS
+        public bool On_move_sms
         {
-            get { return this.movement; }
+            get { return this.on_move_sms; }
             set
             {
-                this.movement = value;
-                if (this.movement)
+                this.on_move_sms = value;
+                if (this.on_move_sms)
                 {
-                    this.video.OnMotion += (object sender, MotionDetectionEventArgs e) =>
-                    {
-                        // If Emai Is Checked Send Email
-                        // If SMS Is Checked Send SMS
-                        // If Picture Is Checked Take a Picture
-                        // If Video Is Checked Record 5 minutes After the last movement
-                    };
+
                 }
                 else
                 {
-                    this.video.OnMotion += (object sender, MotionDetectionEventArgs e) => { };
+
+                }
+            }
+        }
+
+        // On Move Email
+        public bool On_move_email
+        {
+            get { return this.on_move_email; }
+            set
+            {
+                this.on_move_email = value;
+                if (this.on_move_email)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+        // On Move Pic
+        public bool On_move_pic
+        {
+            get { return this.on_move_pic; }
+            set
+            {
+                this.on_move_pic = value;
+                if (this.on_move_pic)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+        }
+        
+        // On Move Rec
+        public bool On_move_rec
+        {
+            get { return this.on_move_rec; }
+            set
+            {
+                this.on_move_rec = value;
+                if (this.on_move_rec)
+                {
+
+                }
+                else
+                {
+
                 }
             }
         }
