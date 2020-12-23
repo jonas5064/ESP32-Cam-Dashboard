@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 
 
@@ -328,11 +329,21 @@ namespace IPCamera
         public void FillUsers()
         {
             users_grid.ItemsSource = MainWindow.myUsers;
+            users_grid.SelectedCellsChanged += (object sender, SelectedCellsChangedEventArgs e) =>
+            {
+                object item = users_grid.SelectedItem;
+                // Get the value of each newly selected cell
+                foreach (DataGridCellInfo di in e.AddedCells)
+                {
+                    //                          Header Value                            All Row Cells Values
+                    Console.WriteLine($"Cell:  {di.Column.Header} = {(di.Column.GetCellContent(item) as TextBlock).Text}");
+                }
+            };
         }
-        
 
-        // Files format checkboxes
-        private void AVI_chencked(object sender, EventArgs e)
+
+            // Files format checkboxes
+            private void AVI_chencked(object sender, EventArgs e)
         {
             Camera.avi_format = true;
             Camera.mp4_format = false;
