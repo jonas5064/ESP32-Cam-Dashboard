@@ -29,8 +29,9 @@ namespace IPCamera
 
         public static MainWindow main_window;
         public static List<Camera> cameras = new List<Camera>();
+        public static List<Users> myUsers = new List<Users>();
         public static Grid cams_grid;
-
+         
 
         public MainWindow()
         {
@@ -58,11 +59,11 @@ namespace IPCamera
         public void UpdatesFromDB()
         {
             cameras.Clear();
-            // Save Data To Database
+            // Get Data From DB
             using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
             {
 
-                // Insert Data Paths
+                // Get Files Paths Data
                 String query = "SELECT Name, Path FROM dbo.FilesDirs";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -84,7 +85,7 @@ namespace IPCamera
                 }
                 connection.Close();
 
-                // Insert Saved Files Format
+                // Get  Files Format Data
                 query = "SELECT avi, mp4, webm FROM dbo.FilesFormats";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -102,7 +103,7 @@ namespace IPCamera
                 }
                 connection.Close();
 
-                // Insert Camera Data
+                // Get Cameras Data
                 query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
                     "Brightness, Contrast, Darkness, Recording, On_Move_SMS, " +
                     "On_Move_EMAIL, On_Move_Pic, On_Move_Rec FROM dbo.myCameras";
@@ -148,6 +149,26 @@ namespace IPCamera
                         {
 
                         }
+                    }
+                }
+                connection.Close();
+
+                // Get Users Data
+                query = "SELECT Id, FirstName, LastName, Email, Phone FROM dbo.Users";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        int id = (int)dataReader["Id"];
+                        String fname = dataReader["FirstName"].ToString().Trim();
+                        String lname = dataReader["LastName"].ToString().Trim();
+                        String email = dataReader["Email"].ToString().Trim();
+                        String phone = dataReader["Phone"].ToString().Trim();
+                        // Create The Usres Objects
+                        Users user = new Users(id, fname, lname, email, phone);
+                        myUsers.Add(user);
                     }
                 }
                 connection.Close();

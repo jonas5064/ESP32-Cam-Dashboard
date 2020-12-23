@@ -8,7 +8,6 @@ using System.Windows.Forms;
 namespace IPCamera
 {
     public partial class Settings : Window
-
     {
 
         public Settings()
@@ -16,6 +15,8 @@ namespace IPCamera
             InitializeComponent();
 
             Update_settings_page();
+
+            FillUsers();
         }
 
 
@@ -322,8 +323,13 @@ namespace IPCamera
             }
         }
 
-
-
+        
+        // Fill Users Table With Users
+        public void FillUsers()
+        {
+            users_grid.ItemsSource = MainWindow.myUsers;
+        }
+        
 
         // Files format checkboxes
         private void AVI_chencked(object sender, EventArgs e)

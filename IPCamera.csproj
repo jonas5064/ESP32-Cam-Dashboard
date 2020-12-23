@@ -111,6 +111,7 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Users.cs" />
     <Compile Include="WindowControll.xaml.cs">
       <DependentUpon>WindowControll.xaml</DependentUpon>
     </Compile>

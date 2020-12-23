@@ -129,16 +129,16 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <CheckBox x:Name="sms_checkbox" Checked="sms_chencked" Unchecked="sms_unchencked" Grid.Column="1" Grid.Row="0" Content="SMS" Foreground="#FFB4B4B4" />
-                    <CheckBox x:Name="email_checkbox" Checked="email_chencked" Unchecked="email_unchencked" Grid.Column="1" Grid.Row="1" Content="EMAIL" Foreground="#FFB4B4B4" />
+                    <CheckBox x:Name="sms_checkbox" Checked="Sms_chencked" Unchecked="Sms_unchencked" Grid.Column="1" Grid.Row="0" Content="SMS" Foreground="#FFB4B4B4" />
+                    <CheckBox x:Name="email_checkbox" Checked="Email_chencked" Unchecked="Email_unchencked" Grid.Column="1" Grid.Row="1" Content="EMAIL" Foreground="#FFB4B4B4" />
                 </Grid>
                 <Grid Grid.Column="2" Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <CheckBox x:Name="pic_checkbox" Checked="pic_chencked" Unchecked="pic_unchencked" Grid.Row="0" Content="Take Picture" Foreground="#FFB4B4B4" />
-                    <CheckBox x:Name="rec_checkbox" Checked="rec_chencked" Unchecked="rec_unchencked" Grid.Row="1" Content="Recording" Foreground="#FFB4B4B4" />
+                    <CheckBox x:Name="pic_checkbox" Checked="Pic_chencked" Unchecked="Pic_unchencked" Grid.Row="0" Content="Take Picture" Foreground="#FFB4B4B4" />
+                    <CheckBox x:Name="rec_checkbox" Checked="Rec_chencked" Unchecked="Rec_unchencked" Grid.Row="1" Content="Recording" Foreground="#FFB4B4B4" />
                 </Grid>
             </Grid>
 

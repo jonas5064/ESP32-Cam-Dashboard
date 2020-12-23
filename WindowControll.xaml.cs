@@ -334,7 +334,7 @@ namespace IPCamera
 
 
         // SMS CheckBoxes
-        private void sms_chencked(object sender, EventArgs e)
+        private void Sms_chencked(object sender, EventArgs e)
         {
             if (!this.camera.On_move_sms)
             {
@@ -353,7 +353,7 @@ namespace IPCamera
                 this.camera.Start();
             }
         }
-        private void sms_unchencked(object sender, EventArgs e)
+        private void Sms_unchencked(object sender, EventArgs e)
         {
             if (this.camera.On_move_sms)
             {
@@ -374,7 +374,7 @@ namespace IPCamera
         }
 
         // Email CheckBoxes
-        private void email_chencked(object sender, EventArgs e)
+        private void Email_chencked(object sender, EventArgs e)
         {
             if (!this.camera.On_move_email)
             {
@@ -393,7 +393,7 @@ namespace IPCamera
                 this.camera.Start();
             }
         }
-        private void email_unchencked(object sender, EventArgs e)
+        private void Email_unchencked(object sender, EventArgs e)
         {
             if (this.camera.On_move_email)
             {
@@ -414,7 +414,7 @@ namespace IPCamera
         }
 
         // Picture Checkbox
-        private void pic_chencked(object sender, EventArgs e)
+        private void Pic_chencked(object sender, EventArgs e)
         {
             if (!this.camera.On_move_pic)
             {
@@ -433,7 +433,7 @@ namespace IPCamera
                 this.camera.Start();
             }
         }
-        private void pic_unchencked(object sender, EventArgs e)
+        private void Pic_unchencked(object sender, EventArgs e)
         {
             if (this.camera.On_move_pic)
             {
@@ -454,7 +454,7 @@ namespace IPCamera
         }
 
         // Recording Checkbox
-        private void rec_chencked(object sender, EventArgs e)
+        private void Rec_chencked(object sender, EventArgs e)
         {
             if (!this.camera.On_move_rec)
             {
@@ -473,7 +473,7 @@ namespace IPCamera
                 this.camera.Start();
             }
         }
-        private void rec_unchencked(object sender, EventArgs e)
+        private void Rec_unchencked(object sender, EventArgs e)
         {
             if (this.camera.On_move_rec)
             {
