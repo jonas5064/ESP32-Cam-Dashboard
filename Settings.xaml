@@ -264,7 +264,7 @@
                         <RowDefinition Height="367*" />
                         <RowDefinition Height="156*" />
                     </Grid.RowDefinitions>
-                    
+
                     <!-- Users Table -->
                     <DataGrid x:Name="users_grid" Background="#2F2F2F" Grid.Row="0"
                                                     SelectionUnit="FullRow" SelectionMode="Extended"
@@ -273,22 +273,6 @@
                                                     ScrollViewer.CanContentScroll="True" 
                                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                        <!--
-                        <DataGrid.Columns >
-                            <DataGridTextColumn Width="*" Header="Id" />
-                            <DataGridTextColumn Width="*" Header="FirstName" />
-                            <DataGridTextColumn Width="*" Header="LastName" />
-                            <DataGridTextColumn Width="*" Header="Email" />
-                            <DataGridTextColumn Width="*" Header="Phone" />
-                            <DataGridTemplateColumn Header="Select" Width="33">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsHitTestVisible="False" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                        -->
                     </DataGrid>
 
                     <!-- Add Users Form And Button Grid-->
@@ -361,12 +345,12 @@
                                 <RowDefinition Height="5*" />
                                 <RowDefinition Height="10*" />
                                 <RowDefinition Height="10*" />
+                                <RowDefinition Height="5*" />
                                 <RowDefinition Height="10*" />
-                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="5*" />
                             </Grid.RowDefinitions>
-                            <Button Content="Add" Grid.Column="1" Grid.Row="1" Margin="0,3,0,3" />
-                            <Button Content="Edit" Grid.Column="1" Grid.Row="2" Margin="0,3,0,3" />
-                            <Button Content="Delete" Grid.Column="1" Grid.Row="3" Margin="0,3,0,3" />
+                            <Button Content="Apply" Grid.Column="1" Grid.Row="1" Margin="0,3,0,3" Click="U_Apply_Click" />
+                            <Button Content="Add" Grid.Column="1" Grid.Row="4" Margin="0,3,0,3" Click="U_Add_Click" />
                         </Grid>
                     </Grid>
 

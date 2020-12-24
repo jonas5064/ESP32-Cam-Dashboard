@@ -11,13 +11,15 @@ namespace IPCamera
     public partial class Settings : Window
     {
 
+        List<Users> users;
+
         public Settings()
         {
             InitializeComponent();
 
-            Update_settings_page();
+            this.Update_settings_page();
 
-            FillUsers();
+            this.FillUsers();
         }
 
 
@@ -328,22 +330,137 @@ namespace IPCamera
         // Fill Users Table With Users
         public void FillUsers()
         {
+            // Save list with users before
+            users = new List<Users>(MainWindow.myUsers);
+            // Add the List To DataGrid
             users_grid.ItemsSource = MainWindow.myUsers;
-            users_grid.SelectedCellsChanged += (object sender, SelectedCellsChangedEventArgs e) =>
+            // Make Id Column No Editable
+            users_grid.AutoGeneratingColumn += (object sender, DataGridAutoGeneratingColumnEventArgs e) =>
             {
-                object item = users_grid.SelectedItem;
-                // Get the value of each newly selected cell
-                foreach (DataGridCellInfo di in e.AddedCells)
+                if (e.Column.Header.ToString() == "Id")
                 {
-                    //                          Header Value                            All Row Cells Values
-                    Console.WriteLine($"Cell:  {di.Column.Header} = {(di.Column.GetCellContent(item) as TextBlock).Text}");
+                    e.Column.IsReadOnly = true; // Makes the column as read only
                 }
             };
+            users_grid.CanUserDeleteRows = true;
         }
 
+        // Users Apply Button
+        private void U_Apply_Click(object sender, RoutedEventArgs e)
+        {
+            // Commit Changes to the List with users
+            users_grid.CommitEdit();
+            // Chech If Delete a users
+            if (users.Count > MainWindow.myUsers.Count)
+            {
+                Console.WriteLine("DELETE OK");
+                foreach (Users u in users)
+                {
+                    if (!MainWindow.myUsers.Contains(u))
+                    {
+                        // Delete This User From DB
+                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                        String query = $"DELETE FROM dbo.Users WHERE Id='{u.Id}'";
+                        SqlCommand cmd = new SqlCommand(query, cn);
+                        cn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        cn.Close();
+                    }
+                }
+            }
+            else // Update DB
+            {
+                int counter = 0;
+                foreach (Users u in MainWindow.myUsers)
+                {
+                    Users old_user = users[counter];
+                    // If A record changeds updated
+                    if ((old_user.Firstname.Equals(u.Firstname)) || 
+                            (old_user.Lastname.Equals(u.Lastname)) || 
+                            (old_user.Email.Equals(u.Email)) || 
+                            (old_user.Phone.Equals(u.Phone)))
+                    {
+                        Console.WriteLine("UPDATE OK");
+                        //Console.WriteLine($"ID: {u.Id}  FName: {u.Firstname}  LName: {u.Lastname}  Email: {u.Email}  Phone: {u.Phone}");
+                        // Update DataBase with this user
+                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                        String query = $"UPDATE dbo.Users SET FirstName='{u.Firstname}', " +
+                                                        $"LastName='{u.Lastname}', Email='{u.Email}', " +
+                                                        $"Phone='{u.Phone}' WHERE Id='{u.Id}'";
+                        SqlCommand cmd = new SqlCommand(query, cn);
+                        cn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        cn.Close();
+                        counter++;
+                    }
+                }
+            }
+            // Refresch Users Table
+            this.Close();
+            new Settings().Show();
+        }
 
-            // Files format checkboxes
-            private void AVI_chencked(object sender, EventArgs e)
+        // Users Add Button
+        private void U_Add_Click(object sender, RoutedEventArgs e)
+        {
+            String fname = FirstName.Text;
+            String lname = LastName.Text;
+            String email = Email.Text;
+            String phone = Phone.Text;
+            // Insert to DB First to create an Id and then update MainWindow.myUsers
+            String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone) VALUES (@fname, @lname, @email, @phone)";
+            using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@fname", fname);
+                    command.Parameters.AddWithValue("@lname", lname);
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@phone", phone);
+                    connection.Open();
+                    int result = command.ExecuteNonQuery();
+                    // Check Error
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                }
+                connection.Close();
+                // Get The New User User From DB And Add Him To MainWindow.myUsers
+                query = $"SELECT Id, FirstName, LastName, Email, Phone FROM dbo.Users " +
+                                            $"WHERE FirstName=@fname AND LastName=@lname AND Email=@email AND Phone=@phone ";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@fname", fname);
+                    command.Parameters.AddWithValue("@lname", lname);
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@phone", phone);
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        int id = (int)dataReader["Id"];
+                        String fname2 = dataReader["FirstName"].ToString().Trim();
+                        String lname2 = dataReader["LastName"].ToString().Trim();
+                        String email2 = dataReader["Email"].ToString().Trim();
+                        String phone2 = dataReader["Phone"].ToString().Trim();
+                        // Create The Usres Objects
+                        Users user = new Users(id, fname2, lname2, email2, phone2);
+                        MainWindow.myUsers.Add(user);
+                    }
+                }
+                connection.Close();
+            }
+            Console.WriteLine("ADD OK");
+            // Refresch Users Table
+            this.Close();
+            new Settings().Show();
+        }
+
+        // Files format checkboxes
+        private void AVI_chencked(object sender, EventArgs e)
         {
             Camera.avi_format = true;
             Camera.mp4_format = false;
@@ -478,6 +595,6 @@ namespace IPCamera
             }
         }
 
-
+        
     }
 }

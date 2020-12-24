@@ -154,6 +154,7 @@ namespace IPCamera
                 connection.Close();
 
                 // Get Users Data
+                myUsers.Clear();
                 query = "SELECT Id, FirstName, LastName, Email, Phone FROM dbo.Users";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
