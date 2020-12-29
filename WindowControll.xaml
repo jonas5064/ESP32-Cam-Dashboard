@@ -50,9 +50,8 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-
-                <CheckBox Grid.Row="2" x:Name="Face_rec" Content="Face Recognition" Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Recognition_Chencked" Unchecked="Face_Recognition_UNChencked" />
-                <CheckBox Grid.Row="3" x:Name="Face_det" Content="Face Detection"   Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Detection_Chencked" Unchecked="Face_Detection_UNChencked"/>
+                <CheckBox Visibility="Hidden" Grid.Row="2" x:Name="Face_rec" Content="Face Recognition" Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Recognition_Chencked" Unchecked="Face_Recognition_UNChencked" />
+                <CheckBox Visibility="Hidden" Grid.Row="3" x:Name="Face_det" Content="Face Detection"   Background="#FFB4B4B4" Foreground="#FFC9C9C9" Checked="Face_Detection_Chencked" Unchecked="Face_Detection_UNChencked"/>
             </Grid>
 
 

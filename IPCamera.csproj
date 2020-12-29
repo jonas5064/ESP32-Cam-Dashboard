@@ -180,6 +180,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="ipCamera.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -187,7 +190,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
-    <Resource Include="ipCamera.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\VisioForge.DotNet.Core.Redist.Base.x86.12.1.26\build\VisioForge.DotNet.Core.Redist.Base.x86.targets" Condition="Exists('packages\VisioForge.DotNet.Core.Redist.Base.x86.12.1.26\build\VisioForge.DotNet.Core.Redist.Base.x86.targets')" />

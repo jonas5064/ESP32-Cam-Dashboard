@@ -66,6 +66,13 @@ namespace IPCamera
             this.video.Video_Effects_Enabled = true;
             this.video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
             this.Recording = rec;
+            // Motion Detection Setup
+            this.video.Motion_Detection = new MotionDetectionSettings
+            {
+                Enabled = true,
+                Highlight_Enabled = false
+            };
+            this.video.OnMotion += this.OnMotion;
 
             count++;
         }
@@ -230,72 +237,28 @@ namespace IPCamera
         public bool On_move_sms
         {
             get { return this.on_move_sms; }
-            set
-            {
-                this.on_move_sms = value;
-                if (this.on_move_sms)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
+            set { this.on_move_sms = value; }
         }
 
         // On Move Email
         public bool On_move_email
         {
             get { return this.on_move_email; }
-            set
-            {
-                this.on_move_email = value;
-                if (this.on_move_email)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
+            set { this.on_move_email = value; }
         }
 
         // On Move Pic
         public bool On_move_pic
         {
             get { return this.on_move_pic; }
-            set
-            {
-                this.on_move_pic = value;
-                if (this.on_move_pic)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
+            set { this.on_move_pic = value; }
         }
         
         // On Move Rec
         public bool On_move_rec
         {
             get { return this.on_move_rec; }
-            set
-            {
-                this.on_move_rec = value;
-                if (this.on_move_rec)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
+            set { this.on_move_rec = value; }
         }
 
         // Start the Camera
@@ -411,6 +374,31 @@ namespace IPCamera
         {
             WindowControll win_controll = new WindowControll(this);
             win_controll.Show();
+        }
+
+        // This Happends when camera detectets a motion
+        public void OnMotion(object sender, MotionDetectionEventArgs e)
+        {
+            if (e.Level > 2)
+            {
+                if (this.On_move_email)
+                {
+
+                    Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
+                }
+                if (this.On_move_pic)
+                {
+
+                }
+                if (this.On_move_rec)
+                {
+
+                }
+                if (this.On_move_sms)
+                {
+
+                }
+            }
         }
 
     }
