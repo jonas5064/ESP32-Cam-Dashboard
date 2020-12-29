@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -381,10 +383,43 @@ namespace IPCamera
         {
             if (e.Level > 2)
             {
+                //Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
                 if (this.On_move_email)
                 {
+                    try
+                    {
+                        Console.WriteLine("Move Sensor Sending an email.");
+                        String hostGmail = "smtp.gmail.com";
+                        //String hostYahoo = "smtp.mail.yahoo.com";
+                        //String hostHotMail = "	smtp.live.com";
+                        int port = 587;
+                        String fromEmail = "Alexpl_15@windowslive.com";
+                        String fromPassword = "Platanios719791";
+                        String toEmail = "alexandrosplatanios15@gmail.com";
+                        String subject = "My House Cameras";
+                        String body = "Detect Motion";
 
-                    Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
+                        MailMessage message = new MailMessage();
+                        message.From = new MailAddress(fromEmail);
+                        message.To.Add(new MailAddress(toEmail));
+                        message.Subject = subject;
+                        message.IsBodyHtml = false;
+                        message.Body = body;
+                        message.Priority = MailPriority.High;
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.Port = port;
+                        smtp.Host = hostGmail;
+                        smtp.EnableSsl = true;
+                        smtp.UseDefaultCredentials = true;
+                        smtp.Credentials = new NetworkCredential(fromEmail, fromPassword);
+                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        smtp.Send(message);
+                        Console.WriteLine("Sent an email OK.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
                 if (this.On_move_pic)
                 {
