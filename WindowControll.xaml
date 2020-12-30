@@ -139,6 +139,20 @@
                     <CheckBox x:Name="pic_checkbox" Checked="Pic_chencked" Unchecked="Pic_unchencked" Grid.Row="0" Content="Take Picture" Foreground="#FFB4B4B4" />
                     <CheckBox x:Name="rec_checkbox" Checked="Rec_chencked" Unchecked="Rec_unchencked" Grid.Row="1" Content="Recording" Foreground="#FFB4B4B4" />
                 </Grid>
+                <Grid Grid.Column="3" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="73*" />
+                        <ColumnDefinition Width="34" />
+                        <ColumnDefinition Width="136*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" x:Name="sensitivity_label" Content="Sensitivity:" Foreground="#FFB4B4B4" />
+                    <Label Grid.Column="1" Grid.Row="0" x:Name="sensitivity_value_label" Foreground="#FFB4B4B4" />
+                    <Slider Grid.Column="2" Grid.Row="0" x:Name="sensitivity_slider" Minimum="2" Maximum="255" ValueChanged="Sensitivity_func" Margin="0,5,0,0"/>
+                </Grid>
             </Grid>
 
             <!-- Recording Grid -->

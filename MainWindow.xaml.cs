@@ -106,7 +106,7 @@ namespace IPCamera
                 // Get Cameras Data
                 query = "SELECT id, urls, name, Face_Detection, Face_Recognition, " +
                     "Brightness, Contrast, Darkness, Recording, On_Move_SMS, " +
-                    "On_Move_EMAIL, On_Move_Pic, On_Move_Rec FROM dbo.myCameras";
+                    "On_Move_EMAIL, On_Move_Pic, On_Move_Rec, Move_Sensitivity FROM dbo.myCameras";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -128,6 +128,7 @@ namespace IPCamera
                         int brightness = (int)dataReader["Brightness"];
                         int contrast = (int)dataReader["Contrast"];
                         int darkness = (int)dataReader["Darkness"];
+                        int move_sensitivity = (int)dataReader["Move_Sensitivity"];
                         try
                         {
                             bool rec = (recording == "True");
@@ -141,7 +142,8 @@ namespace IPCamera
                                 On_move_sms = (on_move_sms == "True"),
                                 On_move_email = (on_move_email == "True"),
                                 On_move_pic = (on_move_pic == "True"),
-                                On_move_rec = (on_move_rec == "True")
+                                On_move_rec = (on_move_rec == "True"),
+                                On_move_sensitivity = move_sensitivity
                             };
                             cameras.Add(cam);
                         }

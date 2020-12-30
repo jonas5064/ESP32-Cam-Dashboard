@@ -33,6 +33,7 @@ namespace IPCamera
         public bool on_move_email = false;
         public bool on_move_pic = false;
         public bool on_move_rec = false;
+        public int on_move_sensitivity = 2;
         public int brightness = 0;
         public int contrast = 0;
         public int darkness = 0;
@@ -263,6 +264,13 @@ namespace IPCamera
             set { this.on_move_rec = value; }
         }
 
+        // Setup On Move Sensitivity
+        public int On_move_sensitivity
+        {
+            get { return this.on_move_sensitivity; }
+            set { this.on_move_sensitivity = value; }
+        }
+
         // Start the Camera
         public void Start()
         {
@@ -379,59 +387,68 @@ namespace IPCamera
         }
 
         // This Happends when camera detectets a motion
+        DateTime last_email_date_onmove;
         public void OnMotion(object sender, MotionDetectionEventArgs e)
         {
-            if (e.Level > 2)
+            if (e.Level > this.On_move_sensitivity)
             {
                 //Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
                 if (this.On_move_email)
                 {
                     try
                     {
-                        Console.WriteLine("Move Sensor Sending an email.");
-                        String hostGmail = "smtp.gmail.com";
-                        //String hostYahoo = "smtp.mail.yahoo.com";
-                        //String hostHotMail = "	smtp.live.com";
-                        int port = 587;
-                        String fromEmail = "Alexpl_15@windowslive.com";
-                        String fromPassword = "Platanios719791";
-                        String toEmail = "alexandrosplatanios15@gmail.com";
-                        String subject = "My House Cameras";
-                        String body = "Detect Motion";
-
-                        MailMessage message = new MailMessage();
-                        message.From = new MailAddress(fromEmail);
-                        message.To.Add(new MailAddress(toEmail));
-                        message.Subject = subject;
-                        message.IsBodyHtml = false;
-                        message.Body = body;
-                        message.Priority = MailPriority.High;
-                        SmtpClient smtp = new SmtpClient();
-                        smtp.Port = port;
-                        smtp.Host = hostGmail;
-                        smtp.EnableSsl = true;
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Credentials = new NetworkCredential(fromEmail, fromPassword);
-                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtp.Send(message);
-                        Console.WriteLine("Sent an email OK.");
+                        // When Send Get the DateTime
+                        if (DateTime.Now > last_email_date_onmove.AddMinutes(10))
+                        {
+                            Console.WriteLine($"[{this.name}]  Detect Motion at  [{DateTime.Now}]");
+                            String hostGmail = "smtp.gmail.com";
+                            //String hostYahoo = "smtp.mail.yahoo.com";
+                            //String hostHotMail = "	smtp.live.com";
+                            int port = 587;
+                            String fromEmail = "alexandrosplatanios28@gmail.com";
+                            String fromPassword = "Platanios719791";
+                            String subject = this.name;
+                            String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
+                            foreach (Users u in MainWindow.myUsers)
+                            {
+                                SmtpClient smtp = new SmtpClient(hostGmail)
+                                {
+                                    Port = port,
+                                    EnableSsl = true,
+                                    UseDefaultCredentials = true,
+                                    Credentials = new NetworkCredential(fromEmail, fromPassword),
+                                    DeliveryMethod = SmtpDeliveryMethod.Network
+                                };
+                                smtp.Send(fromEmail, u.Email, subject, body);  // Doesn't Works
+                            }
+                        } 
+                    }
+                    catch (SmtpException ex)
+                    {
+                        //System.Windows.MessageBox.Show($"[SmtpException]   {ex.Message}");
+                        Console.WriteLine($"[SmtpException]   {ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message);
+                        Console.WriteLine($"[Exception]   {ex.Message}");
                     }
                 }
                 if (this.On_move_pic)
                 {
 
+                    this.Take_pic();
                 }
                 if (this.On_move_rec)
                 {
-
+                    // Recording for some time
+                    this.Recording = true;
+                    Thread.Sleep(1000 * 10 * 60);
+                    this.Recording = false;
                 }
                 if (this.On_move_sms)
                 {
-
+                    // Send SMS
+                    ///
                 }
             }
         }

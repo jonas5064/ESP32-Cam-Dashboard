@@ -32,6 +32,8 @@ namespace IPCamera
             brightness_slider.Value  = this.camera.Brightness;
             contrast_slider.Value    = this.camera.Contrast;
             darkness_slider.Value    = this.camera.Darkness;
+            sensitivity_value_label.Content = $"{this.camera.On_move_sensitivity}";
+            sensitivity_slider.Value = this.camera.On_move_sensitivity;
             // Setup recording Button
             if (this.camera.Recording)
             {
@@ -490,6 +492,35 @@ namespace IPCamera
                 // Restart Camera
                 this.camera.Stop();
                 this.camera.Start();
+            }
+        }
+
+        // Set The Sensitivity
+        private void Sensitivity_func(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            try
+            {
+                // Update Cameras Move_Sensitivity
+                /*
+                this.camera.On_move_sensitivity = Convert.ToInt32(e.NewValue);
+                // Update DataBases Move_Sensitivity
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                */
+            }
+            catch (System.Data.SqlClient.SqlException se)
+            {
+                System.Windows.MessageBox.Show("Error updateting Move_Sensitivity into Database!  [ERROR CODE]: " + se);
+            }
+            catch(System.NullReferenceException ex)
+            {
+                System.Windows.MessageBox.Show("[ERROR]: " + ex.Message);
             }
         }
 
