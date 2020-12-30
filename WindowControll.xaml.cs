@@ -501,8 +501,10 @@ namespace IPCamera
             try
             {
                 // Update Cameras Move_Sensitivity
-                /*
-                this.camera.On_move_sensitivity = Convert.ToInt32(e.NewValue);
+                int val = Convert.ToInt32(e.NewValue);
+                sensitivity_value_label.Content = $"{val}";
+                this.camera.On_move_sensitivity = val;
+                Console.WriteLine(this.camera.On_move_sensitivity.ToString());
                 // Update DataBases Move_Sensitivity
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
                 String query = $"UPDATE dbo.myCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -512,15 +514,14 @@ namespace IPCamera
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
-                */
             }
             catch (System.Data.SqlClient.SqlException se)
             {
-                System.Windows.MessageBox.Show("Error updateting Move_Sensitivity into Database!  [ERROR CODE]: " + se);
+                //System.Windows.MessageBox.Show("Error updateting Move_Sensitivity into Database!  [ERROR CODE]: " + se);
             }
             catch(System.NullReferenceException ex)
             {
-                System.Windows.MessageBox.Show("[ERROR]: " + ex.Message);
+                //System.Windows.MessageBox.Show("[ERROR]: " + ex.Message);
             }
         }
 
