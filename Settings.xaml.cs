@@ -376,6 +376,11 @@ namespace IPCamera
                 if (e.Column.Header.ToString() == "Id")
                 {
                     e.Column.IsReadOnly = true; // Makes the column as read only
+                    e.Column.Width = 33;
+                }
+                if (e.Column.Header.ToString() == "Email")
+                {
+                    e.Column.Width = 333;
                 }
             };
             users_grid.CanUserDeleteRows = true;

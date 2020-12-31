@@ -401,7 +401,6 @@ namespace IPCamera
                         if (DateTime.Now > last_email_date_onmove.AddMinutes(10))
                         {
                             last_email_date_onmove = DateTime.Now;
-                            Console.WriteLine($"[{this.name}]  Detect Motion at  [{DateTime.Now}]");
                             String hostGmail = "smtp.gmail.com";
                             //String hostYahoo = "smtp.mail.yahoo.com";
                             //String hostHotMail = "	smtp.live.com";
