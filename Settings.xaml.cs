@@ -367,7 +367,6 @@ namespace IPCamera
         {
             // Save list with users before
             users = new List<Users>(MainWindow.myUsers);
-            Console.WriteLine($"myUsers.Count: {users.Count}");
             // Add the List To DataGrid
             users_grid.ItemsSource = MainWindow.myUsers;
             // Make Id Column No Editable

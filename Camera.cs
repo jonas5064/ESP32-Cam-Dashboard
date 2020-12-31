@@ -397,21 +397,43 @@ namespace IPCamera
                 {
                     try
                     {
+                        /*
+                        Console.WriteLine($"Motion Detected Send Email Message.  [Before]    " +
+                            $"Time.now: {DateTime.Now}  Time.before: {last_email_date_onmove.AddMinutes(1)}");
+                        */
                         // When Send Get the DateTime
-                        if (DateTime.Now > last_email_date_onmove.AddMinutes(10))
+                        if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
                         {
                             last_email_date_onmove = DateTime.Now;
-                            String hostGmail = "smtp.gmail.com";
-                            //String hostYahoo = "smtp.mail.yahoo.com";
-                            //String hostHotMail = "	smtp.live.com";
+                            String host = "";
                             int port = 587;
                             String fromEmail = MainWindow.email_send;
+                            if (fromEmail.Contains("gmail"))
+                            {
+                                host = "smtp.gmail.com";
+                            }
+                            else if (fromEmail.Contains("yahoo"))
+                            {
+                                host = "smtp.mail.yahoo.com";
+                            }
+                            else if (fromEmail.Contains("live"))
+                            {
+                                host = "	smtp.live.com";
+                            }
                             String fromPassword = MainWindow.pass_send;
                             String subject = this.name;
                             String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
+                            // Send Email To All Users
                             foreach (Users u in MainWindow.myUsers)
                             {
-                                SmtpClient smtp = new SmtpClient(hostGmail)
+                                // Create a Message
+                                MailMessage msg = new MailMessage();
+                                msg.From = new MailAddress(u.Email);
+                                msg.To.Add(fromEmail);
+                                msg.Subject = subject;
+                                msg.Body = body;
+                                // Create Email Connection Object
+                                SmtpClient smtp = new SmtpClient(host)
                                 {
                                     Port = port,
                                     EnableSsl = true,
@@ -419,7 +441,9 @@ namespace IPCamera
                                     Credentials = new NetworkCredential(fromEmail, fromPassword),
                                     DeliveryMethod = SmtpDeliveryMethod.Network
                                 };
-                                smtp.Send(fromEmail, u.Email, subject, body);  // Doesn't Works
+                                Console.WriteLine($"Send Email From: {fromEmail}  Pass: {fromPassword}  To: {u.Email}");
+                                // Send Email
+                                smtp.Send(msg);  // Doesn't Works
                             }
                         } 
                     }
