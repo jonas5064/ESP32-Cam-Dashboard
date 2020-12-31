@@ -249,12 +249,12 @@ namespace IPCamera
             // Save Email Sender And Password
             if (email_send_textbox.Text != "" && pass_send_textbox.Text != "")
             {
-                if ( (!email_send_textbox.Text.Equals(MainWindow.main_window.email_send)) ||
-                        (!pass_send_textbox.Text.Equals(MainWindow.main_window.pass_send)))
+                if ( (!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
+                        (!pass_send_textbox.Text.Equals(MainWindow.pass_send)))
                 {
                     // Delete From Table The Last
                     SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"DELETE FROM dbo.Other";
+                    String query = $"DELETE FROM dbo.EmailSender";
                     SqlCommand cmd = new SqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
@@ -264,7 +264,7 @@ namespace IPCamera
                     // Save Data To Database
                     using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                     {
-                        query = $"INSERT INTO dbo.Other (Email,Pass) VALUES (@email,@pass)";
+                        query = $"INSERT INTO dbo.EmailSender (Email,Pass) VALUES (@email,@pass)";
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@email", email_send_textbox.Text);
@@ -357,8 +357,8 @@ namespace IPCamera
                 }
             }
             // Update Email Sender And Pasword
-            email_send_textbox.Text = MainWindow.main_window.email_send;
-            pass_send_textbox.Text = MainWindow.main_window.pass_send;
+            email_send_textbox.Text = MainWindow.email_send;
+            pass_send_textbox.Text = MainWindow.pass_send;
         }
 
         
@@ -367,6 +367,7 @@ namespace IPCamera
         {
             // Save list with users before
             users = new List<Users>(MainWindow.myUsers);
+            Console.WriteLine($"myUsers.Count: {users.Count}");
             // Add the List To DataGrid
             users_grid.ItemsSource = MainWindow.myUsers;
             // Make Id Column No Editable
@@ -504,15 +505,32 @@ namespace IPCamera
             webm_checkbox.IsChecked = false;
             try
             {
-                // Update DataBase this Camera Object field Face Detection 1
+                // Delete Data From DB
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.FilesFormats SET avi='{1}', mp4='{0}', webm='{0}'";
+                String query = $"DELETE FROM dbo.FilesFormats";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Insert Data To DB
+                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@avi", 1);
+                        command.Parameters.AddWithValue("@mp4", 0);
+                        command.Parameters.AddWithValue("@webm", 0);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException se)
             {
@@ -524,15 +542,32 @@ namespace IPCamera
             Camera.avi_format = false;
             try
             {
-                // Update DataBase this Camera Object field Face Detection 1
+                // Delete Data From DB
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.FilesFormats SET avi='{0}'";
+                String query = $"DELETE FROM dbo.FilesFormats";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Insert Data To DB
+                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@avi", 0);
+                        command.Parameters.AddWithValue("@mp4", 0);
+                        command.Parameters.AddWithValue("@webm", 0);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException se)
             {
@@ -549,15 +584,32 @@ namespace IPCamera
             webm_checkbox.IsChecked = false;
             try
             {
-                // Update DataBase this Camera Object field Face Detection 1
+                // Delete Data From DB
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.FilesFormats SET mp4='{1}', avi='{0}', webm='{0}'";
+                String query = $"DELETE FROM dbo.FilesFormats";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Insert Data To DB
+                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@avi", 0);
+                        command.Parameters.AddWithValue("@mp4", 1);
+                        command.Parameters.AddWithValue("@webm", 0);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException se)
             {
@@ -569,15 +621,32 @@ namespace IPCamera
             Camera.mp4_format = false;
             try
             {
-                // Update DataBase this Camera Object field Face Detection 1
+                // Delete Data From DB
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.FilesFormats SET mp4='{0}'";
+                String query = $"DELETE FROM dbo.FilesFormats";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Insert Data To DB
+                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@avi", 0);
+                        command.Parameters.AddWithValue("@mp4", 0);
+                        command.Parameters.AddWithValue("@webm", 0);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException se)
             {
@@ -594,15 +663,32 @@ namespace IPCamera
             avi_checkbox.IsChecked = false;
             try
             {
-                // Update DataBase this Camera Object field Face Detection 1
+                // Delete Data From DB
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.FilesFormats SET webm='{1}', avi='{0}', mp4='{0}'";
+                String query = $"DELETE FROM dbo.FilesFormats";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Insert Data To DB
+                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@avi", 0);
+                        command.Parameters.AddWithValue("@mp4", 0);
+                        command.Parameters.AddWithValue("@webm", 1);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException se)
             {
@@ -614,15 +700,32 @@ namespace IPCamera
             Camera.webm_format = false;
             try
             {
-                // Update DataBase this Camera Object field Face Detection 1
+                // Delete Data From DB
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.FilesFormats SET webm='{0}'";
+                String query = $"DELETE FROM dbo.FilesFormats";
                 SqlCommand cmd = new SqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
+                // Insert Data To DB
+                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@avi", 0);
+                        command.Parameters.AddWithValue("@mp4", 0);
+                        command.Parameters.AddWithValue("@webm", 0);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException se)
             {

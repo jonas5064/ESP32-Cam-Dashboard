@@ -515,14 +515,8 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException se)
-            {
-                //System.Windows.MessageBox.Show("Error updateting Move_Sensitivity into Database!  [ERROR CODE]: " + se);
-            }
-            catch(System.NullReferenceException ex)
-            {
-                //System.Windows.MessageBox.Show("[ERROR]: " + ex.Message);
-            }
+            catch (System.Data.SqlClient.SqlException) { }
+            catch (System.NullReferenceException) { }
         }
 
     }

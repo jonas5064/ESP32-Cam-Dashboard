@@ -387,7 +387,7 @@ namespace IPCamera
         }
 
         // This Happends when camera detectets a motion
-        DateTime last_email_date_onmove;
+        DateTime last_email_date_onmove = DateTime.Now;
         public void OnMotion(object sender, MotionDetectionEventArgs e)
         {
             if (e.Level > this.On_move_sensitivity)
@@ -400,13 +400,14 @@ namespace IPCamera
                         // When Send Get the DateTime
                         if (DateTime.Now > last_email_date_onmove.AddMinutes(10))
                         {
+                            last_email_date_onmove = DateTime.Now;
                             Console.WriteLine($"[{this.name}]  Detect Motion at  [{DateTime.Now}]");
                             String hostGmail = "smtp.gmail.com";
                             //String hostYahoo = "smtp.mail.yahoo.com";
                             //String hostHotMail = "	smtp.live.com";
                             int port = 587;
-                            String fromEmail = MainWindow.main_window.email_send;
-                            String fromPassword = MainWindow.main_window.pass_send;
+                            String fromEmail = MainWindow.email_send;
+                            String fromPassword = MainWindow.pass_send;
                             String subject = this.name;
                             String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
                             foreach (Users u in MainWindow.myUsers)
