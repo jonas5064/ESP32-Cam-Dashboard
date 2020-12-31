@@ -246,6 +246,38 @@ namespace IPCamera
                     MainWindow.RestartApp();
                 }
             }
+            // Save Email Sender And Password
+            if (email_send_textbox.Text != "" && pass_send_textbox.Text != "")
+            {
+                if ( (!email_send_textbox.Text.Equals(MainWindow.main_window.email_send)) ||
+                        (!pass_send_textbox.Text.Equals(MainWindow.main_window.pass_send)))
+                {
+                    // Delete From Table The Last
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"DELETE FROM dbo.Other";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                    // Save Data To Database
+                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                    {
+                        query = $"INSERT INTO dbo.Other (Email,Pass) VALUES (@email,@pass)";
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@email", email_send_textbox.Text);
+                            command.Parameters.AddWithValue("@pass", pass_send_textbox.Text);
+                            connection.Open();
+                            result = command.ExecuteNonQuery();
+                            // Check Error
+                            if (result < 0)
+                                System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -324,6 +356,9 @@ namespace IPCamera
                     name_8.Text = MainWindow.cameras[7].name;
                 }
             }
+            // Update Email Sender And Pasword
+            email_send_textbox.Text = MainWindow.main_window.email_send;
+            pass_send_textbox.Text = MainWindow.main_window.pass_send;
         }
 
         

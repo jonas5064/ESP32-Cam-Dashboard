@@ -405,8 +405,8 @@ namespace IPCamera
                             //String hostYahoo = "smtp.mail.yahoo.com";
                             //String hostHotMail = "	smtp.live.com";
                             int port = 587;
-                            String fromEmail = "alexandrosplatanios28@gmail.com";
-                            String fromPassword = "Platanios719791";
+                            String fromEmail = MainWindow.main_window.email_send;
+                            String fromPassword = MainWindow.main_window.pass_send;
                             String subject = this.name;
                             String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
                             foreach (Users u in MainWindow.myUsers)

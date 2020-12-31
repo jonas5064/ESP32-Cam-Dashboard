@@ -174,42 +174,24 @@
                         </Grid>
 
                         <!-- On Movement -->
-                        <!--
                         <Grid Grid.Column="1" Grid.Row="0">
                             <Label Content="On Movement:" Foreground="#FFB4B4B4" />
                         </Grid>
                         <Grid Grid.Column="1" Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="91*" />
-                                <ColumnDefinition Width="305*" />
-                                <ColumnDefinition Width="12*" />
-                                <ColumnDefinition Width="80*" />
+                                <ColumnDefinition Width="25*" />
+                                <ColumnDefinition Width="126*" />
+                                <ColumnDefinition Width="337*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0" Content="SMS:" Foreground="#FFB4B4B4" />
-                            <TextBox x:Name="sms_textbox"  Grid.Column="1" Grid.Row="0"/>
-                            <CheckBox x:Name="sms_checkbox" Grid.Column="3" Grid.Row="0" Content="Enable" Foreground="#FFB4B4B4" />
-
-                            <Label Grid.Column="0" Grid.Row="1" Content="EMAIL:" Foreground="#FFB4B4B4" />
-                            <TextBox x:Name="email_textbox"  Grid.Column="1" Grid.Row="1"/>
-                            <CheckBox x:Name="email_checkbox" Grid.Column="3" Grid.Row="1" Content="Enable" Foreground="#FFB4B4B4" />
+                            <Label Grid.Column="1" Grid.Row="0" Content="Email Sender:" Foreground="#FFB4B4B4" />
+                            <TextBox Grid.Column="2" Grid.Row="0" Name="email_send_textbox" Margin="0,-10,0,10" />
+                            <Label Grid.Column="1" Grid.Row="1" Content="Password:" Foreground="#FFB4B4B4" />
+                            <TextBox Grid.Column="2" Grid.Row="1" Name="pass_send_textbox" />
                         </Grid>
-                        <Grid Grid.Column="2" Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*" />
-                                <ColumnDefinition Width="139*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <CheckBox x:Name="pic_checkbox" Grid.Column="1" Grid.Row="0" Content="Take Picture" Foreground="#FFB4B4B4" />
-                            <CheckBox x:Name="rec_checkbox" Grid.Column="1" Grid.Row="1" Content="Recording" Foreground="#FFB4B4B4" />
-                        </Grid>
-                        -->
                     </Grid>
 
 

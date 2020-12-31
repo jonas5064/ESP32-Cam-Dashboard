@@ -31,7 +31,9 @@ namespace IPCamera
         public static List<Camera> cameras = new List<Camera>();
         public static List<Users> myUsers = new List<Users>();
         public static Grid cams_grid;
-         
+        public String email_send;
+        public String pass_send;
+
 
         public MainWindow()
         {
@@ -172,6 +174,21 @@ namespace IPCamera
                         // Create The Usres Objects
                         Users user = new Users(id, fname, lname, email, phone);
                         myUsers.Add(user);
+                    }
+                }
+                connection.Close();
+
+                // Get Email_send Pass_send
+                myUsers.Clear();
+                query = "SELECT Email, Pass FROM dbo.Other";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        this.email_send = dataReader["Email"].ToString().Trim();
+                        this.pass_send = dataReader["Pass"].ToString().Trim();
                     }
                 }
                 connection.Close();
