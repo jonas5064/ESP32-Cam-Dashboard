@@ -20,6 +20,11 @@ namespace IPCamera
             this.Update_settings_page();
 
             this.FillUsers();
+
+            // Fill the TextBoxes With the Data
+            sms_account_sid.Text = MainWindow.twilioAccountSID;
+            sms_account_token.Text = MainWindow.twilioAccountToken;
+            sms_account_phone.Text = MainWindow.twilioNumber;
         }
 
 
@@ -247,7 +252,7 @@ namespace IPCamera
                 }
             }
             // Save Email Sender And Password
-            if (email_send_textbox.Text != "" && pass_send_textbox.Text != "")
+            if (email_send_textbox.Text.Equals("") && pass_send_textbox.Text.Equals(""))
             {
                 if ( (!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
                         (!pass_send_textbox.Text.Equals(MainWindow.pass_send)))
@@ -277,6 +282,13 @@ namespace IPCamera
                         }
                     }
                 }
+            }
+            // Save SMS sid, token, phone
+            if (!sms_account_sid.Text.Equals("") && 
+                sms_account_token.Equals("") && 
+                sms_account_phone.Equals(""))
+            {
+
             }
         }
 
@@ -410,7 +422,7 @@ namespace IPCamera
                     }
                 }
             }
-            else // Update DB
+            else // Update Users On DB
             {
                 int counter = 0;
                 foreach (Users u in MainWindow.myUsers)
