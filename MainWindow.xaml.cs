@@ -35,8 +35,8 @@ namespace IPCamera
         public static String pass_send;
 
         public static String twilioNumber;
-        public static String twilioAccountSID = "accf42e809c-9eb2-36e8-9147-3535dd2f8278";
-        public static String twilioAccountToken = "autbe29bae3-95a7-3dbf-9956-2a9d984bf0c8";
+        public static String twilioAccountSID;
+        public static String twilioAccountToken;
 
 
         public MainWindow()
@@ -192,6 +192,21 @@ namespace IPCamera
                     {
                         email_send = dataReader["Email"].ToString().Trim();
                         pass_send = dataReader["Pass"].ToString().Trim();
+                    }
+                }
+                connection.Close();
+
+                // Get SMS SID, SMS TOKEN, SMS PHONE
+                query = "SELECT AccountSID,AccountTOKEN,Phone FROM dbo.SMS";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        twilioAccountSID = dataReader["AccountSID"].ToString().Trim();
+                        twilioAccountToken = dataReader["AccountTOKEN"].ToString().Trim();
+                        twilioNumber = dataReader["Phone"].ToString().Trim();
                     }
                 }
                 connection.Close();

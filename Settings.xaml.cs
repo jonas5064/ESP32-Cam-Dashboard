@@ -285,10 +285,34 @@ namespace IPCamera
             }
             // Save SMS sid, token, phone
             if (!sms_account_sid.Text.Equals("") && 
-                sms_account_token.Equals("") && 
-                sms_account_phone.Equals(""))
+                !sms_account_token.Text.Equals("") && 
+                !sms_account_phone.Text.Equals(""))
             {
-
+                // Delete From Table The Last
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"DELETE FROM dbo.SMS";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+                // Save Data To Database
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    query = $"INSERT INTO dbo.SMS (AccountSID,AccountTOKEN,Phone) VALUES (@sid,@token,@phone)";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@sid", sms_account_sid.Text);
+                        command.Parameters.AddWithValue("@token", sms_account_token.Text);
+                        command.Parameters.AddWithValue("@phone", sms_account_phone.Text);
+                        connection.Open();
+                        result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                }
             }
         }
 
