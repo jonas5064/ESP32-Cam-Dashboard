@@ -483,7 +483,7 @@ namespace IPCamera
                 {
                     Console.WriteLine("Take Picture.");
                     this.Take_pic();
-                }async 
+                }
                 if (this.On_move_rec)
                 {
                     Console.WriteLine("Start Recording.");
