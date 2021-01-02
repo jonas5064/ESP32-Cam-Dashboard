@@ -737,6 +737,17 @@ namespace IPCamera
             }
         }
 
-        
+        // When select a tab
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        // SMS Hyper Link Func
+        private void Hyperlink_RequestNavigate(object sender,
+                                       System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+        }
     }
 }
