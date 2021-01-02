@@ -34,6 +34,10 @@ namespace IPCamera
         public static String email_send;
         public static String pass_send;
 
+        public static String twilioNumber;
+        public static String twilioAccountSID = "accf42e809c-9eb2-36e8-9147-3535dd2f8278";
+        public static String twilioAccountToken = "autbe29bae3-95a7-3dbf-9956-2a9d984bf0c8";
+
 
         public MainWindow()
         {

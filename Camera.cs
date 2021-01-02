@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 //using VisioForge.Controls.UI.WinForms;
 using VisioForge.Controls.UI.WPF;
@@ -76,7 +81,7 @@ namespace IPCamera
                 Highlight_Enabled = false
             };
             this.video.OnMotion += this.OnMotion;
-
+            //this.video.Video_Still_Frames_Grabber_Enabled = true;
             count++;
         }
 
@@ -387,7 +392,7 @@ namespace IPCamera
         }
 
         // This Happends when camera detectets a motion
-        DateTime last_email_date_onmove = DateTime.Now;
+        DateTime last_email_date_onmove = DateTime.Now.AddMinutes(-1);
         public void OnMotion(object sender, MotionDetectionEventArgs e)
         {
             if (e.Level > this.On_move_sensitivity)
@@ -405,6 +410,16 @@ namespace IPCamera
                         if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
                         {
                             last_email_date_onmove = DateTime.Now;
+
+                            /*
+                            // Grab a Pic
+                            BitmapSource bmpS = this.video.Frame_GetCurrent();
+                            // BitmapSource to Stream
+                            MemoryStream stream = new MemoryStream();
+                            GetBitmap(bmpS).Save(stream, ImageFormat.Jpeg);
+                            */
+
+                            // Return to Sending Email
                             String host = "";
                             int port = 587;
                             String fromEmail = MainWindow.email_send;
@@ -423,28 +438,35 @@ namespace IPCamera
                             String fromPassword = MainWindow.pass_send;
                             String subject = this.name;
                             String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
-                            // Send Email To All Users
+                            // Create a Message
+                            MailMessage msg = new MailMessage();
+                            msg.From = new MailAddress(fromEmail);
+                            /*
+                            // Add Image to message OK
+                            System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Image.Jpeg);
+                            System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(stream, ct);
+                            attach.ContentDisposition.FileName = "img.jpeg";
+                            msg.Attachments.Add(attach);
+                            */
+                            // Add All Recievers
                             foreach (Users u in MainWindow.myUsers)
                             {
-                                // Create a Message
-                                MailMessage msg = new MailMessage();
-                                msg.From = new MailAddress(u.Email);
-                                msg.To.Add(fromEmail);
-                                msg.Subject = subject;
-                                msg.Body = body;
-                                // Create Email Connection Object
-                                SmtpClient smtp = new SmtpClient(host)
-                                {
-                                    Port = port,
-                                    EnableSsl = true,
-                                    UseDefaultCredentials = true,
-                                    Credentials = new NetworkCredential(fromEmail, fromPassword),
-                                    DeliveryMethod = SmtpDeliveryMethod.Network
-                                };
+                                msg.To.Add(u.Email);
                                 Console.WriteLine($"Send Email From: {fromEmail}  Pass: {fromPassword}  To: {u.Email}");
-                                // Send Email
-                                smtp.Send(msg);  // Doesn't Works
                             }
+                            msg.Subject = subject;
+                            msg.Body = body;
+                            // Create Email Connection Object
+                            SmtpClient smtp = new SmtpClient(host)
+                            {
+                                Port = port,
+                                EnableSsl = true,
+                                UseDefaultCredentials = true,
+                                Credentials = new NetworkCredential(fromEmail, fromPassword),
+                                DeliveryMethod = SmtpDeliveryMethod.Network
+                            };
+                            // Send Email
+                            smtp.Send(msg);  // Doesn't Works
                         } 
                     }
                     catch (SmtpException ex)
@@ -459,11 +481,12 @@ namespace IPCamera
                 }
                 if (this.On_move_pic)
                 {
-
+                    Console.WriteLine("Take Picture.");
                     this.Take_pic();
                 }
                 if (this.On_move_rec)
                 {
+                    Console.WriteLine("Start Recording.");
                     // Recording for some time
                     this.Recording = true;
                     Thread.Sleep(1000 * 10 * 60);
@@ -472,7 +495,22 @@ namespace IPCamera
                 if (this.On_move_sms)
                 {
                     // Send SMS
-                    ///
+                    if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
+                    {
+                        last_email_date_onmove = DateTime.Now;
+                        // Find your Account Sid and Token at https://account.apifonica.com/
+                        Console.WriteLine($"Before Send SMS.   ssid: {MainWindow.twilioAccountSID}   token: {MainWindow.twilioAccountToken}");
+                        TwilioClient.Init(MainWindow.twilioAccountSID, MainWindow.twilioAccountToken);
+                        foreach (Users u in MainWindow.myUsers)
+                        {
+                            var message = MessageResource.Create(
+                                body: $"[{this.name}]  Detect Motion at  [{DateTime.Now}]",
+                                from: new Twilio.Types.PhoneNumber(MainWindow.twilioNumber),
+                                to: new Twilio.Types.PhoneNumber(u.Phone)
+                            );
+                            Console.WriteLine($"Send SMS To: {message.Sid}.");
+                        }
+                    }
                 }
             }
         }
