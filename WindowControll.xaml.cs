@@ -261,7 +261,6 @@ namespace IPCamera
             }
         }
 
-
         private void UP_button_click(object sender, MouseButtonEventArgs e)
         {
             System.Windows.MessageBox.Show("Mouse UP!");
