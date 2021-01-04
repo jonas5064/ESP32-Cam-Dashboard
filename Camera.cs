@@ -51,6 +51,10 @@ namespace IPCamera
         public static bool avi_format = false;
         public static bool mp4_format = false;
         public static bool webm_format = false;
+        public String up_req = "";
+        public String down_req = "";
+        public String right_req = "";
+        public String left_req = "";
 
 
         public Camera(String url, String name, String id, bool rec)

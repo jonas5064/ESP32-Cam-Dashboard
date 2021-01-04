@@ -241,15 +241,6 @@ namespace IPCamera
                         }
                     }
                 }
-                // Ask to Restart The Application
-                MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
-                if ( res.ToString() == "OK" )
-                {
-                    // Close Settings Window
-                    this.Close();
-                    // Restart App Application
-                    MainWindow.RestartApp();
-                }
             }
             // Save Email Sender And Password
             if (email_send_textbox.Text.Equals("") && pass_send_textbox.Text.Equals(""))
@@ -313,6 +304,47 @@ namespace IPCamera
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                     }
                 }
+            }
+            // Save UP, DOWN, RIGHT, LEFT Buttons
+            if (!up_text.Text.Equals("") && !down_text.Text.Equals("") &&
+                    !right_text.Text.Equals("") && !left_text.Text.Equals(""))
+            {
+                String cam_name = camera_selector.SelectedItem.ToString();
+                if (!cam_name.Equals("Select a camera"))
+                {
+                    Console.WriteLine("Update DATABASE");
+                    // Update Data To Database
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = "UPDATE dbo.myCameras SET Up_req=@up, Down_req=@down, Left_req=@left, Right_req=@right WHERE name=@cam_name";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cmd.Parameters.AddWithValue("@up", up_text.Text);
+                    cmd.Parameters.AddWithValue("@down", down_text.Text);
+                    cmd.Parameters.AddWithValue("@left", left_text.Text);
+                    cmd.Parameters.AddWithValue("@right", right_text.Text);
+                    cmd.Parameters.AddWithValue("@cam_name", cam_name);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
+                else
+                {
+                    Console.WriteLine("Select a camera.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Select a camera.");
+            }
+            // Ask to Restart The Application
+            MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
+            if (res.ToString() == "OK")
+            {
+                // Close Settings Window
+                this.Close();
+                // Restart App Application
+                MainWindow.RestartApp();
             }
         }
 
@@ -395,6 +427,13 @@ namespace IPCamera
             // Update Email Sender And Pasword
             email_send_textbox.Text = MainWindow.email_send;
             pass_send_textbox.Text = MainWindow.pass_send;
+            // Update Robotic . CameraSelector cameras
+            camera_selector.Items.Add("Select a camera");
+            camera_selector.SelectedIndex = camera_selector.Items.IndexOf("Select a camera");
+            foreach (Camera cam in MainWindow.cameras)
+            {
+                camera_selector.Items.Add(cam.name);
+            }
         }
 
         
@@ -784,6 +823,34 @@ namespace IPCamera
                                        System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+        }
+
+        // Whene Robotic Select Camera Combo Box change
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            String cam_name = camera_selector.SelectedItem.ToString();
+            if (!cam_name.Equals("Select a camera"))
+            {
+                Console.WriteLine($"Selected Camera: {cam_name}");
+                foreach (Camera cam in MainWindow.cameras)
+                {
+                    if (cam.name.Equals(cam_name))
+                    {
+                        up_text.Text = cam.up_req;
+                        down_text.Text = cam.down_req;
+                        right_text.Text = cam.right_req;
+                        left_text.Text = cam.left_req;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Camera Selected");
+                up_text.Text = "";
+                down_text.Text = "";
+                right_text.Text = "";
+                left_text.Text = "";
+            }
         }
     }
 }
