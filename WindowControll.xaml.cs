@@ -5,6 +5,8 @@ using System.Windows.Input;
 using VisioForge.Types;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 namespace IPCamera
 {
@@ -261,24 +263,45 @@ namespace IPCamera
             }
         }
 
+        // UP, DOWN, LEFT,RIGHT use Http request api to controll he camera
+        private void GET_request(String url)
+        {
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                String result = response.Content.ReadAsStringAsync().Result;
+                Console.WriteLine(result);
+            }
+            else
+            {
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+            client.Dispose();
+        }
+
         private void UP_button_click(object sender, MouseButtonEventArgs e)
         {
-            System.Windows.MessageBox.Show("Mouse UP!");
+            Console.WriteLine("Mouse UP!");
+            GET_request("URL_get rest UP");
         }
 
         private void DOWN_button_click(object sender, MouseButtonEventArgs e)
         {
-            System.Windows.MessageBox.Show("Mouse DOWN!");
+            Console.WriteLine("Mouse DOWN!");
+            GET_request("URL_get rest DOWN");
         }
 
         private void LEFT_button_click(object sender, MouseButtonEventArgs e)
         {
-            System.Windows.MessageBox.Show("Mouse LEFT!");
+            Console.WriteLine("Mouse LEFT!");
+            GET_request("URL_get rest LEFT");
         }
 
         private void RIGHT_button_click(object sender, MouseButtonEventArgs e)
         {
-            System.Windows.MessageBox.Show("Mouse RIGHT!");
+            Console.WriteLine("Mouse RIGHT!");
+            GET_request("URL_get rest RIGHT");
         }
 
         private void TAKE_PIC_button_click(object sender, MouseButtonEventArgs e)
