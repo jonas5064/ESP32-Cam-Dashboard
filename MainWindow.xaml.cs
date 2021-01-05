@@ -132,7 +132,23 @@ namespace IPCamera
                         String down = dataReader["Down_req"].ToString().Trim();
                         String right = dataReader["Right_req"].ToString().Trim();
                         String left = dataReader["Left_req"].ToString().Trim();
-                        
+                        if (up.Equals("NULL"))
+                        {
+                            up = "";
+                        }
+                        if (down.Equals("NULL"))
+                        {
+                            down = "";
+                        }
+                        if (right.Equals("NULL"))
+                        {
+                            right = "";
+                        }
+                        if (left.Equals("NULL"))
+                        {
+                            left = "";
+                        }
+
                         int brightness = (int)dataReader["Brightness"];
                         int contrast = (int)dataReader["Contrast"];
                         int darkness = (int)dataReader["Darkness"];
