@@ -824,8 +824,8 @@ namespace IPCamera
         private void Apply_get_req_Click(object sender, RoutedEventArgs e)
         {
             // Save UP, DOWN, RIGHT, LEFT Buttons
-            if (!up_text.Text.Equals("") && !down_text.Text.Equals("") &&
-                    !right_text.Text.Equals("") && !left_text.Text.Equals(""))
+            if (CheckURL(up_text.Text) && CheckURL(down_text.Text) &&
+                    CheckURL(right_text.Text) && CheckURL(left_text.Text))
             {
                 String cam_name = camera_selector.SelectedItem.ToString();
                 if (!cam_name.Equals("Select a camera"))
@@ -842,29 +842,43 @@ namespace IPCamera
                     cmd.Parameters.AddWithValue("@cam_name", cam_name);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
+                    cn.Close();
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    cn.Close();
+                    else
+                    {
+                        // Ask to Restart The Application
+                        MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
+                        if (res.ToString() == "OK")
+                        {
+                            // Close Settings Window
+                            this.Close();
+                            // Restart App Application
+                            MainWindow.RestartApp();
+                        }
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Select a camera.");
+                    System.Windows.MessageBox.Show("Select a camera.");
                 }
             }
             else
             {
-                Console.WriteLine("Select a camera.");
-            }
-            // Ask to Restart The Application
-            MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
-            if (res.ToString() == "OK")
-            {
-                // Close Settings Window
-                this.Close();
-                // Restart App Application
-                MainWindow.RestartApp();
+                System.Windows.MessageBox.Show("Setup cameras http/https urls");
             }
         }
+
+
+        // Check if the texts is a valis urls
+        private static bool CheckURL(String url)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            return result;
+        }
+        
 
 
     }
