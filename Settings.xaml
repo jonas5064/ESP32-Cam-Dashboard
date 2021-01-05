@@ -470,7 +470,7 @@
                         <Label Grid.Row="3" Grid.Column="1" Foreground="#FFB4B4B4" Background="{x:Null}" FontSize="18">RIGHT:</Label>
                         <TextBox Grid.Row="3" Grid.Column="2" Margin="7,2,7,3" FontSize="18" x:Name="right_text" />
                         <!-- Button Apply -->
-                        <Button Grid.Column="2" Grid.Row="5" Content="Apply" HorizontalAlignment="Right" FontSize="18" Width="131" Click="Apply_Click"/>
+                        <Button Grid.Column="2" Grid.Row="5" Content="Apply" HorizontalAlignment="Right" FontSize="18" Width="131" Click="Apply_get_req_Click"/>
                     </Grid>
                 </Grid>
             </TabItem>

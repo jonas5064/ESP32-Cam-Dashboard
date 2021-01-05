@@ -305,38 +305,6 @@ namespace IPCamera
                     }
                 }
             }
-            // Save UP, DOWN, RIGHT, LEFT Buttons
-            if (!up_text.Text.Equals("") && !down_text.Text.Equals("") &&
-                    !right_text.Text.Equals("") && !left_text.Text.Equals(""))
-            {
-                String cam_name = camera_selector.SelectedItem.ToString();
-                if (!cam_name.Equals("Select a camera"))
-                {
-                    Console.WriteLine("Update DATABASE");
-                    // Update Data To Database
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = "UPDATE dbo.myCameras SET Up_req=@up, Down_req=@down, Left_req=@left, Right_req=@right WHERE name=@cam_name";
-                    SqlCommand cmd = new SqlCommand(query, cn);
-                    cmd.Parameters.AddWithValue("@up", up_text.Text);
-                    cmd.Parameters.AddWithValue("@down", down_text.Text);
-                    cmd.Parameters.AddWithValue("@left", left_text.Text);
-                    cmd.Parameters.AddWithValue("@right", right_text.Text);
-                    cmd.Parameters.AddWithValue("@cam_name", cam_name);
-                    cn.Open();
-                    int result = cmd.ExecuteNonQuery();
-                    if (result < 0)
-                        System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    cn.Close();
-                }
-                else
-                {
-                    Console.WriteLine("Select a camera.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Select a camera.");
-            }
             // Ask to Restart The Application
             MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
             if (res.ToString() == "OK")
@@ -347,7 +315,6 @@ namespace IPCamera
                 MainWindow.RestartApp();
             }
         }
-
 
 
         private void Update_settings_page()
@@ -852,5 +819,53 @@ namespace IPCamera
                 left_text.Text = "";
             }
         }
+
+        // Save the cameras remote controll settings
+        private void Apply_get_req_Click(object sender, RoutedEventArgs e)
+        {
+            // Save UP, DOWN, RIGHT, LEFT Buttons
+            if (!up_text.Text.Equals("") && !down_text.Text.Equals("") &&
+                    !right_text.Text.Equals("") && !left_text.Text.Equals(""))
+            {
+                String cam_name = camera_selector.SelectedItem.ToString();
+                if (!cam_name.Equals("Select a camera"))
+                {
+                    Console.WriteLine("Update DATABASE");
+                    // Update Data To Database
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = "UPDATE dbo.myCameras SET Up_req=@up, Down_req=@down, Left_req=@left, Right_req=@right WHERE name=@cam_name";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cmd.Parameters.AddWithValue("@up", up_text.Text);
+                    cmd.Parameters.AddWithValue("@down", down_text.Text);
+                    cmd.Parameters.AddWithValue("@left", left_text.Text);
+                    cmd.Parameters.AddWithValue("@right", right_text.Text);
+                    cmd.Parameters.AddWithValue("@cam_name", cam_name);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
+                else
+                {
+                    Console.WriteLine("Select a camera.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Select a camera.");
+            }
+            // Ask to Restart The Application
+            MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
+            if (res.ToString() == "OK")
+            {
+                // Close Settings Window
+                this.Close();
+                // Restart App Application
+                MainWindow.RestartApp();
+            }
+        }
+
+
     }
 }
