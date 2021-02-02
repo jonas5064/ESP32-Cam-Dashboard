@@ -22,7 +22,7 @@ namespace IPCamera
             this.FillUsers();
 
             // Fill the TextBoxes With the Data
-            sms_account_sid.Text = MainWindow.twilioAccountSID;
+            sms_account_ssid.Text = MainWindow.twilioAccountSID;
             sms_account_token.Text = MainWindow.twilioAccountToken;
             sms_account_phone.Text = MainWindow.twilioNumber;
         }
@@ -243,41 +243,56 @@ namespace IPCamera
                 }
             }
             // Save Email Sender And Password
-            if (email_send_textbox.Text.Equals("") && pass_send_textbox.Text.Equals(""))
+            if ( (!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
+                    (!pass_send_textbox.Password.Equals(MainWindow.pass_send)))
             {
-                if ( (!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
-                        (!pass_send_textbox.Text.Equals(MainWindow.pass_send)))
+                Console.WriteLine(pass_send_textbox.Password);
+                // If email is an valid email
+                try
                 {
-                    // Delete From Table The Last
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"DELETE FROM dbo.EmailSender";
-                    SqlCommand cmd = new SqlCommand(query, cn);
-                    cn.Open();
-                    int result = cmd.ExecuteNonQuery();
-                    if (result < 0)
-                        System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    cn.Close();
-                    // Save Data To Database
-                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                    var addr = new System.Net.Mail.MailAddress(email_send_textbox.Text);
+                    if (addr.Address == email_send_textbox.Text)
                     {
-                        query = $"INSERT INTO dbo.EmailSender (Email,Pass) VALUES (@email,@pass)";
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        // Delete From Table The Last
+                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                        String query = $"DELETE FROM dbo.EmailSender";
+                        SqlCommand cmd = new SqlCommand(query, cn);
+                        cn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        cn.Close();
+                        // Save Data To Database
+                        using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                         {
-                            command.Parameters.AddWithValue("@email", email_send_textbox.Text);
-                            command.Parameters.AddWithValue("@pass", pass_send_textbox.Text);
-                            connection.Open();
-                            result = command.ExecuteNonQuery();
-                            // Check Error
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
+                            query = $"INSERT INTO dbo.EmailSender (Email,Pass) VALUES (@email,@pass)";
+                            using (SqlCommand command = new SqlCommand(query, connection))
+                            {
+                                command.Parameters.AddWithValue("@email", email_send_textbox.Text);
+                                command.Parameters.AddWithValue("@pass", pass_send_textbox.Password);
+                                connection.Open();
+                                result = command.ExecuteNonQuery();
+                                // Check Error
+                                if (result < 0)
+                                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                            }
                         }
+                    } else
+                    {
+                        System.Windows.MessageBox.Show("Not Valid Email!");
                     }
                 }
+                catch
+                {
+                    System.Windows.MessageBox.Show("Not Valid Email!");
+                }
+
+                
             }
             // Save SMS sid, token, phone
-            if (!sms_account_sid.Text.Equals("") && 
-                !sms_account_token.Text.Equals("") && 
-                !sms_account_phone.Text.Equals(""))
+            if (!sms_account_ssid.Text.Equals(MainWindow.twilioAccountSID) ||
+                !sms_account_token.Text.Equals(MainWindow.twilioAccountToken) ||
+                !sms_account_phone.Text.Equals(MainWindow.twilioNumber))
             {
                 // Delete From Table The Last
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
@@ -294,7 +309,7 @@ namespace IPCamera
                     query = $"INSERT INTO dbo.SMS (AccountSID,AccountTOKEN,Phone) VALUES (@sid,@token,@phone)";
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@sid", sms_account_sid.Text);
+                        command.Parameters.AddWithValue("@sid", sms_account_ssid.Text);
                         command.Parameters.AddWithValue("@token", sms_account_token.Text);
                         command.Parameters.AddWithValue("@phone", sms_account_phone.Text);
                         connection.Open();
@@ -393,7 +408,7 @@ namespace IPCamera
             }
             // Update Email Sender And Pasword
             email_send_textbox.Text = MainWindow.email_send;
-            pass_send_textbox.Text = MainWindow.pass_send;
+            pass_send_textbox.Password = MainWindow.pass_send;
             // Update Robotic . CameraSelector cameras
             camera_selector.Items.Add("Select a camera");
             camera_selector.SelectedIndex = camera_selector.Items.IndexOf("Select a camera");
@@ -403,7 +418,7 @@ namespace IPCamera
             }
         }
 
-        
+
         // Fill Users Table With Users
         public void FillUsers()
         {

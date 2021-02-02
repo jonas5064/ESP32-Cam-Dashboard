@@ -180,9 +180,10 @@
                         </Grid>
                         <Grid Grid.Column="1" Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="25*" />
-                                <ColumnDefinition Width="126*" />
-                                <ColumnDefinition Width="337*" />
+                                <ColumnDefinition Width="24*" />
+                                <ColumnDefinition Width="123*" />
+                                <ColumnDefinition Width="313*" />
+                                <ColumnDefinition Width="19*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -191,7 +192,8 @@
                             <Label Grid.Column="1"   Grid.Row="0" Content="Email Sender:" Foreground="#FFB4B4B4" />
                             <TextBox Grid.Column="2" Grid.Row="0" Name="email_send_textbox" Margin="0,3" />
                             <Label Grid.Column="1"   Grid.Row="1" Content="Password:"      Foreground="#FFB4B4B4" />
-                            <TextBox Grid.Column="2" Grid.Row="1" Name="pass_send_textbox" Margin="0,3" />
+                            <!--<TextBox Grid.Column="2" Grid.Row="1" Name="pass_send_textbox" Margin="0,3" />-->
+                            <PasswordBox Grid.Column="2" Grid.Row="1" Name="pass_send_textbox" Margin="0,3" PasswordChar="*" />
                         </Grid>
 
                         <!-- SMS Tokens -->
@@ -227,7 +229,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Grid.Column="0"   Grid.Row="0" Content="AccountSID:" Foreground="#FFB4B4B4" />
-                                <TextBox Grid.Column="1" Grid.Row="0" Margin="0,3" x:Name="sms_account_sid" />
+                                <TextBox Grid.Column="1" Grid.Row="0" Margin="0,3" x:Name="sms_account_ssid" />
                                 <Label Grid.Column="0"   Grid.Row="1" Content="AccountTOKEN:" Foreground="#FFB4B4B4" />
                                 <TextBox Grid.Column="1" Grid.Row="1" Margin="0,3" x:Name="sms_account_token" />
                                 <Label Grid.Column="0"   Grid.Row="2" Content="Phone:" Foreground="#FFB4B4B4" />
