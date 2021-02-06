@@ -114,7 +114,6 @@ namespace IPCamera
                     }
                 }
             }
-
             // Save URLS
             Dictionary<String, String> urls = new Dictionary<String, String>();
             // Setup a list with the urls and the number of them.
@@ -279,15 +278,17 @@ namespace IPCamera
                         }
                     } else
                     {
-                        System.Windows.MessageBox.Show("Not Valid Email!");
+                        if (email_send_textbox.Text != "")
+                        {
+                            System.Windows.MessageBox.Show("Not Valid Email!");
+                        }
+                        
                     }
                 }
                 catch
                 {
                     System.Windows.MessageBox.Show("Not Valid Email!");
-                }
-
-                
+                } 
             }
             // Save SMS sid, token, phone
             if (!sms_account_ssid.Text.Equals(MainWindow.twilioAccountSID) ||
