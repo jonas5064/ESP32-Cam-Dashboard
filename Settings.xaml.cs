@@ -278,7 +278,7 @@ namespace IPCamera
                         }
                     } else
                     {
-                        if (email_send_textbox.Text != "")
+                        if (!email_send_textbox.Text.Equals(""))
                         {
                             System.Windows.MessageBox.Show("Not Valid Email!");
                         }
@@ -287,7 +287,10 @@ namespace IPCamera
                 }
                 catch
                 {
-                    System.Windows.MessageBox.Show("Not Valid Email!");
+                    if (!email_send_textbox.Text.Equals(""))
+                    {
+                        System.Windows.MessageBox.Show("Not Valid Email!");
+                    }
                 } 
             }
             // Save SMS sid, token, phone
