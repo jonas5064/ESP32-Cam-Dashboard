@@ -53,7 +53,7 @@ namespace IPCamera
             pic_checkbox.IsChecked = (this.camera.On_move_pic);
             rec_checkbox.IsChecked = (this.camera.On_move_rec);
             // Add Title
-            cameras_title.Content = this.camera.name;
+            cameras_title.Content = "Cameras Name: " + this.camera.name;
         }
 
 
@@ -525,17 +525,20 @@ namespace IPCamera
                 // Update Cameras Move_Sensitivity
                 int val = Convert.ToInt32(e.NewValue);
                 sensitivity_value_label.Content = $"{val}";
-                this.camera.On_move_sensitivity = val;
-                Console.WriteLine(this.camera.On_move_sensitivity.ToString());
-                // Update DataBases Move_Sensitivity
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.myCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
+                if (this.camera != null)
+                {
+                    this.camera.On_move_sensitivity = val;
+                    Console.WriteLine(this.camera.On_move_sensitivity.ToString());
+                    // Update DataBases Move_Sensitivity
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"UPDATE dbo.myCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                }
             }
             catch (System.Data.SqlClient.SqlException) { }
             catch (System.NullReferenceException) { }

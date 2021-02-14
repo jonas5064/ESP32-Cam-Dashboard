@@ -50,7 +50,6 @@ Global
 		{2211CF6F-02C0-4E07-B927-810DE34D80A0}.Release|ARM64.ActiveCfg = Release
 		{2211CF6F-02C0-4E07-B927-810DE34D80A0}.Release|x64.ActiveCfg = Release
 		{2211CF6F-02C0-4E07-B927-810DE34D80A0}.Release|x86.ActiveCfg = Release
-		{2211CF6F-02C0-4E07-B927-810DE34D80A0}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

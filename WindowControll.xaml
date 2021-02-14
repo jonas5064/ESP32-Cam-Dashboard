@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="WindowControll"
         Background="#FF151515"
-        Width="1000" Height="700">
+        Width="1300" Height="1000"
+        MinWidth="1300" MinHeight="1000">
     <!-- WindowState="Maximized" -->
 
 
@@ -15,30 +16,47 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="13"/>
-            <ColumnDefinition Width="533*"/>
-            <ColumnDefinition Width="227*"/>
+            <ColumnDefinition Width="711*"/>
+            <ColumnDefinition Width="268*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="575*"/>
-            <RowDefinition Height="94*"/>
+            <!--<RowDefinition Height="94*"/>-->
         </Grid.RowDefinitions>
 
         <!-- Up Right Corner -->
-        <Grid Grid.Column="1" Grid.Row="0">
+        <Grid Grid.Column="1" Grid.Row="0" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="105*" />
-                <ColumnDefinition Width="411*" />
-                <ColumnDefinition Width="17*" />
+                <ColumnDefinition Width="192*" />
+                <ColumnDefinition Width="475*" />
+                <ColumnDefinition Width="262*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="133*" />
-                <RowDefinition Height="96*" />
-                <RowDefinition Height="73*" />
-                <RowDefinition Height="77*" />
+                <RowDefinition />
+                <RowDefinition Height="115*" />
+                <RowDefinition Height="210*" />
+                <RowDefinition Height="194*" />
+                <RowDefinition Height="147*" />
+                <RowDefinition Height="292*" />
             </Grid.RowDefinitions>
 
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="79*"/>
+                    <ColumnDefinition Width="330*"/>
+                    <ColumnDefinition Width="66*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="42*"/>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="38*"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="1" Grid.Row="0" x:Name="cameras_title" Foreground="#FFC9C9C9" FontSize="23"/>
+                <Label Grid.Column="1" Grid.Row="2" x:Name="local_camera_title" Foreground="#FFC9C9C9" Content="Local Machine Settings:" FontSize="19"/>
+            </Grid>
+
             <!-- Grid Contains checkbox Face Detection, Recognition -->
-            <Grid Grid.Column="0" Grid.Row="0" >
+            <Grid Grid.Column="0" Grid.Row="1" >
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -56,7 +74,7 @@
 
 
             <!-- brightness Slider -->
-            <Grid Grid.Column="1" Grid.Row="0" >
+            <Grid Grid.Column="1" Grid.Row="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -69,13 +87,13 @@
                 </Grid.RowDefinitions>
 
 
-                <Label  Grid.Row="1" x:Name="brightness_label" Foreground="#FFC9C9C9" />
+                <Label  Grid.Row="1" x:Name="brightness_label" Foreground="#FFC9C9C9" Content="Brightness"/>
                 <Slider Grid.Row="2" x:Name="brightness_slider" Minimum="0" Maximum="255" ValueChanged="Brightness_func" />
 
-                <Label  Grid.Row="3" x:Name="contrast_label" Foreground="#FFC9C9C9" />
+                <Label  Grid.Row="3" x:Name="contrast_label" Foreground="#FFC9C9C9" Content="Contrast"/>
                 <Slider Grid.Row="4" x:Name="contrast_slider" Minimum="0" Maximum="255" ValueChanged="Contrast_func" />
 
-                <Label  Grid.Row="5" x:Name="darkness_label" Foreground="#FFC9C9C9" />
+                <Label  Grid.Row="5" x:Name="darkness_label" Foreground="#FFC9C9C9" Content="Darkness"/>
                 <Slider Grid.Row="6" x:Name="darkness_slider" Minimum="0" Maximum="255" ValueChanged="Darkness_func" />
             </Grid>
 
@@ -83,7 +101,7 @@
 
 
             <!-- Camera Controll Buttons Grid -->
-            <Grid Grid.Row="1" Grid.Column="0" >
+            <Grid Grid.Row="3" Grid.Column="0" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -102,7 +120,7 @@
             </Grid>
 
             <!-- On Movement -->
-            <Grid Grid.Row="1" Grid.Column="1" >
+            <Grid Grid.Row="3" Grid.Column="1" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="72*" />
                     <ColumnDefinition Width="105*" />
@@ -156,22 +174,21 @@
             </Grid>
 
             <!-- Recording Grid -->
-            <Grid Grid.Column="0" Grid.Row="2" >
+            <Grid Grid.Column="0" Grid.Row="4" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="31*" />
-                    <RowDefinition Height="18*" />
-                    <RowDefinition Height="24*" />
+                    <RowDefinition />
+                    <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1" >
                     <Label Foreground="#FFC9C9C9" x:Name="rec_label"/>
                 </Grid>
-                <Grid Grid.Row="2" >
+                <Grid Grid.Row="1" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" MouseUp="Start_REC_button_click" Source="{StaticResource start_recording_button_img}" />
-                    <Image Grid.Column="1" MouseUp="Stop_REC_button_click"  Source="{StaticResource stop_recording_button_img}" />
+                    <Image Grid.Column="0" MouseUp="Start_REC_button_click" Source="{StaticResource start_recording_button_img}" Height="50px"/>
+                    <Image Grid.Column="1" MouseUp="Stop_REC_button_click"  Source="{StaticResource stop_recording_button_img}" Margin="0,0,1,0" Height="50px"/>
                 </Grid>
             </Grid>
 
@@ -179,13 +196,268 @@
 
         <Grid Grid.Column="2" Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="24*"/>
+                <RowDefinition Height="25*"/>
+                <RowDefinition Height="24*"/>
             </Grid.RowDefinitions>
-
-            <Label x:Name="cameras_title" Grid.Row="0" Foreground="#FFC9C9C9" FontSize="27" />
+            <Label Grid.Row="0" x:Name="cameras_remote_title" Foreground="#FFC9C9C9" FontSize="15" Content="Remote Cameras Settings:"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_resolution" Foreground="#FFC9C9C9" FontSize="13" Content="Resolution:"/>
+                <ComboBox Grid.Column="1" Margin="12,0" Height="23">
+                    <ComboBoxItem Content="UXGA(1600X1200)" IsSelected="True"/>
+                    <ComboBoxItem Content="SXGA(1280X1024)" IsSelected="False"/>
+                    <ComboBoxItem Content="XGA(1024X768)" IsSelected="False"/>
+                    <ComboBoxItem Content="SVGA(800X600)" IsSelected="False"/>
+                    <ComboBoxItem Content="VGA(640X480)" IsSelected="False"/>
+                    <ComboBoxItem Content="CIF(400X296)" IsSelected="False"/>
+                    <ComboBoxItem Content="QVGA(320X240)" IsSelected="False"/>
+                    <ComboBoxItem Content="HQVGA(240X176" IsSelected="False"/>
+                    <ComboBoxItem Content="QQVGA(160X120)" IsSelected="False"/>
+                </ComboBox>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="117*"/>
+                    <ColumnDefinition Width="167*"/>
+                    <ColumnDefinition Width="66*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_quality" Foreground="#FFC9C9C9" FontSize="13" Content="Quality:"/>
+                <!-- Add To Slider ValueChanged="" -->
+                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2"/>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_brightness" Foreground="#FFC9C9C9" FontSize="13" Content="Brightness:"/>
+                <!-- Add To Slider ValueChanged="" -->
+                <Slider Grid.Column="2" x:Name="cameras_brightness_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+            </Grid>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_contrast" Foreground="#FFC9C9C9" FontSize="13" Content="Contrast:"/>
+                <!-- Add To Slider ValueChanged="" -->
+                <Slider Grid.Column="2" x:Name="cameras_contrast_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+            </Grid>
+            <Grid Grid.Row="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_saturation" Foreground="#FFC9C9C9" FontSize="13" Content="Saturation:"/>
+                <!-- Add To Slider ValueChanged="" -->
+                <Slider Grid.Column="2" x:Name="cameras_saturation_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+            </Grid>
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_specialeffect" Foreground="#FFC9C9C9" FontSize="13" Content="Special Effect:"/>
+                <ComboBox Grid.Column="1" Margin="12,0" Height="23">
+                    <ComboBoxItem Content="No Effect" IsSelected="True"/>
+                    <ComboBoxItem Content="Negative" IsSelected="False"/>
+                    <ComboBoxItem Content="Grayscale" IsSelected="False"/>
+                    <ComboBoxItem Content="Red Tint" IsSelected="False"/>
+                    <ComboBoxItem Content="Green Tint" IsSelected="False"/>
+                    <ComboBoxItem Content="Blue Tint" IsSelected="False"/>
+                    <ComboBoxItem Content="Sepia" IsSelected="False"/>
+                </ComboBox>
+            </Grid>
+            <Grid Grid.Row="7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_awb" Foreground="#FFC9C9C9" FontSize="13" Content="AWB:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_awb_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_awb_gain" Foreground="#FFC9C9C9" FontSize="13" Content="AWB Gain:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_awb_gain_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_wb_mode" Foreground="#FFC9C9C9" FontSize="13" Content="WB Mode:"/>
+                <ComboBox Grid.Column="1" Margin="12,0" Height="23">
+                    <ComboBoxItem Content="Auto" IsSelected="True"/>
+                    <ComboBoxItem Content="Sunny" IsSelected="False"/>
+                    <ComboBoxItem Content="Cloudy" IsSelected="False"/>
+                    <ComboBoxItem Content="Office" IsSelected="False"/>
+                    <ComboBoxItem Content="Home" IsSelected="False"/>
+                </ComboBox>
+            </Grid>
+            <Grid Grid.Row="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_aec_sensor" Foreground="#FFC9C9C9" FontSize="13" Content="AEC SENSOR:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="11">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_aec_dsp" Foreground="#FFC9C9C9" FontSize="13" Content="AEC DSP:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_ae_level" Foreground="#FFC9C9C9" FontSize="13" Content="AE Level:"/>
+                <!-- Add To Slider ValueChanged="" -->
+                <Slider Grid.Column="2" x:Name="cameras_ae_level_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+            </Grid>
+            <Grid Grid.Row="13">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_agc" Foreground="#FFC9C9C9" FontSize="13" Content="AGC:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_agc_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_gain_ceiling" Foreground="#FFC9C9C9" FontSize="13" Content="Gain Ceiling:"/>
+                <!-- Add To Slider ValueChanged="" -->
+                <Slider Grid.Column="2" x:Name="cameras_gain_ceiling_slider" Minimum="2" Maximum="128" Margin="12,0"/>
+            </Grid>
+            <Grid Grid.Row="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_bpc" Foreground="#FFC9C9C9" FontSize="13" Content="BPC:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_bpc_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_wpc" Foreground="#FFC9C9C9" FontSize="13" Content="WPC:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_wpc_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="17">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_raw_gma" Foreground="#FFC9C9C9" FontSize="13" Content="RAW GMA:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_raw_gma_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_lens_correction" Foreground="#FFC9C9C9" FontSize="13" Content="Lens Correction:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_lens_correction_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="19">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_h_mirror" Foreground="#FFC9C9C9" FontSize="13" Content="H-Mirror:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_h_mirror_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_v_flip" Foreground="#FFC9C9C9" FontSize="13" Content="V-Flip:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_v_flip_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="21">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_dcw_downsize_en" Foreground="#FFC9C9C9" FontSize="13" Content="DCW (Downsize EN):"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_dcw_downsize_en_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="22">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_color_bar" Foreground="#FFC9C9C9" FontSize="13" Content="Color Bar:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_color_bar_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="23">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_face_detection" Foreground="#FFC9C9C9" FontSize="13" Content="Face Detection:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_face_detection_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*"/>
+                    <ColumnDefinition Width="111*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" x:Name="cameras_face_recognition" Foreground="#FFC9C9C9" FontSize="13" Content="Face Recognition:"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_face_recognition_checkbox" Foreground="#FFB4B4B4" />
+            </Grid>
+            <Grid Grid.Row="25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="cameras_get_still_button" Content="Get Still" Margin="3"></Button>
+                <Button Grid.Column="1" x:Name="cameras_start_stream_button" Content="Start Stream" Margin="3"></Button>
+                <Button Grid.Column="2" x:Name="cameras_enroll_face_button" Content="Enroll Face" Margin="3"></Button>
+            </Grid>
         </Grid>
 
 
