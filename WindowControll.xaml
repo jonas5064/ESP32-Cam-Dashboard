@@ -252,8 +252,7 @@
                     <ColumnDefinition Width="66*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_quality" Foreground="#FFC9C9C9" FontSize="13" Content="Quality:"/>
-                <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2"/>
+                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2" ValueChanged="cameras_quality_changed"/>
             </Grid>
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
