@@ -609,6 +609,7 @@ namespace IPCamera
                 }
                 if (!selection.Contains("Change"))
                 {
+                    this.camera.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                     //Console.WriteLine("Old Url: " + this.url);
@@ -622,8 +623,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.camera.Stop();
-                            this.camera.video.StartAsync();
+                            this.camera.Start();
                             //MainWindow.RestartApp();
                         }
                     }
