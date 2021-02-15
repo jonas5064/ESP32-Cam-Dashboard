@@ -16,8 +16,9 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="13"/>
-            <ColumnDefinition Width="711*"/>
-            <ColumnDefinition Width="268*"/>
+            <ColumnDefinition Width="929*"/>
+            <ColumnDefinition Width="197*"/>
+            <ColumnDefinition Width="153*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="575*"/>
@@ -194,7 +195,7 @@
 
         </Grid>
 
-        <Grid Grid.Column="2" Grid.Row="0">
+        <Grid Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -231,16 +232,17 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_resolution" Foreground="#FFC9C9C9" FontSize="13" Content="Resolution:"/>
-                <ComboBox Grid.Column="1" Margin="12,0" Height="23">
-                    <ComboBoxItem Content="UXGA(1600X1200)" IsSelected="True"/>
+                <ComboBox Grid.Column="1" Margin="12,0" Height="23" SelectionChanged="Resolution_combobox_Changed">
+                    <ComboBoxItem Content="UXGA(1600X1200)" IsSelected="False"/>
                     <ComboBoxItem Content="SXGA(1280X1024)" IsSelected="False"/>
                     <ComboBoxItem Content="XGA(1024X768)" IsSelected="False"/>
                     <ComboBoxItem Content="SVGA(800X600)" IsSelected="False"/>
                     <ComboBoxItem Content="VGA(640X480)" IsSelected="False"/>
                     <ComboBoxItem Content="CIF(400X296)" IsSelected="False"/>
                     <ComboBoxItem Content="QVGA(320X240)" IsSelected="False"/>
-                    <ComboBoxItem Content="HQVGA(240X176" IsSelected="False"/>
+                    <ComboBoxItem Content="HQVGA(240X176)" IsSelected="False"/>
                     <ComboBoxItem Content="QQVGA(160X120)" IsSelected="False"/>
+                    <ComboBoxItem Content="Change" IsSelected="True"/>
                 </ComboBox>
             </Grid>
             <Grid Grid.Row="2">

@@ -7,6 +7,9 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using System.Net;
+using System.IO;
+using System.Threading;
 
 namespace IPCamera
 {
@@ -16,6 +19,7 @@ namespace IPCamera
     public partial class WindowControll : Window
     {
         public Camera camera;
+        public String url = "";
 
         public WindowControll(Camera cam)
         {
@@ -24,6 +28,7 @@ namespace IPCamera
            
             // Setup this_camera
             this.camera = cam;
+            this.url = this.camera.url;
             // Chech if Face_Recognition, Face Detection  is checked
             Face_det.IsChecked = (this.camera.Detection);
             Face_rec.IsChecked = (this.camera.Recognition);
@@ -544,5 +549,89 @@ namespace IPCamera
             catch (System.NullReferenceException) { }
         }
 
+        // Remote Camera Resolution
+        private void Resolution_combobox_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.url != "")
+            {
+                ComboBox cmb = sender as ComboBox;
+                String selection = cmb.SelectedValue.ToString();
+                String order = "";
+                /*
+                Console.WriteLine(selection);
+                switch (selection)
+                {
+                    case "QQVGA(160X120)":  order = "0"; Console.WriteLine("0"); break;
+                    case "HQVGA(240X176)":  order = "3"; Console.WriteLine("3"); break;
+                    case "QVGA(320X240)":   order = "4"; Console.WriteLine("4"); break;
+                    case "CIF(400X296)":    order = "5"; Console.WriteLine("5"); break;
+                    case "VGA(640X480)":    order = "6"; Console.WriteLine("6"); break;
+                    case "SVGA(800X600)":   order = "7"; Console.WriteLine("7"); break;
+                    case "XGA(1024X768)":   order = "8"; Console.WriteLine("8"); break;
+                    case "SXGA(1280X1024)": order = "9"; Console.WriteLine("9"); break;
+                    case "UXGA(1600X1200)": order = "10"; Console.WriteLine("10"); break;
+                };
+                */
+                if (selection.Contains("QQVGA(160X120)"))
+                {
+                    order = "0";
+                } else if (selection.Contains("HQVGA(240X176)"))
+                {
+                    order = "3";
+                }
+                else if (selection.Contains("QVGA(320X240)"))
+                {
+                    order = "4";
+                }
+                else if (selection.Contains("CIF(400X296)"))
+                {
+                    order = "5";
+                }
+                else if (selection.Contains("VGA(640X480)"))
+                {
+                    order = "6";
+                }
+                else if (selection.Contains("SVGA(800X600)"))
+                {
+                    order = "7";
+                }
+                else if (selection.Contains("XGA(1024X768)"))
+                {
+                    order = "8";
+                }
+                else if (selection.Contains("SXGA(1280X1024)"))
+                {
+                    order = "9";
+                }
+                else if (selection.Contains("UXGA(1600X1200)"))
+                {
+                    order = "10";
+                }
+                if (!selection.Contains("Change"))
+                {
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=framesize&val=" + order;
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Stop();
+                            this.camera.video.StartAsync();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
     }
+
+
 }

@@ -384,7 +384,7 @@ namespace IPCamera
         // On Error EVnt
         private void OnError(object sender, VisioForge.Types.ErrorsEventArgs e)
         {
-            System.Windows.MessageBox.Show($"[OnError]   {e.Message}");
+            //System.Windows.MessageBox.Show($"[OnError]   {e.Message}");
             //throw new NotImplementedException();
         }
 

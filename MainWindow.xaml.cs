@@ -68,7 +68,6 @@ namespace IPCamera
             // Get Data From DB
             using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
             {
-
                 // Get Files Paths Data
                 String query = "SELECT Name, Path FROM dbo.FilesDirs";
                 using (SqlCommand command = new SqlCommand(query, connection))
