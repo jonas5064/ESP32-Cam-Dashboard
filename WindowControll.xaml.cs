@@ -657,6 +657,84 @@ namespace IPCamera
                 }
             }
         }
+
+        // Remote Cameras Brightness
+        private void cameras_brightness(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int val = Convert.ToInt32(e.NewValue);
+            if (this.camera != null)
+            {
+                this.camera.Stop();
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // http://192.168.1.50/control?var=quality&val=10
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/control?var=brightness&val=" + val;
+                //Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        this.camera.Start();
+                        //MainWindow.RestartApp();
+                    }
+                }
+            }
+        }
+
+        // Remote Cameras Contrast
+        private void cameras_contrast(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int val = Convert.ToInt32(e.NewValue);
+            if (this.camera != null)
+            {
+                this.camera.Stop();
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // http://192.168.1.50/control?var=quality&val=10
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/control?var=contrast&val=" + val;
+                //Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        this.camera.Start();
+                        //MainWindow.RestartApp();
+                    }
+                }
+            }
+        }
+
+        // Remote Cameras Saturasion
+        private void cameras_saturation(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int val = Convert.ToInt32(e.NewValue);
+            if (this.camera != null)
+            {
+                this.camera.Stop();
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // http://192.168.1.50/control?var=quality&val=10
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/control?var=saturation&val=" + val;
+                //Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        this.camera.Start();
+                        //MainWindow.RestartApp();
+                    }
+                }
+            }
+        }
     }
 
 

@@ -252,7 +252,7 @@
                     <ColumnDefinition Width="66*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_quality" Foreground="#FFC9C9C9" FontSize="13" Content="Quality:"/>
-                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2" ValueChanged="cameras_quality_changed" IsMoveToPointEnabled="True" />
+                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2" IsMoveToPointEnabled="True" ValueChanged="cameras_quality_changed" />
             </Grid>
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
@@ -260,8 +260,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_brightness" Foreground="#FFC9C9C9" FontSize="13" Content="Brightness:"/>
-                <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_brightness_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+                <Slider Grid.Column="1" x:Name="cameras_brightness_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_brightness" Height="36" VerticalAlignment="Bottom"/>
             </Grid>
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
@@ -269,8 +268,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_contrast" Foreground="#FFC9C9C9" FontSize="13" Content="Contrast:"/>
-                <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_contrast_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+                <Slider Grid.Column="2" x:Name="cameras_contrast_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_contrast"/>
             </Grid>
             <Grid Grid.Row="5">
                 <Grid.ColumnDefinitions>
@@ -278,8 +276,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_saturation" Foreground="#FFC9C9C9" FontSize="13" Content="Saturation:"/>
-                <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_saturation_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+                <Slider Grid.Column="2" x:Name="cameras_saturation_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_saturation"/>
             </Grid>
             <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
@@ -350,7 +347,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_ae_level" Foreground="#FFC9C9C9" FontSize="13" Content="AE Level:"/>
                 <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_ae_level_slider" Minimum="-2" Maximum="2" Margin="12,0"/>
+                <Slider Grid.Column="2" x:Name="cameras_ae_level_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True"/>
             </Grid>
             <Grid Grid.Row="13">
                 <Grid.ColumnDefinitions>
@@ -367,7 +364,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_gain_ceiling" Foreground="#FFC9C9C9" FontSize="13" Content="Gain Ceiling:"/>
                 <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_gain_ceiling_slider" Minimum="2" Maximum="128" Margin="12,0"/>
+                <Slider Grid.Column="2" x:Name="cameras_gain_ceiling_slider" Minimum="2" Maximum="128" Margin="12,0" IsMoveToPointEnabled="True"/>
             </Grid>
             <Grid Grid.Row="15">
                 <Grid.ColumnDefinitions>
