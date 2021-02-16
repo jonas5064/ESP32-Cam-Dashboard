@@ -340,7 +340,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_aec_dsp" Foreground="#FFC9C9C9" FontSize="13" Content="AEC DSP:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222"  Click="AEC_DSP_checkbox_Checked"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222" Click="AEC_DSP_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="12">
                 <Grid.ColumnDefinitions>
@@ -349,7 +349,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_ae_level" Foreground="#FFC9C9C9" FontSize="13" Content="AE Level:"/>
                 <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_ae_level_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True"/>
+                <Slider Grid.Column="2" x:Name="cameras_ae_level_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="AE_LEVEL_changed"/>
             </Grid>
             <Grid Grid.Row="13">
                 <Grid.ColumnDefinitions>
@@ -357,7 +357,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_agc" Foreground="#FFC9C9C9" FontSize="13" Content="AGC:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_agc_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_agc_checkbox" Foreground="#FFB4B4B4" Click="AGC_checkbox_Checked" Checked="cameras_agc_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="14">
                 <Grid.ColumnDefinitions>
