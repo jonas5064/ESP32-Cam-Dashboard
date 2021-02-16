@@ -790,9 +790,8 @@ namespace IPCamera
             }
         }
 
-        /*
         // Remotes Camera AWB
-        private void cameras_awb_checkbox_Checked(object sender, RoutedEventArgs e)
+        private void AWB_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
@@ -837,11 +836,9 @@ namespace IPCamera
                 }
             }
         }
-        */
 
-        /*
         // Remotes Camera AWB GAIN
-        private void cameras_awb_gain_checkbox_Checked(object sender, RoutedEventArgs e)
+        private void AWB_GAIN_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
@@ -887,11 +884,9 @@ namespace IPCamera
                 }
             }
         }
-        */
 
-        /*
         // Remotes Camera WB Mode
-        private void WB_mode_Changed(object sender, SelectionChangedEventArgs e)
+        private void WB_MODE_Changed(object sender, SelectionChangedEventArgs e)
         {
             if (this.url != "")
             {
@@ -938,7 +933,6 @@ namespace IPCamera
                 }
             }
         }
-        */
 
         /*
         // Remotes Camera AEC Sensor

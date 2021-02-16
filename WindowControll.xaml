@@ -302,7 +302,7 @@
                     <ColumnDefinition Width="182*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_awb" Foreground="#FFC9C9C9" FontSize="13" Content="AWB:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_awb_checkbox" Foreground="#FFB4B4B4" Grid.ColumnSpan="2"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_awb_checkbox" Foreground="#FFB4B4B4" Grid.ColumnSpan="2" Click="AWB_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="8">
                 <Grid.ColumnDefinitions>
@@ -310,7 +310,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_awb_gain" Foreground="#FFC9C9C9" FontSize="13" Content="AWB Gain:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_awb_gain_checkbox" Foreground="#FFB4B4B4"  />
+                <CheckBox Grid.Column="1" x:Name="cameras_awb_gain_checkbox" Foreground="#FFB4B4B4" Click="AWB_GAIN_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="9">
                 <Grid.ColumnDefinitions>
@@ -318,8 +318,7 @@
                     <ColumnDefinition Width="116*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_wb_mode" Foreground="#FFC9C9C9" FontSize="13" Content="WB Mode:"/>
-                <ComboBox Grid.Column="1" Margin="12,7" Height="23" >
-                    <!-- SelectionChanged="WB_mode_Changed" -->
+                <ComboBox Grid.Column="1" Margin="12,7" Height="23" SelectionChanged="WB_MODE_Changed">
                     <ComboBoxItem Content="Auto" IsSelected="True"/>
                     <ComboBoxItem Content="Sunny" IsSelected="False"/>
                     <ComboBoxItem Content="Cloudy" IsSelected="False"/>
