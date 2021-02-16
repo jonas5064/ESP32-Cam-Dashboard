@@ -934,9 +934,8 @@ namespace IPCamera
             }
         }
 
-        /*
         // Remotes Camera AEC Sensor
-        private void Cameras_aec_sensor_checkbox(object sender, RoutedEventArgs e)
+        private void AEC_SENSOR_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
@@ -982,7 +981,6 @@ namespace IPCamera
                 }
             }
         }
-        */
 
         /*
         // Remotes Camera AEC DSP SensorSensor

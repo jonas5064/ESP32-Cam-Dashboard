@@ -332,7 +332,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_aec_sensor" Foreground="#FFC9C9C9" FontSize="13" Content="AEC SENSOR:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222"/>
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222" Click="AEC_SENSOR_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="11">
                 <Grid.ColumnDefinitions>
