@@ -456,7 +456,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" x:Name="cameras_get_still_button" Content="Get Still" Margin="3" Click="GET_STILL_Clicked"></Button>
                 <Button Grid.Column="1" x:Name="cameras_start_stream_button" Content="Restart" Margin="3" Click="RESTART_Clicked"></Button>
-                <Button Grid.Column="2" x:Name="cameras_enroll_face_button" Content="Enroll Face" Margin="3"></Button>
+                <Button Grid.Column="2" x:Name="cameras_enroll_face_button" Content="Enroll Face" Margin="3" Click="ENROLL_FACE_Clicked"></Button>
             </Grid>
         </Grid>
 

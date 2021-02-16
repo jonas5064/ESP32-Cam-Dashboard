@@ -20,6 +20,8 @@ namespace IPCamera
     {
         public Camera camera;
         public String url = "";
+        public bool remote_detection = false;
+        public bool remote_recognition = false;
 
         public WindowControll(Camera cam)
         {
@@ -1539,6 +1541,7 @@ namespace IPCamera
                 {
                     if (response.StatusCode.ToString().Equals("OK"))
                     {
+                        this.remote_detection = true;
                         this.camera.Start();
                         //MainWindow.RestartApp();
                     }
@@ -1560,6 +1563,7 @@ namespace IPCamera
                 {
                     if (response.StatusCode.ToString().Equals("OK"))
                     {
+                        this.remote_detection = false;
                         this.camera.Start();
                         //MainWindow.RestartApp();
                     }
@@ -1572,47 +1576,56 @@ namespace IPCamera
         private void FACE_RECOGNITION_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (this.remote_detection)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=face_recognize&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=face_recognize&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.remote_recognition = true;
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=face_recognize&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=face_recognize&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.remote_recognition = false;
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
+            } else
+            {
+                c.IsChecked = false;
+                MessageBox.Show("Face Detection is disabled");
             }
         }
 
@@ -1670,6 +1683,39 @@ namespace IPCamera
             } catch (System.Net.WebException)
             {
                 this.camera.Start();
+            }
+        }
+
+        // Button Enroll Face Clicked (Save a face on DB)
+        private void ENROLL_FACE_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (this.remote_recognition)
+            {
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                //Console.WriteLine("Old Url: " + this.url);
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/control?var=face_enroll&val=1";
+                Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                try
+                {
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                        }
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+
+                }
+            } else
+            {
+                MessageBox.Show("Face Recognition is disabled");
             }
         }
 
