@@ -1616,6 +1616,62 @@ namespace IPCamera
             }
         }
 
+        // Button Get Still Clicked
+        private void GET_STILL_Clicked(object sender, RoutedEventArgs e)
+        {
+            // Create Random a number with 13 digits
+            Random ran = new Random();
+            int num_1 = ran.Next(0000000, 10000000);
+            int num_2 = ran.Next(000000, 10000000);
+            String val = num_1.ToString() + num_2.ToString();
+            // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+            // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+            //Console.WriteLine("Old Url: " + this.url);
+            int found = this.url.IndexOf(":81");
+            String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+            ur_l += "/capture?_cb=0";
+            //Console.WriteLine("New Url: " + ur_l);
+            HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+            request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                if (response.StatusCode.ToString().Equals("OK"))
+                {
+                    this.camera.Start();
+                    //MainWindow.RestartApp();
+                }
+            }
+        }
+
+        // Button RESTART Clicked
+        private void RESTART_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.camera.Stop();
+            // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+            // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+            //Console.WriteLine("Old Url: " + this.url);
+            int found = this.url.IndexOf(":81");
+            String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+            ur_l += "/restart?username=" + this.camera.username + "&password=" + this.camera.password;
+            Console.WriteLine("New Url: " + ur_l);
+            HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+            request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        Thread.Sleep(5000);
+                        this.camera.Start();
+                        //MainWindow.RestartApp();
+                    }
+                }
+            } catch (System.Net.WebException)
+            {
+                this.camera.Start();
+            }
+        }
 
     }
 

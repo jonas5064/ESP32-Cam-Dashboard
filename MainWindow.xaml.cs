@@ -119,6 +119,8 @@ namespace IPCamera
                         String id = dataReader["id"].ToString().Trim();
                         String url = dataReader["urls"].ToString().Trim();
                         String name = dataReader["name"].ToString().Trim();
+                        String username = dataReader["username"].ToString().Trim();
+                        String password = dataReader["password"].ToString().Trim();
                         String detection = dataReader["Face_Detection"].ToString().Trim();
                         String recognition = dataReader["Face_Recognition"].ToString().Trim();
                         String recording = dataReader["Recording"].ToString().Trim();
@@ -157,6 +159,8 @@ namespace IPCamera
                             bool rec = (recording == "True");
                             Camera cam = new Camera(url, name, id, rec)
                             {
+                                Username = username,
+                                Password = password,
                                 Brightness = brightness,
                                 Contrast = contrast,
                                 Darkness = darkness,

@@ -30,6 +30,8 @@ namespace IPCamera
         public String url = "";
         public string name = "";
         public string id = "";
+        public string username = "";
+        public string password = "";
         public int row = 0;
         public int coll = 0;
         public bool detection = false;
@@ -99,6 +101,20 @@ namespace IPCamera
         public VideoCapture Get()
         {
             return this.video;
+        }
+
+        // Setup Username
+        public String Username
+        {
+            get { return this.username; }
+            set { this.username = value; }
+        }
+
+        // Setup Password
+        public String Password
+        {
+            get { return this.password; }
+            set { this.password = value; }
         }
 
         // Setup Brightness Effext

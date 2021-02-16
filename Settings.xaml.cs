@@ -115,13 +115,17 @@ namespace IPCamera
                 }
             }
             // Save URLS
-            Dictionary<String, String> urls = new Dictionary<String, String>();
+            //Dictionary<String, String> urls = new Dictionary<String, String>();
+            //Dictionary<String, String> usernamepas = new Dictionary<String, String>();
+            List<Cameras> cams = new List<Cameras>(8);
             // Setup a list with the urls and the number of them.
             if (url_1.Text != "" && name_1.Text != "")
             {
                 try
                 {
-                    urls.Add(url_1.Text, name_1.Text);
+                    //urls.Add(url_1.Text, name_1.Text);
+                    //usernamepas.Add(username_1.Text, password_1.Text);
+                    cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -132,7 +136,9 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_2.Text, name_2.Text);
+                    //urls.Add(url_2.Text, name_2.Text);
+                    //usernamepas.Add(username_2.Text, password_2.Text);
+                    cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -143,7 +149,9 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_3.Text, name_3.Text);
+                    //urls.Add(url_3.Text, name_3.Text);
+                    //usernamepas.Add(username_3.Text, password_3.Text);
+                    cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -154,7 +162,9 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_4.Text, name_4.Text);
+                    //urls.Add(url_4.Text, name_4.Text);
+                    //usernamepas.Add(username_4.Text, password_4.Text);
+                    cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -165,7 +175,9 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_5.Text, name_5.Text);
+                    //urls.Add(url_5.Text, name_5.Text);
+                    //usernamepas.Add(username_5.Text, password_5.Text);
+                    cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -176,7 +188,9 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_6.Text, name_6.Text);
+                    //urls.Add(url_6.Text, name_6.Text);
+                    //usernamepas.Add(username_6.Text, password_6.Text);
+                    cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -187,7 +201,9 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_7.Text, name_7.Text);
+                    //urls.Add(url_7.Text, name_7.Text);
+                    //usernamepas.Add(username_7.Text, password_7.Text);
+                    cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Text));
                 }
                 catch (System.ArgumentException)
                 {
@@ -198,14 +214,16 @@ namespace IPCamera
             {
                 try
                 {
-                    urls.Add(url_8.Text, name_8.Text);
+                    //urls.Add(url_8.Text, name_8.Text);
+                    //usernamepas.Add(username_8.Text, password_8.Text);
+                    cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Text));
                 }
                 catch (System.ArgumentException)
                 {
 
                 }
             }
-            int urls_num = urls.Count;
+            int urls_num = cams.Count;
             // If urls.Count > 0
             if (urls_num > 0)
             {
@@ -219,19 +237,21 @@ namespace IPCamera
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
-                foreach (var d in urls)
+                foreach (Cameras d in cams)
                 {
                     Guid guid = Guid.NewGuid();
                     String my_id = guid.ToString();
                     // Save Data To Database
                     using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                     {
-                        String query = $"INSERT INTO dbo.MyCameras (id,urls,Name) VALUES (@id,@urls,@name)";
+                        String query = $"INSERT INTO dbo.MyCameras (id,urls,name,username,password ) VALUES (@id,@urls,@name,@username,@password)";
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@id", my_id);
-                            command.Parameters.AddWithValue("@urls", d.Key);
-                            command.Parameters.AddWithValue("@name", d.Value);
+                            command.Parameters.AddWithValue("@urls", d.url);
+                            command.Parameters.AddWithValue("@name", d.name);
+                            command.Parameters.AddWithValue("@username", d.username);
+                            command.Parameters.AddWithValue("@password", d.password);
                             connection.Open();
                             int result = command.ExecuteNonQuery();
                             // Check Error
@@ -352,6 +372,8 @@ namespace IPCamera
                 {
                     url_1.Text = MainWindow.cameras[0].url;
                     name_1.Text = MainWindow.cameras[0].name;
+                    username_1.Text = MainWindow.cameras[0].Username;
+                    password_1.Text = MainWindow.cameras[0].Password;
                 }
             }
             if (Camera.count > 1)
@@ -360,6 +382,8 @@ namespace IPCamera
                 {
                     url_2.Text = MainWindow.cameras[1].url;
                     name_2.Text = MainWindow.cameras[1].name;
+                    username_2.Text = MainWindow.cameras[1].Username;
+                    password_2.Text = MainWindow.cameras[1].Password;
                 }
             }
             if (Camera.count > 2)
@@ -368,6 +392,8 @@ namespace IPCamera
                 {
                     url_3.Text = MainWindow.cameras[2].url;
                     name_3.Text = MainWindow.cameras[2].name;
+                    username_3.Text = MainWindow.cameras[2].Username;
+                    password_3.Text = MainWindow.cameras[2].Password;
                 }
             }
             if (Camera.count > 3)
@@ -376,6 +402,8 @@ namespace IPCamera
                 {
                     url_4.Text = MainWindow.cameras[3].url;
                     name_4.Text = MainWindow.cameras[3].name;
+                    username_4.Text = MainWindow.cameras[3].Username;
+                    password_4.Text = MainWindow.cameras[3].Password;
                 }
             }
             if (Camera.count > 4)
@@ -384,6 +412,8 @@ namespace IPCamera
                 {
                     url_5.Text = MainWindow.cameras[4].url;
                     name_5.Text = MainWindow.cameras[4].name;
+                    username_5.Text = MainWindow.cameras[4].Username;
+                    password_5.Text = MainWindow.cameras[4].Password;
                 }
             }
             if (Camera.count > 5)
@@ -392,6 +422,8 @@ namespace IPCamera
                 {
                     url_6.Text = MainWindow.cameras[5].url;
                     name_6.Text = MainWindow.cameras[5].name;
+                    username_6.Text = MainWindow.cameras[5].Username;
+                    password_6.Text = MainWindow.cameras[5].Password;
                 }
             }
             if (Camera.count > 6)
@@ -400,6 +432,8 @@ namespace IPCamera
                 {
                     url_7.Text = MainWindow.cameras[6].url;
                     name_7.Text = MainWindow.cameras[6].name;
+                    username_7.Text = MainWindow.cameras[6].Username;
+                    password_7.Text = MainWindow.cameras[6].Password;
                 }
             }
             if (Camera.count > 7)
@@ -408,6 +442,8 @@ namespace IPCamera
                 {
                     url_8.Text = MainWindow.cameras[7].url;
                     name_8.Text = MainWindow.cameras[7].name;
+                    username_8.Text = MainWindow.cameras[7].Username;
+                    password_8.Text = MainWindow.cameras[7].Password;
                 }
             }
             // Update Email Sender And Pasword
@@ -900,5 +936,26 @@ namespace IPCamera
         
 
 
+    }
+
+
+
+    public class Cameras
+    {
+        public String url;
+        public String name;
+        public String username;
+        public String password;
+        public Cameras(String u, String n, String un, String p)
+        {
+            this.url = u;
+            this.name = n;
+            this.username = un;
+            this.password = p;
+        }
+        ~Cameras()
+        {
+
+        }
     }
 }
