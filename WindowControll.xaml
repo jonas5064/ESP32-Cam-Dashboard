@@ -366,7 +366,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_gain_ceiling" Foreground="#FFC9C9C9" FontSize="13" Content="Gain Ceiling:"/>
                 <!-- Add To Slider ValueChanged="" -->
-                <Slider Grid.Column="2" x:Name="cameras_gain_ceiling_slider" Minimum="2" Maximum="128" Margin="12,0" IsMoveToPointEnabled="True"/>
+                <Slider Grid.Column="2" x:Name="cameras_gain_ceiling_slider" Minimum="2" Maximum="128" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="GAIN_CEILINGL_changed"/>
             </Grid>
             <Grid Grid.Row="15">
                 <Grid.ColumnDefinitions>
@@ -374,7 +374,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_bpc" Foreground="#FFC9C9C9" FontSize="13" Content="BPC:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_bpc_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_bpc_checkbox" Foreground="#FFB4B4B4" Click="BPC_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="16">
                 <Grid.ColumnDefinitions>
