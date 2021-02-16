@@ -446,7 +446,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_face_recognition" Foreground="#FFC9C9C9" FontSize="13" Content="Face Recognition:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_face_recognition_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_face_recognition_checkbox" Foreground="#FFB4B4B4" Click="FACE_RECOGNITION_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="25">
                 <Grid.ColumnDefinitions>
