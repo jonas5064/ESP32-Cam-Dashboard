@@ -1676,6 +1676,10 @@ namespace IPCamera
                     if (response.StatusCode.ToString().Equals("OK"))
                     {
                         Thread.Sleep(5000);
+                        ((CheckBox)cameras_face_detection_checkbox).IsChecked = false;
+                        this.remote_detection = false;
+                        ((CheckBox)cameras_face_recognition_checkbox).IsChecked = false;
+                        this.remote_recognition = false;
                         this.camera.Start();
                         //MainWindow.RestartApp();
                     }
