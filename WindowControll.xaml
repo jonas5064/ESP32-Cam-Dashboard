@@ -330,7 +330,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_aec_sensor" Foreground="#FFC9C9C9" FontSize="13" Content="AEC SENSOR:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222" Checked="Cameras_aec_sensor_checkbox" />
             </Grid>
             <Grid Grid.Row="11">
                 <Grid.ColumnDefinitions>
@@ -338,7 +338,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_aec_dsp" Foreground="#FFC9C9C9" FontSize="13" Content="AEC DSP:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" Checked="Cameras_aec_dsp_sensor_checkbox" />
             </Grid>
             <Grid Grid.Row="12">
                 <Grid.ColumnDefinitions>
