@@ -259,7 +259,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" x:Name="cameras_brightness" Foreground="#FFC9C9C9" FontSize="13" Content="Brightness:"/>
+                <Label Grid.Column="0" x:Name="cameras_brightness_r" Foreground="#FFC9C9C9" FontSize="13" Content="Brightness:"/>
                 <Slider Grid.Column="1" x:Name="cameras_brightness_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_brightness" Height="36" VerticalAlignment="Bottom"/>
             </Grid>
             <Grid Grid.Row="4">
@@ -267,7 +267,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" x:Name="cameras_contrast" Foreground="#FFC9C9C9" FontSize="13" Content="Contrast:"/>
+                <Label Grid.Column="0" x:Name="cameras_contrast_r" Foreground="#FFC9C9C9" FontSize="13" Content="Contrast:"/>
                 <Slider Grid.Column="2" x:Name="cameras_contrast_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_contrast"/>
             </Grid>
             <Grid Grid.Row="5">
@@ -275,7 +275,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" x:Name="cameras_saturation" Foreground="#FFC9C9C9" FontSize="13" Content="Saturation:"/>
+                <Label Grid.Column="0" x:Name="cameras_saturation_r" Foreground="#FFC9C9C9" FontSize="13" Content="Saturation:"/>
                 <Slider Grid.Column="2" x:Name="cameras_saturation_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_saturation"/>
             </Grid>
             <Grid Grid.Row="6">
@@ -284,7 +284,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_specialeffect" Foreground="#FFC9C9C9" FontSize="13" Content="Special Effect:"/>
-                <ComboBox Grid.Column="1" Margin="12,0" Height="23">
+                <ComboBox Grid.Column="1" Margin="12,0" Height="23" SelectionChanged="Resolution_specialeffect_Changed">
                     <ComboBoxItem Content="No Effect" IsSelected="True"/>
                     <ComboBoxItem Content="Negative" IsSelected="False"/>
                     <ComboBoxItem Content="Grayscale" IsSelected="False"/>

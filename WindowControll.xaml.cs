@@ -557,21 +557,6 @@ namespace IPCamera
                 ComboBox cmb = sender as ComboBox;
                 String selection = cmb.SelectedValue.ToString();
                 String order = "";
-                /*
-                Console.WriteLine(selection);
-                switch (selection)
-                {
-                    case "QQVGA(160X120)":  order = "0"; Console.WriteLine("0"); break;
-                    case "HQVGA(240X176)":  order = "3"; Console.WriteLine("3"); break;
-                    case "QVGA(320X240)":   order = "4"; Console.WriteLine("4"); break;
-                    case "CIF(400X296)":    order = "5"; Console.WriteLine("5"); break;
-                    case "VGA(640X480)":    order = "6"; Console.WriteLine("6"); break;
-                    case "SVGA(800X600)":   order = "7"; Console.WriteLine("7"); break;
-                    case "XGA(1024X768)":   order = "8"; Console.WriteLine("8"); break;
-                    case "SXGA(1280X1024)": order = "9"; Console.WriteLine("9"); break;
-                    case "UXGA(1600X1200)": order = "10"; Console.WriteLine("10"); break;
-                };
-                */
                 if (selection.Contains("QQVGA(160X120)"))
                 {
                     order = "0";
@@ -733,6 +718,64 @@ namespace IPCamera
                         //MainWindow.RestartApp();
                     }
                 }
+            }
+        }
+
+        // Remote Camera Specialeffect
+        private void Resolution_specialeffect_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.url != "")
+            {
+                ComboBox cmb = sender as ComboBox;
+                String selection = cmb.SelectedValue.ToString();
+                String order = "";
+                if (selection.Contains("No Effect"))
+                {
+                    order = "0";
+                }
+                else if (selection.Contains("Negative"))
+                {
+                    order = "1";
+                }
+                else if (selection.Contains("Grayscale"))
+                {
+                    order = "2";
+                }
+                else if (selection.Contains("Red Tint"))
+                {
+                    order = "3";
+                }
+                else if (selection.Contains("Green Tint"))
+                {
+                    order = "4";
+                }
+                else if (selection.Contains("Blue Tint"))
+                {
+                    order = "5";
+                }
+                else if (selection.Contains("Sepia"))
+                {
+                    order = "6";
+                }
+                this.camera.Stop();
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                //Console.WriteLine("Old Url: " + this.url);
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/control?var=special_effect&val=" + order;
+                //Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        this.camera.Start();
+                        //MainWindow.RestartApp();
+                    }
+                }
+
             }
         }
     }
