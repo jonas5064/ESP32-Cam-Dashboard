@@ -635,22 +635,25 @@ namespace IPCamera
         // When Cameras Quality Changed
         private void cameras_quality_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            this.camera.Stop();
             int val = Convert.ToInt32(e.NewValue);
-            // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-            // http://192.168.1.50/control?var=quality&val=10
-            int found = this.url.IndexOf(":81");
-            String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-            ur_l += "/control?var=quality&val=" + val;
-            //Console.WriteLine("New Url: " + ur_l);
-            HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-            request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            if (this.camera != null)
             {
-                if (response.StatusCode.ToString().Equals("OK"))
+                this.camera.Stop();
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // http://192.168.1.50/control?var=quality&val=10
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/control?var=quality&val=" + val;
+                //Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    this.camera.Start();
-                    //MainWindow.RestartApp();
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        this.camera.Start();
+                        //MainWindow.RestartApp();
+                    }
                 }
             }
         }
