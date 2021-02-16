@@ -252,7 +252,7 @@
                     <ColumnDefinition Width="66*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_quality" Foreground="#FFC9C9C9" FontSize="13" Content="Quality:"/>
-                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2" IsMoveToPointEnabled="True" ValueChanged="cameras_quality_changed" />
+                <Slider Grid.Column="1" x:Name="cameras_quality_slider" Minimum="10" Maximum="63" Margin="12,0" Grid.ColumnSpan="2" IsMoveToPointEnabled="True" ValueChanged="Quality_changed" />
             </Grid>
             <Grid Grid.Row="3">
                 <Grid.ColumnDefinitions>
@@ -260,7 +260,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_brightness_r" Foreground="#FFC9C9C9" FontSize="13" Content="Brightness:"/>
-                <Slider Grid.Column="1" x:Name="cameras_brightness_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_brightness" Height="36" VerticalAlignment="Bottom"/>
+                <Slider Grid.Column="1" x:Name="cameras_brightness_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" Height="36" VerticalAlignment="Bottom" ValueChanged="Brightness_changed" />
             </Grid>
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
@@ -268,7 +268,7 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_contrast_r" Foreground="#FFC9C9C9" FontSize="13" Content="Contrast:"/>
-                <Slider Grid.Column="2" x:Name="cameras_contrast_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_contrast"/>
+                <Slider Grid.Column="2" x:Name="cameras_contrast_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="Contrast_changed" />
             </Grid>
             <Grid Grid.Row="5">
                 <Grid.ColumnDefinitions>
@@ -276,15 +276,16 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_saturation_r" Foreground="#FFC9C9C9" FontSize="13" Content="Saturation:"/>
-                <Slider Grid.Column="2" x:Name="cameras_saturation_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="cameras_saturation"/>
+                <Slider Grid.Column="2" x:Name="cameras_saturation_slider" Minimum="-2" Maximum="2" Margin="12,0" IsMoveToPointEnabled="True" ValueChanged="Saturation_changed"/>
             </Grid>
             <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="117*"/>
+                    <ColumnDefinition Width="28*"/>
+                    <ColumnDefinition Width="206*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_specialeffect" Foreground="#FFC9C9C9" FontSize="13" Content="Special Effect:"/>
-                <ComboBox Grid.Column="1" Margin="12,0" Height="23" SelectionChanged="Resolution_specialeffect_Changed">
+                <ComboBox Grid.Column="1" Margin="12,6" Height="23" Grid.ColumnSpan="2" SelectionChanged="Specialeffect_Changed">
                     <ComboBoxItem Content="No Effect" IsSelected="True"/>
                     <ComboBoxItem Content="Negative" IsSelected="False"/>
                     <ComboBoxItem Content="Grayscale" IsSelected="False"/>
@@ -296,11 +297,12 @@
             </Grid>
             <Grid Grid.Row="7">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="64*"/>
-                    <ColumnDefinition Width="111*"/>
+                    <ColumnDefinition Width="128*"/>
+                    <ColumnDefinition Width="41*"/>
+                    <ColumnDefinition Width="182*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_awb" Foreground="#FFC9C9C9" FontSize="13" Content="AWB:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_awb_checkbox" Foreground="#FFB4B4B4" Checked="cameras_awb_checkbox_Checked" />
+                <CheckBox Grid.Column="1" x:Name="cameras_awb_checkbox" Foreground="#FFB4B4B4" Grid.ColumnSpan="2"/>
             </Grid>
             <Grid Grid.Row="8">
                 <Grid.ColumnDefinitions>
@@ -308,15 +310,16 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_awb_gain" Foreground="#FFC9C9C9" FontSize="13" Content="AWB Gain:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_awb_gain_checkbox" Foreground="#FFB4B4B4" Checked="cameras_awb_gain_checkbox_Checked" />
+                <CheckBox Grid.Column="1" x:Name="cameras_awb_gain_checkbox" Foreground="#FFB4B4B4"  />
             </Grid>
             <Grid Grid.Row="9">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="59*"/>
+                    <ColumnDefinition Width="116*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_wb_mode" Foreground="#FFC9C9C9" FontSize="13" Content="WB Mode:"/>
-                <ComboBox Grid.Column="1" Margin="12,0" Height="23" SelectionChanged="Resolution_wb_mode_Changed">
+                <ComboBox Grid.Column="1" Margin="12,7" Height="23" >
+                    <!-- SelectionChanged="WB_mode_Changed" -->
                     <ComboBoxItem Content="Auto" IsSelected="True"/>
                     <ComboBoxItem Content="Sunny" IsSelected="False"/>
                     <ComboBoxItem Content="Cloudy" IsSelected="False"/>
@@ -330,7 +333,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_aec_sensor" Foreground="#FFC9C9C9" FontSize="13" Content="AEC SENSOR:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222" Checked="Cameras_aec_sensor_checkbox" />
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_sensor_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222"/>
             </Grid>
             <Grid Grid.Row="11">
                 <Grid.ColumnDefinitions>
@@ -338,7 +341,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_aec_dsp" Foreground="#FFC9C9C9" FontSize="13" Content="AEC DSP:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" Checked="Cameras_aec_dsp_sensor_checkbox" />
+                <CheckBox Grid.Column="1" x:Name="cameras_aec_dsp_checkbox" Foreground="#FFB4B4B4" HorizontalAlignment="Right" Width="222" />
             </Grid>
             <Grid Grid.Row="12">
                 <Grid.ColumnDefinitions>

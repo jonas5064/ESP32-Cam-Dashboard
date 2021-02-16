@@ -594,33 +594,39 @@ namespace IPCamera
                 }
                 if (!selection.Contains("Change"))
                 {
-                    this.camera.Stop();
-                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                    //Console.WriteLine("Old Url: " + this.url);
-                    int found = this.url.IndexOf(":81");
-                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                    ur_l += "/control?var=framesize&val=" + order;
-                    //Console.WriteLine("New Url: " + ur_l);
-                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    try
                     {
-                        if (response.StatusCode.ToString().Equals("OK"))
+                        this.camera.Stop();
+                        // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                        // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                        //Console.WriteLine("Old Url: " + this.url);
+                        int found = this.url.IndexOf(":81");
+                        String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                        ur_l += "/control?var=framesize&val=" + order;
+                        //Console.WriteLine("New Url: " + ur_l);
+                        HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                        request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                         {
-                            this.camera.Start();
-                            //MainWindow.RestartApp();
+                            if (response.StatusCode.ToString().Equals("OK"))
+                            {
+                                Thread.Sleep(2000);
+                                this.camera.Start();
+                            }
                         }
+                    } catch(Exception er)
+                    {
+                        System.Windows.MessageBox.Show("[ERROR] " + er.Message);
                     }
                 }
             }
         }
 
-
+        
         // When Cameras Quality Changed
-        private void cameras_quality_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Quality_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            int val = Convert.ToInt32(e.NewValue);
+            int val = Convert.ToInt16(e.NewValue);
             if (this.camera != null)
             {
                 this.camera.Stop();
@@ -644,9 +650,9 @@ namespace IPCamera
         }
 
         // Remote Cameras Brightness
-        private void cameras_brightness(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Brightness_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            int val = Convert.ToInt32(e.NewValue);
+            int val = Convert.ToInt16(e.NewValue);
             if (this.camera != null)
             {
                 this.camera.Stop();
@@ -670,9 +676,9 @@ namespace IPCamera
         }
 
         // Remote Cameras Contrast
-        private void cameras_contrast(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Contrast_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            int val = Convert.ToInt32(e.NewValue);
+            int val = Convert.ToInt16(e.NewValue);
             if (this.camera != null)
             {
                 this.camera.Stop();
@@ -696,7 +702,7 @@ namespace IPCamera
         }
 
         // Remote Cameras Saturasion
-        private void cameras_saturation(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Saturation_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             if (this.camera != null)
@@ -722,7 +728,7 @@ namespace IPCamera
         }
 
         // Remote Camera Specialeffect
-        private void Resolution_specialeffect_Changed(object sender, SelectionChangedEventArgs e)
+        private void Specialeffect_Changed(object sender, SelectionChangedEventArgs e)
         {
             if (this.url != "")
             {
@@ -757,27 +763,34 @@ namespace IPCamera
                 {
                     order = "6";
                 }
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=special_effect&val=" + order;
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                try
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=special_effect&val=" + order;
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
+                } catch(Exception)
+                {
+
                 }
             }
         }
 
+        /*
         // Remotes Camera AWB
         private void cameras_awb_checkbox_Checked(object sender, RoutedEventArgs e)
         {
@@ -824,7 +837,9 @@ namespace IPCamera
                 }
             }
         }
+        */
 
+        /*
         // Remotes Camera AWB GAIN
         private void cameras_awb_gain_checkbox_Checked(object sender, RoutedEventArgs e)
         {
@@ -872,9 +887,11 @@ namespace IPCamera
                 }
             }
         }
+        */
 
+        /*
         // Remotes Camera WB Mode
-        private void Resolution_wb_mode_Changed(object sender, SelectionChangedEventArgs e)
+        private void WB_mode_Changed(object sender, SelectionChangedEventArgs e)
         {
             if (this.url != "")
             {
@@ -907,7 +924,7 @@ namespace IPCamera
                 //Console.WriteLine("Old Url: " + this.url);
                 int found = this.url.IndexOf(":81");
                 String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=special_effect&val=" + order;
+                ur_l += "/control?var=wb_mode&val=" + order;
                 //Console.WriteLine("New Url: " + ur_l);
                 HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                 request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -921,7 +938,9 @@ namespace IPCamera
                 }
             }
         }
+        */
 
+        /*
         // Remotes Camera AEC Sensor
         private void Cameras_aec_sensor_checkbox(object sender, RoutedEventArgs e)
         {
@@ -969,7 +988,9 @@ namespace IPCamera
                 }
             }
         }
+        */
 
+        /*
         // Remotes Camera AEC DSP SensorSensor
         private void Cameras_aec_dsp_sensor_checkbox(object sender, RoutedEventArgs e)
         {
@@ -1017,6 +1038,7 @@ namespace IPCamera
                 }
             }
         }
+        */
 
     }
 
