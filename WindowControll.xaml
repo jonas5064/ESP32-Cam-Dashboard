@@ -382,7 +382,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_wpc" Foreground="#FFC9C9C9" FontSize="13" Content="WPC:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_wpc_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_wpc_checkbox" Foreground="#FFB4B4B4" Click="WPC_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="17">
                 <Grid.ColumnDefinitions>
@@ -390,7 +390,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_raw_gma" Foreground="#FFC9C9C9" FontSize="13" Content="RAW GMA:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_raw_gma_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_raw_gma_checkbox" Foreground="#FFB4B4B4" Click="RAW_GMA_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="18">
                 <Grid.ColumnDefinitions>
@@ -398,7 +398,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_lens_correction" Foreground="#FFC9C9C9" FontSize="13" Content="Lens Correction:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_lens_correction_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_lens_correction_checkbox" Foreground="#FFB4B4B4" Click="LENS_CORRECTION_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="19">
                 <Grid.ColumnDefinitions>
@@ -406,7 +406,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_h_mirror" Foreground="#FFC9C9C9" FontSize="13" Content="H-Mirror:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_h_mirror_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_h_mirror_checkbox" Foreground="#FFB4B4B4" Click="H_MIRROR_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="20">
                 <Grid.ColumnDefinitions>
@@ -414,7 +414,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_v_flip" Foreground="#FFC9C9C9" FontSize="13" Content="V-Flip:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_v_flip_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_v_flip_checkbox" Foreground="#FFB4B4B4" Click="V_FLIP_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="21">
                 <Grid.ColumnDefinitions>
@@ -422,7 +422,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_dcw_downsize_en" Foreground="#FFC9C9C9" FontSize="13" Content="DCW (Downsize EN):"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_dcw_downsize_en_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_dcw_downsize_en_checkbox" Foreground="#FFB4B4B4" Click="DCW_DOWNSIZE_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="22">
                 <Grid.ColumnDefinitions>
