@@ -430,7 +430,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_color_bar" Foreground="#FFC9C9C9" FontSize="13" Content="Color Bar:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_color_bar_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_color_bar_checkbox" Foreground="#FFB4B4B4" Click="COLOR_BAR_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="23">
                 <Grid.ColumnDefinitions>
@@ -438,7 +438,7 @@
                     <ColumnDefinition Width="111*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_face_detection" Foreground="#FFC9C9C9" FontSize="13" Content="Face Detection:"/>
-                <CheckBox Grid.Column="1" x:Name="cameras_face_detection_checkbox" Foreground="#FFB4B4B4" />
+                <CheckBox Grid.Column="1" x:Name="cameras_face_detection_checkbox" Foreground="#FFB4B4B4" Click="FACE_DETECTION_checkbox_Checked"/>
             </Grid>
             <Grid Grid.Row="24">
                 <Grid.ColumnDefinitions>
