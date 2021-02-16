@@ -1057,7 +1057,7 @@ namespace IPCamera
         }
 
         // AGC Checked
-        private void cameras_agc_checkbox_Checked(object sender, RoutedEventArgs e)
+        private void AGC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
