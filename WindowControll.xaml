@@ -8,7 +8,8 @@
         Title="WindowControll"
         Background="#FF151515"
         Width="1300" Height="1000"
-        MinWidth="1300" MinHeight="1000">
+        MinWidth="1300" MinHeight="1000"
+        ResizeMode="NoResize">
     <!-- WindowState="Maximized" -->
 
 
@@ -190,6 +191,47 @@
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" MouseUp="Start_REC_button_click" Source="{StaticResource start_recording_button_img}" Height="50px"/>
                     <Image Grid.Column="1" MouseUp="Stop_REC_button_click"  Source="{StaticResource stop_recording_button_img}" Margin="0,0,1,0" Height="50px"/>
+                </Grid>
+            </Grid>
+
+            <!-- Network Streaming -->
+            <Grid Grid.Column="1" Grid.Row="5">
+                <Grid.ColumnDefinitions>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" x:Name="network_streaming_label" Content="Network Streaming:" Foreground="#FFB4B4B4" FontSize="23"/>
+                <CheckBox Grid.Row="1" x:Name="network_streaming_checkbox" Content="Network Streaming Enable" Foreground="#FFB4B4B4" FontSize="17" Margin="221,10,0,0" Unchecked="Network_stream_check" Click="Network_stream_check"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="369*" />
+                        <ColumnDefinition Width="106*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" x:Name="network_streaming_c_number_label" Content="Clients Number:" Foreground="#FFB4B4B4" FontSize="17" Margin="221,0,0,0"/>
+                    <TextBox Grid.Column="1" x:Name="network_streaming_cliants_num" HorizontalAlignment="Left" Height="25" Margin="5,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" PreviewTextInput="NumberValidationTextBox" MaxLength="5" LostFocus="network_streaming_cliants_num_LostFocus"/>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="369*" />
+                        <ColumnDefinition Width="106*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" x:Name="network_streaming_port_label" Content="Port:" Foreground="#FFB4B4B4" FontSize="17" Margin="308,0,10,0" RenderTransformOrigin="1.222,0.471"/>
+                    <TextBox Grid.Column="1" x:Name="network_streaming_port" HorizontalAlignment="Left" Height="25" Margin="5,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" PreviewTextInput="NumberValidationTextBox" MaxLength="5" LostFocus="network_streaming_port_LostFocus"/>
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="163*" />
+                        <ColumnDefinition Width="312*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" x:Name="network_streaming_url_label" Content="URL:" Foreground="#FFB4B4B4" FontSize="17" Margin="112,5,0,10" RenderTransformOrigin="1.222,0.471"/>
+                    <TextBox Grid.Column="1" x:Name="network_streaming_url" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="282" LostFocus="network_streaming_url_LostFocus"/>
                 </Grid>
             </Grid>
 
@@ -458,7 +500,7 @@
                 <Button Grid.Column="0" x:Name="cameras_get_still_button" Content="Get Still" Margin="3" Click="GET_STILL_Clicked"></Button>
                 <Button Grid.Column="1" x:Name="cameras_start_stream_button" Content="Restart" Margin="3" Click="RESTART_Clicked"></Button>
                 <Button Grid.Column="2" x:Name="cameras_enroll_face_button" Content="Enroll Face" Margin="3" Click="ENROLL_FACE_Clicked"></Button>
-                <Button Grid.Column="3" x:Name="cameras_reboot_button" Content="Reboot" Margin="3" Click="Reboot_Clicked"></Button>
+                <Button Grid.Column="3" x:Name="cameras_reboot_button" Content="Fuctor" Margin="3" Click="Reboot_Clicked"></Button>
             </Grid>
         </Grid>
 

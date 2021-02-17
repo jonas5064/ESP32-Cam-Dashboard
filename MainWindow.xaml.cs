@@ -154,6 +154,11 @@ namespace IPCamera
                         int contrast = (int)dataReader["Contrast"];
                         int darkness = (int)dataReader["Darkness"];
                         int move_sensitivity = (int)dataReader["Move_Sensitivity"];
+
+                        String net_stream_url_l = (String)dataReader["net_stream_url"].ToString().Trim();
+                        String net_stream_port_l = (String)dataReader["net_stream_port"].ToString().Trim();
+                        String net_stream_l = (String)dataReader["net_stream"].ToString().Trim();
+                        int net_stream_cl_n_l = (int)dataReader["net_stream_cl_n"];
                         try
                         {
                             bool rec = (recording == "True");
@@ -174,7 +179,11 @@ namespace IPCamera
                                 up_req = up,
                                 down_req = down,
                                 right_req = right,
-                                left_req = left
+                                left_req = left,
+                                net_stream_url = net_stream_url_l,
+                                net_stream_port = net_stream_port_l,
+                                net_stream_clients_num = net_stream_cl_n_l,
+                                net_stream = (net_stream_l == "True")
                             };
                             MainWindow.cameras.Add(cam);
                         }
@@ -243,6 +252,7 @@ namespace IPCamera
         {
             foreach (Camera cam in cameras)
             {
+                Console.WriteLine("Starting: " + cam.url);
                 cam.Start();
             }
         }
@@ -252,6 +262,7 @@ namespace IPCamera
         {
             foreach (Camera cam in cameras)
             {
+                Console.WriteLine("Stoping: " + cam.url);
                 cam.Stop();
             }
         }

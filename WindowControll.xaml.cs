@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net;
 using System.IO;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace IPCamera
 {
@@ -22,6 +23,7 @@ namespace IPCamera
         public String url = "";
         public bool remote_detection = false;
         public bool remote_recognition = false;
+        String cam_resolution_order = "";
 
         public WindowControll(Camera cam)
         {
@@ -70,6 +72,11 @@ namespace IPCamera
             cameras_ae_level_slider.Value = -2;
             cameras_gain_ceiling_slider.Value = -2;
             */
+            // Setuo Network streaming Settings
+            network_streaming_checkbox.IsChecked = this.camera.net_stream;
+            network_streaming_cliants_num.Text = Convert.ToString(this.camera.net_stream_clients_num);
+            network_streaming_port.Text = Convert.ToString(this.camera.net_stream_port);
+            network_streaming_url.Text = this.camera.net_stream_url;
         }
 
 
@@ -565,55 +572,54 @@ namespace IPCamera
         {
             if (this.url != "")
             {
+                this.camera.Stop();
                 ComboBox cmb = sender as ComboBox;
                 String selection = cmb.SelectedValue.ToString();
-                String order = "";
                 if (selection.Contains("QQVGA(160X120)"))
                 {
-                    order = "0";
+                    cam_resolution_order = "0";
                 } else if (selection.Contains("HQVGA(240X176)"))
                 {
-                    order = "3";
+                    cam_resolution_order = "3";
                 }
                 else if (selection.Contains("QVGA(320X240)"))
                 {
-                    order = "4";
+                    cam_resolution_order = "4";
                 }
                 else if (selection.Contains("CIF(400X296)"))
                 {
-                    order = "5";
+                    cam_resolution_order = "5";
                 }
                 else if (selection.Contains("VGA(640X480)"))
                 {
-                    order = "6";
+                    cam_resolution_order = "6";
                 }
                 else if (selection.Contains("SVGA(800X600)"))
                 {
-                    order = "7";
+                    cam_resolution_order = "7";
                 }
                 else if (selection.Contains("XGA(1024X768)"))
                 {
-                    order = "8";
+                    cam_resolution_order = "8";
                 }
                 else if (selection.Contains("SXGA(1280X1024)"))
                 {
-                    order = "9";
+                    cam_resolution_order = "9";
                 }
                 else if (selection.Contains("UXGA(1600X1200)"))
                 {
-                    order = "10";
+                    cam_resolution_order = "10";
                 }
                 if (!selection.Contains("Change"))
                 {
                     try
                     {
-                        this.camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.url);
                         int found = this.url.IndexOf(":81");
                         String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                        ur_l += "/control?var=framesize&val=" + order;
+                        ur_l += "/control?var=framesize&val=" + cam_resolution_order;
                         //Console.WriteLine("New Url: " + ur_l);
                         HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                         request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -621,7 +627,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                Thread.Sleep(2000);
+                                Thread.Sleep(5000);
                                 this.camera.Start();
                             }
                         }
@@ -1533,50 +1539,57 @@ namespace IPCamera
         //  FACE DETECTION Changed
         private void FACE_DETECTION_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (Convert.ToInt16(cam_resolution_order) <= 5)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=face_detect&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=face_detect&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.remote_detection = true;
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.remote_detection = true;
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=face_detect&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=face_detect&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.remote_detection = false;
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.remote_detection = false;
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
+            } else
+            {
+                MessageBox.Show("Cameras Resolution lowest from 680x480");
+                cameras_face_detection_checkbox.IsChecked = false;
             }
         }
 
@@ -1762,7 +1775,96 @@ namespace IPCamera
             }
         }
 
+
+        // Helper Function For Network streaming
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        // Network Streaming CheckBox
+        private void Network_stream_check(object sender, RoutedEventArgs e)
+        {
+            CheckBox c = sender as CheckBox;
+            if (c.IsChecked.Value)
+            {
+                this.camera.net_stream = true;
+                // Update DataBase this Camera
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET net_stream='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+            else
+            {
+                this.camera.net_stream = false;
+                // Update DataBase this Camera
+                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                String query = $"UPDATE dbo.myCameras SET net_stream='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cn.Open();
+                int result = cmd.ExecuteNonQuery();
+                if (result < 0)
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                cn.Close();
+            }
+        }
+
+        // Network Streaming Clients Number
+        private void network_streaming_cliants_num_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox n = sender as TextBox;
+            int clients_number = Convert.ToInt32((String)n.Text);
+            this.camera.net_stream_clients_num = clients_number;
+            // Update DataBase this Camera
+            SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+            String query = $"UPDATE dbo.myCameras SET net_stream_cl_n='{clients_number}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+            SqlCommand cmd = new SqlCommand(query, cn);
+            cn.Open();
+            int result = cmd.ExecuteNonQuery();
+            if (result < 0)
+                System.Windows.MessageBox.Show("Error inserting data into Database!");
+            cn.Close();
+        }
+
+        // Network Streaming Port
+        private void network_streaming_port_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox n = sender as TextBox;
+            this.camera.net_stream_port = (String)n.Text;
+            // Update DataBase this Camera
+            SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+            String query = $"UPDATE dbo.myCameras SET net_stream_port='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+            SqlCommand cmd = new SqlCommand(query, cn);
+            cn.Open();
+            int result = cmd.ExecuteNonQuery();
+            if (result < 0)
+                System.Windows.MessageBox.Show("Error inserting data into Database!");
+            cn.Close();
+        }
+
+        // Network Streaming Port
+        private void network_streaming_url_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox n = sender as TextBox;
+            this.camera.net_stream_url = (String)n.Text;
+            // Update DataBase this Camera
+            SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+            String query = $"UPDATE dbo.myCameras SET net_stream_url='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+            SqlCommand cmd = new SqlCommand(query, cn);
+            cn.Open();
+            int result = cmd.ExecuteNonQuery();
+            if (result < 0)
+                System.Windows.MessageBox.Show("Error inserting data into Database!");
+            cn.Close();
+        }
+
     }
 
-
-}
+        
+    }

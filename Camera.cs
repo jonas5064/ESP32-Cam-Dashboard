@@ -57,6 +57,10 @@ namespace IPCamera
         public String down_req = "";
         public String right_req = "";
         public String left_req = "";
+        public String net_stream_url = "";
+        public String net_stream_port = "";
+        public int net_stream_clients_num = 0;
+        public bool net_stream = false;
 
 
         public Camera(String url, String name, String id, bool rec)
