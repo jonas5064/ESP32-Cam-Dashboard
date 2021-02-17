@@ -147,6 +147,12 @@ namespace IPCamera
             }
         }
 
+        public bool Net_stream
+        {
+            get { return this.net_stream; }
+            set { this.net_stream = value; } // When is checked start expose http server
+        }
+
         // Setup Contrast Effext
         public int Contrast
         {

@@ -183,7 +183,7 @@ namespace IPCamera
                                 net_stream_url = net_stream_url_l,
                                 net_stream_port = net_stream_port_l,
                                 net_stream_clients_num = net_stream_cl_n_l,
-                                net_stream = (net_stream_l == "True")
+                                Net_stream = (net_stream_l == "True")
                             };
                             MainWindow.cameras.Add(cam);
                         }

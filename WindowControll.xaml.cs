@@ -1789,7 +1789,7 @@ namespace IPCamera
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
             {
-                this.camera.net_stream = true;
+                this.camera.Net_stream = true;
                 // Update DataBase this Camera
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
                 String query = $"UPDATE dbo.myCameras SET net_stream='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -1802,7 +1802,7 @@ namespace IPCamera
             }
             else
             {
-                this.camera.net_stream = false;
+                this.camera.Net_stream = false;
                 // Update DataBase this Camera
                 SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
                 String query = $"UPDATE dbo.myCameras SET net_stream='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
