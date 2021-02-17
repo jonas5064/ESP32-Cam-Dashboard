@@ -1581,6 +1581,7 @@ namespace IPCamera
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
                             this.remote_detection = false;
+                            this.remote_recognition = false;
                             this.camera.Start();
                             //MainWindow.RestartApp();
                         }
