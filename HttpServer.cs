@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -61,18 +62,15 @@ namespace IPCamera
 
         public async Task ListenAsync()
         {
-            if (this.listener != null)
+            
+            while (this.run)
             {
-                while (this.run)
+                try
                 {
-
-                    // Some Whow Rerender The Page
-                    Console.WriteLine("Listening...");
                     var context = await this.listener.GetContextAsync();
                     HttpListenerRequest request = context.Request;
-                    // Obtain a response object.
                     HttpListenerResponse response = context.Response;
-                    System.IO.Stream output = response.OutputStream;
+
 
                     // Get Frame Buffer
                     System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
@@ -80,23 +78,21 @@ namespace IPCamera
                     BitmapEncoder enc = new BmpBitmapEncoder();
                     enc.Frames.Add(BitmapFrame.Create(bitmapsource));
                     enc.Save(outStream);
+                    byte[] frame = outStream.GetBuffer();
+
+
                     // Send Frames
-                    output = response.OutputStream;
-                    output.Write(outStream.ToArray(), 0, outStream.ToArray().Count());
-                    output.Close();
+                    response.StatusCode = 200;
+                    response.ContentLength64 = frame.Length;
+                    response.ContentType = "image/jpeg";
+                    response.KeepAlive = true;
+                    response.Headers.Add("Refresh", "0");
+                    response.OutputStream.Write(frame, 0, frame.Length);
+                    response.OutputStream.Close();
 
-
-                    
-
-                    
 
 
                     /*
-                    Console.WriteLine("Listening...");
-                    var context = await this.listener.GetContextAsync();
-                    HttpListenerRequest request = context.Request;
-                    // Obtain a response object.
-                    HttpListenerResponse response = context.Response;
                     // Create Buffer With HTML
                     string responseString = "<HTML><HEAD><meta http-equiv='refresh' content='0'" +
                         "></HEAD><BODY>" +
@@ -105,14 +101,15 @@ namespace IPCamera
                     byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                     // Send Buffer
                     response.ContentLength64 = buffer.Length;
-                    System.IO.Stream output = response.OutputStream;
-                    output.Write(buffer, 0, buffer.Length);
-                    // You must close the output stream.
-                    output.Close();
+                    response.OutputStream.Write(buffer, 0, buffer.Length);
+                    response.OutputStream.Close();
                     */
 
-                }
+                    //enc.Frames.Clear();
+                    //response.Headers.Clear();
+                } catch (Exception) { }
             }
+            
         }
 
         public void close()
