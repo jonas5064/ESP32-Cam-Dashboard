@@ -395,11 +395,11 @@
             </Grid>
             <Grid Grid.Row="14">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="59*"/>
+                    <ColumnDefinition Width="116*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_gain_ceiling" Foreground="#FFC9C9C9" FontSize="13" Content="Gain Ceiling:"/>
-                <Slider Grid.Column="1" x:Name="cameras_gain_ceiling_slider" Minimum="-2" Maximum="2" Margin="10,6,16,0" Grid.ColumnSpan="2" IsMoveToPointEnabled="True" ValueChanged="GAIN_CEILINGL_changed" Value="-2"/>
+                <Slider Grid.Column="1" x:Name="cameras_gain_ceiling_slider" Minimum="-2" Maximum="2" Margin="10,6,16,0" IsMoveToPointEnabled="True" ValueChanged="GAIN_CEILINGL_changed" Value="-2"/>
             </Grid>
             <Grid Grid.Row="15">
                 <Grid.ColumnDefinitions>
