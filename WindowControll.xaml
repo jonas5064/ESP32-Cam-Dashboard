@@ -214,24 +214,16 @@
                         <ColumnDefinition Width="369*" />
                         <ColumnDefinition Width="106*" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" x:Name="network_streaming_c_number_label" Content="Clients Number:" Foreground="#FFB4B4B4" FontSize="17" Margin="221,0,0,0"/>
-                    <TextBox Grid.Column="1" x:Name="network_streaming_cliants_num" HorizontalAlignment="Left" Height="25" Margin="5,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" PreviewTextInput="NumberValidationTextBox" MaxLength="5" LostFocus="network_streaming_cliants_num_LostFocus"/>
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="369*" />
-                        <ColumnDefinition Width="106*" />
-                    </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" x:Name="network_streaming_port_label" Content="Port:" Foreground="#FFB4B4B4" FontSize="17" Margin="308,0,10,0" RenderTransformOrigin="1.222,0.471"/>
                     <TextBox Grid.Column="1" x:Name="network_streaming_port" HorizontalAlignment="Left" Height="25" Margin="5,7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" PreviewTextInput="NumberValidationTextBox" MaxLength="5" LostFocus="network_streaming_port_LostFocus"/>
                 </Grid>
-                <Grid Grid.Row="4">
+                <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="163*" />
-                        <ColumnDefinition Width="312*" />
+                        <ColumnDefinition Width="319*" />
+                        <ColumnDefinition Width="157*" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" x:Name="network_streaming_url_label" Content="URL:" Foreground="#FFB4B4B4" FontSize="17" Margin="112,5,0,10" RenderTransformOrigin="1.222,0.471"/>
-                    <TextBox Grid.Column="1" x:Name="network_streaming_url" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="282" LostFocus="network_streaming_url_LostFocus"/>
+                    <Label Grid.Column="0" x:Name="network_streaming_url_label" Content="IP:" Foreground="#FFB4B4B4" FontSize="17" Margin="277,5,0,10" RenderTransformOrigin="1.222,0.471"/>
+                    <TextBox Grid.Column="1" x:Name="network_streaming_url" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" LostFocus="network_streaming_url_LostFocus"/>
                 </Grid>
             </Grid>
 

@@ -59,9 +59,8 @@ namespace IPCamera
         public String left_req = "";
         public String net_stream_url = "";
         public String net_stream_port = "";
-        public int net_stream_clients_num = 0;
         public bool net_stream = false;
-
+        HttpServer server = new HttpServer();
 
         public Camera(String url, String name, String id, bool rec)
         {
@@ -150,7 +149,40 @@ namespace IPCamera
         public bool Net_stream
         {
             get { return this.net_stream; }
-            set { this.net_stream = value; } // When is checked start expose http server
+            set { 
+                this.net_stream = value;
+                if (this.net_stream_url.Length > 0 && this.net_stream_port.Length > 0)
+                {
+                    this.server.run = this.net_stream;
+                    Console.WriteLine("Server,Run: " + Convert.ToString(this.net_stream));
+                    if (this.net_stream)
+                    {
+                        this.server.port = this.net_stream_port;
+                        this.server.ip = this.net_stream_url;
+                        // Start http this.server
+                        this.server.setup();
+                        _ = this.server.ListenAsync();
+                    } else
+                    {
+                        if(this.server.run)
+                        {
+                            this.server.close();
+                        }
+                    }
+                }
+            }
+        }
+
+        public String Net_stream_port
+        {
+            get { return this.net_stream_port; }
+            set { this.net_stream_port = value; }
+        }
+
+        public String Net_stream_url
+        {
+            get { return this.net_stream_url; }
+            set { this.net_stream_url = value; }
         }
 
         // Setup Contrast Effext

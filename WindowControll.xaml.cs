@@ -74,7 +74,6 @@ namespace IPCamera
             */
             // Setuo Network streaming Settings
             network_streaming_checkbox.IsChecked = this.camera.net_stream;
-            network_streaming_cliants_num.Text = Convert.ToString(this.camera.net_stream_clients_num);
             network_streaming_port.Text = Convert.ToString(this.camera.net_stream_port);
             network_streaming_url.Text = this.camera.net_stream_url;
         }
@@ -1790,16 +1789,23 @@ namespace IPCamera
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
             {
-                this.camera.Net_stream = true;
-                // Update DataBase this Camera
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.myCameras SET net_stream='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
+                if (network_streaming_port.Text.Length > 0 && network_streaming_url.Text.Length > 0)
+                {
+                    this.camera.Net_stream = true;
+                    // Update DataBase this Camera
+                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                    String query = $"UPDATE dbo.myCameras SET net_stream='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    cn.Close();
+                } else
+                {
+                    MessageBox.Show("Fill ip & port!");
+                    c.IsChecked = false;
+                }
             }
             else
             {
@@ -1816,28 +1822,11 @@ namespace IPCamera
             }
         }
 
-        // Network Streaming Clients Number
-        private void network_streaming_cliants_num_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox n = sender as TextBox;
-            int clients_number = Convert.ToInt32((String)n.Text);
-            this.camera.net_stream_clients_num = clients_number;
-            // Update DataBase this Camera
-            SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-            String query = $"UPDATE dbo.myCameras SET net_stream_cl_n='{clients_number}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-            SqlCommand cmd = new SqlCommand(query, cn);
-            cn.Open();
-            int result = cmd.ExecuteNonQuery();
-            if (result < 0)
-                System.Windows.MessageBox.Show("Error inserting data into Database!");
-            cn.Close();
-        }
-
         // Network Streaming Port
         private void network_streaming_port_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
-            this.camera.net_stream_port = (String)n.Text;
+            this.camera.Net_stream_port = (String)n.Text;
             // Update DataBase this Camera
             SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
             String query = $"UPDATE dbo.myCameras SET net_stream_port='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -1853,7 +1842,7 @@ namespace IPCamera
         private void network_streaming_url_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
-            this.camera.net_stream_url = (String)n.Text;
+            this.camera.Net_stream_url = (String)n.Text;
             // Update DataBase this Camera
             SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
             String query = $"UPDATE dbo.myCameras SET net_stream_url='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";

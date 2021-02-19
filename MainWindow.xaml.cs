@@ -19,7 +19,9 @@ using System.Windows.Shapes;
 using VisioForge.Types.OutputFormat;
 using VisioForge.Types.VideoEffects;
 using VisioForge.Controls.UI.WPF;
-
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace IPCamera
 {
@@ -38,7 +40,6 @@ namespace IPCamera
         public static String twilioAccountSID;
         public static String twilioAccountToken;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -49,8 +50,16 @@ namespace IPCamera
             UpdatesFromDB();
             // Open he Cameras Windows
             CreateVideosPage();
-        }
 
+            /*
+            HttpServer server = new HttpServer();
+            server.ip = "localhost";
+            server.port = "8000";
+            server.setup();
+            _ = server.ListenAsync();
+            //server.close();
+            */
+        }
 
         // Restart Application
         public static void RestartApp()
@@ -158,7 +167,6 @@ namespace IPCamera
                         String net_stream_url_l = (String)dataReader["net_stream_url"].ToString().Trim();
                         String net_stream_port_l = (String)dataReader["net_stream_port"].ToString().Trim();
                         String net_stream_l = (String)dataReader["net_stream"].ToString().Trim();
-                        int net_stream_cl_n_l = (int)dataReader["net_stream_cl_n"];
                         try
                         {
                             bool rec = (recording == "True");
@@ -182,7 +190,6 @@ namespace IPCamera
                                 left_req = left,
                                 net_stream_url = net_stream_url_l,
                                 net_stream_port = net_stream_port_l,
-                                net_stream_clients_num = net_stream_cl_n_l,
                                 Net_stream = (net_stream_l == "True")
                             };
                             MainWindow.cameras.Add(cam);
