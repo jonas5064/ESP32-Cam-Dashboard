@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace IPCamera
 {
@@ -16,6 +18,7 @@ namespace IPCamera
         public bool run;
         public String ip = "";
         public String port = "";
+        public Camera cam;
 
         public HttpServer()
         {
@@ -62,19 +65,52 @@ namespace IPCamera
             {
                 while (this.run)
                 {
+
+                    // Some Whow Rerender The Page
                     Console.WriteLine("Listening...");
                     var context = await this.listener.GetContextAsync();
                     HttpListenerRequest request = context.Request;
                     // Obtain a response object.
                     HttpListenerResponse response = context.Response;
-                    // Construct a response.   Here will displays the video
-                    string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+                    System.IO.Stream output = response.OutputStream;
+
+                    // Get Frame Buffer
+                    System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
+                    MemoryStream outStream = new MemoryStream();
+                    BitmapEncoder enc = new BmpBitmapEncoder();
+                    enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                    enc.Save(outStream);
+                    // Send Frames
+                    output = response.OutputStream;
+                    output.Write(outStream.ToArray(), 0, outStream.ToArray().Count());
+                    output.Close();
+
+
+                    
+
+                    
+
+
+                    /*
+                    Console.WriteLine("Listening...");
+                    var context = await this.listener.GetContextAsync();
+                    HttpListenerRequest request = context.Request;
+                    // Obtain a response object.
+                    HttpListenerResponse response = context.Response;
+                    // Create Buffer With HTML
+                    string responseString = "<HTML><HEAD><meta http-equiv='refresh' content='0'" +
+                        "></HEAD><BODY>" +
+                        "Hello World" +
+                        "</BODY></HTML>";
                     byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                    // Send Buffer
                     response.ContentLength64 = buffer.Length;
                     System.IO.Stream output = response.OutputStream;
                     output.Write(buffer, 0, buffer.Length);
                     // You must close the output stream.
                     output.Close();
+                    */
+
                 }
             }
         }
@@ -88,6 +124,7 @@ namespace IPCamera
             this.listener.Close();
             this.listener = new HttpListener();
         }
+
     }
 
 }

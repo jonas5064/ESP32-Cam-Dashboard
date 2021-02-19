@@ -159,9 +159,10 @@ namespace IPCamera
                     {
                         this.server.port = this.net_stream_port;
                         this.server.ip = this.net_stream_url;
+                        this.server.cam = this;
                         // Start http this.server
                         this.server.setup();
-                        _ = this.server.ListenAsync();
+                        var result = this.server.ListenAsync();
                     } else
                     {
                         if(this.server.run)
