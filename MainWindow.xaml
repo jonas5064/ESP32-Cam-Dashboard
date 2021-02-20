@@ -9,32 +9,60 @@
         WindowState="Maximized"
         AutomationProperties.Name="IPCameras"
         WindowStartupLocation="CenterScreen"
-        Background="Black" Height="639" Width="1279">
+        Background="Black" Height="198.6" Width="1025"
+        MinHeight="633" MinWidth="1206">
 
     <!-- Main Grid -->
     <Grid x:Name="main_grid" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="13*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="39*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
 
-        <!-- Cameras Grid -->
-        <Grid x:Name="cameras_grid" Grid.Row="0" Grid.ColumnSpan="2"/>
+        <!-- Toolbar -->
+        <DockPanel Grid.Row="0">
+            <ToolBarTray DockPanel.Dock="Top" Background="#000025">
+                <ToolBar>
+                    <Button Content="Start"    Click="Start_clicked"    />
+                    <Button Content="Stop"     Click="Stop_clicked"     />
+                    <Button Content="Settings" Click="Settings_clicked" />
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>
 
+        <!-- Cameras Grid -->
+        <Grid Grid.Row="1" x:Name="cameras_grid"/>
 
         <!-- Buttons Grid-->
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
+            
             <StackPanel Grid.Column="1" Orientation="Horizontal" >
+                <!--
                 <Button Content="Start"    Width="150" Click="Start_clicked"    />
                 <Button Content="Stop"     Width="150" Click="Stop_clicked"     />
                 <Button Content="Settings" Width="150" Click="Settings_clicked" />
+                -->
             </StackPanel>
+            
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="213*"/>
+                    <ColumnDefinition Width="184*"/>
+                    <ColumnDefinition Width="13*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="13*"/>
+                    <RowDefinition Height="18*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="© Copyright 2020 Alexandros Platanios" Foreground="Silver" FontStyle="Oblique" FontSize="9" Width="177"/>
+            </Grid>
         </Grid>
     </Grid>
 
