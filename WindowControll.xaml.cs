@@ -1758,8 +1758,36 @@ namespace IPCamera
                 {
                     if (response.StatusCode.ToString().Equals("OK"))
                     {
-                        Thread.Sleep(3);
-                        MessageBox.Show("Camera: " + this.camera.name + " has opened hotspot.");
+                        
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+
+            }
+        }
+
+        // Button HostPot Clicked
+        private void Hostpot_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.camera.Stop();
+            // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+            // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+            //Console.WriteLine("Old Url: " + this.url);
+            int found = this.url.IndexOf(":81");
+            String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+            ur_l += "/hostpot?username=" + this.camera.username + "&password=" + this.camera.password;
+            Console.WriteLine("New Url: " + ur_l);
+            HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+            request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        
                     }
                 }
             }
