@@ -6,13 +6,13 @@
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
 
-        <BitmapImage x:Key="up_img"           UriSource="C:\Users\Alexp\source\repos\IPCamera\img\up.png"    />
-        <BitmapImage x:Key="left_img"         UriSource="C:\Users\Alexp\source\repos\IPCamera\img\left.png"  />
-        <BitmapImage x:Key="right_img"        UriSource="C:\Users\Alexp\source\repos\IPCamera\img\right.png" />
-        <BitmapImage x:Key="down_img"         UriSource="C:\Users\Alexp\source\repos\IPCamera\img\down.png"  />
-        <BitmapImage x:Key="take_pic_img"     UriSource="C:\Users\Alexp\source\repos\IPCamera\img\pic.jpg"   />
-        <BitmapImage x:Key="start_recording_button_img"  UriSource="C:\Users\Alexp\source\repos\IPCamera\img\start-recording.png" />
-        <BitmapImage x:Key="stop_recording_button_img"  UriSource="C:\Users\Alexp\source\repos\IPCamera\img\stop-recording.jpg" />
+        <BitmapImage x:Key="up_img"           UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\up.png"    />
+        <BitmapImage x:Key="left_img"         UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\left.png"  />
+        <BitmapImage x:Key="right_img"        UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\right.png" />
+        <BitmapImage x:Key="down_img"         UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\down.png"  />
+        <BitmapImage x:Key="take_pic_img"     UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\pic.jpg"   />
+        <BitmapImage x:Key="start_recording_button_img"  UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\start-recording.png" />
+        <BitmapImage x:Key="stop_recording_button_img"  UriSource="C:\Users\Alexp\source\repos\Alexandros5880\IPCamera\img\stop-recording.jpg" />
 
     </Application.Resources>
     

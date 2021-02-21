@@ -28,11 +28,14 @@ namespace IPCamera
         public WindowControll(Camera cam)
         {
             InitializeComponent();
+
             this.DataContext = this;
-           
             // Setup this_camera
             this.camera = cam;
             this.url = this.camera.url;
+            // Add Title
+            cameras_title.Content = "Cameras Name: " + this.camera.name;
+            
             // Chech if Face_Recognition, Face Detection  is checked
             Face_det.IsChecked = (this.camera.Detection);
             Face_rec.IsChecked = (this.camera.Recognition);
@@ -61,21 +64,11 @@ namespace IPCamera
             email_checkbox.IsChecked = (this.camera.On_move_email);
             pic_checkbox.IsChecked = (this.camera.On_move_pic);
             rec_checkbox.IsChecked = (this.camera.On_move_rec);
-            // Add Title
-            cameras_title.Content = "Cameras Name: " + this.camera.name;
-            /*
-            // Set all sliders
-            cameras_quality_slider.Value = 10;
-            cameras_brightness_slider.Value = -2;
-            cameras_contrast_slider.Value = -2;
-            cameras_saturation_slider.Value = -2;
-            cameras_ae_level_slider.Value = -2;
-            cameras_gain_ceiling_slider.Value = -2;
-            */
             // Setuo Network streaming Settings
             network_streaming_checkbox.IsChecked = this.camera.net_stream;
             network_streaming_port.Text = Convert.ToString(this.camera.net_stream_port);
             network_streaming_url.Text = this.camera.net_stream_url;
+            
         }
 
 

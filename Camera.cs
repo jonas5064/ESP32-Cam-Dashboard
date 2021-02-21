@@ -47,7 +47,7 @@ namespace IPCamera
         public bool recording = false;
         public VideoCapture video;
         public static int count = 0;
-        public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\IPCamera\\Database1.mdf;Integrated Security=True";
+        public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\Database1.mdf;Integrated Security=True";
         public static String pictures_dir;
         public static String videos_dir;
         public static bool avi_format = false;
