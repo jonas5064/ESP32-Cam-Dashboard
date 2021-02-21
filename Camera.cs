@@ -61,6 +61,7 @@ namespace IPCamera
         public String net_stream_port = "";
         public bool net_stream = false;
         HttpServer server = new HttpServer();
+        public bool camera_oppened = false;
 
         public Camera(String url, String name, String id, bool rec)
         {
@@ -450,8 +451,12 @@ namespace IPCamera
         // When click on camera
         public void CamerasFocused(object sender, MouseButtonEventArgs e)
         {
-            WindowControll win_controll = new WindowControll(this);
-            win_controll.Show();
+            if (this.camera_oppened == false)
+            {
+                this.camera_oppened = true;
+                WindowControll win_controll = new WindowControll(this);
+                win_controll.Show();
+            }
         }
 
         // This Happends when camera detectets a motion

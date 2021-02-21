@@ -28,6 +28,13 @@ namespace IPCamera
         }
 
 
+        protected override void OnClosed(EventArgs e)
+        {
+            MainWindow.settings_oppened = false;
+            Console.WriteLine("settings_oppened: " + Convert.ToString(MainWindow.settings_oppened));
+            this.Close();
+        }
+
 
 
         private void Button_pictures_Click(object sender, RoutedEventArgs e)

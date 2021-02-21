@@ -49,6 +49,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\IPCamera.xml</DocumentationFile>
+    <NoWarn>#pragma warning disable 1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>

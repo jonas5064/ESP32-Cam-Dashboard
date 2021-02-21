@@ -40,6 +40,8 @@ namespace IPCamera
         public static String twilioAccountSID;
         public static String twilioAccountToken;
 
+        public static bool settings_oppened = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -287,8 +289,13 @@ namespace IPCamera
         // When Click Settings Button
         private void Settings_clicked(object sender, RoutedEventArgs e)
         {
-            Settings settings = new Settings();
-            settings.Show();
+            if (settings_oppened == false)
+            {
+                settings_oppened = true;
+                Console.WriteLine("settings_oppened: " + Convert.ToString(settings_oppened));
+                Settings settings = new Settings();
+                settings.Show();
+            }
         }
 
 
@@ -323,11 +330,6 @@ namespace IPCamera
                     counter++;
                 }
             }  
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     } // Stop Class
 

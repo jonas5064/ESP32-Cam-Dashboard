@@ -75,6 +75,7 @@ namespace IPCamera
 
         protected override void OnClosed(EventArgs e)
         {
+            this.camera.camera_oppened = false;
             this.Close();
         }
 
