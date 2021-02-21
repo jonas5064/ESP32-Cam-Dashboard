@@ -266,17 +266,16 @@
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_resolution" Foreground="#FFC9C9C9" FontSize="13" Content="Resolution:"/>
-                <ComboBox Grid.Column="1" Margin="14,0,10,4" Height="23" SelectionChanged="Resolution_combobox_Changed">
-                    <ComboBoxItem Content="UXGA(1600X1200)" IsSelected="False"/>
-                    <ComboBoxItem Content="SXGA(1280X1024)" IsSelected="False"/>
-                    <ComboBoxItem Content="XGA(1024X768)" IsSelected="False"/>
-                    <ComboBoxItem Content="SVGA(800X600)" IsSelected="False"/>
-                    <ComboBoxItem Content="VGA(640X480)" IsSelected="False"/>
-                    <ComboBoxItem Content="CIF(400X296)" IsSelected="False"/>
-                    <ComboBoxItem Content="QVGA(320X240)" IsSelected="False"/>
-                    <ComboBoxItem Content="HQVGA(240X176)" IsSelected="False"/>
-                    <ComboBoxItem Content="QQVGA(160X120)" IsSelected="False"/>
-                    <ComboBoxItem Content="Change" IsSelected="True"/>
+                <ComboBox x:Name="remote_resolution" Grid.Column="1" Margin="14,0,10,4" Height="23" SelectionChanged="Resolution_combobox_Changed">
+                    <ComboBoxItem x:Name="remote_resolution_10" Content="UXGA(1600X1200)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_9" Content="SXGA(1280X1024)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_8" Content="XGA(1024X768)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_7" Content="SVGA(800X600)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_6" Content="VGA(640X480)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_5" Content="CIF(400X296)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_4" Content="QVGA(320X240)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_3" Content="HQVGA(240X176)" IsSelected="False"/>
+                    <ComboBoxItem x:Name="remote_resolution_2" Content="QQVGA(160X120)" IsSelected="False"/>
                 </ComboBox>
             </Grid>
             <Grid Grid.Row="2">

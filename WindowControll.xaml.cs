@@ -11,6 +11,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace IPCamera
 {
@@ -68,9 +69,85 @@ namespace IPCamera
             network_streaming_checkbox.IsChecked = this.camera.net_stream;
             network_streaming_port.Text = Convert.ToString(this.camera.net_stream_port);
             network_streaming_url.Text = this.camera.net_stream_url;
-            
+            // Setup Remotes Cameras Settisng
+            update_remote_cameras_status();
         }
 
+
+        // Setup Remotes Cameras Settisng
+        private void update_remote_cameras_status()
+        {
+            // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+            // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+            //Console.WriteLine("Old Url: " + this.url);
+            int found = this.url.IndexOf(":81");
+            String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+            ur_l += "/status?username=" + this.camera.username + "&password=" + this.camera.password;
+            Console.WriteLine("New Url: " + ur_l);
+            HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+            request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode.ToString().Equals("OK"))
+                    {
+                        Stream ReceiveStream = response.GetResponseStream();
+                        StreamReader reader = new StreamReader(ReceiveStream);
+                        string responseFromServer = reader.ReadToEnd();
+                        dynamic data = JObject.Parse(responseFromServer);
+
+                        // Set Frame Rezolution
+                        String fsize = Convert.ToString(data.framesize).Trim();
+                        switch (fsize)
+                        {
+                            case "0": Console.WriteLine($"Frame Size: {0}"); break;
+                            case "3": Console.WriteLine($"Frame Size: {3}"); break;
+                            case "4": Console.WriteLine($"Frame Size: {4}"); break;
+                            case "5": Console.WriteLine($"Frame Size: {5}"); break;
+                            case "6": Console.WriteLine($"Frame Size: {6}"); break;
+                            case "7": Console.WriteLine($"Frame Size: {7}"); break;
+                            case "8": Console.WriteLine($"Frame Size: {8}"); break;
+                            case "9": Console.WriteLine($"Frame Size: {9}"); break;
+                            case "10": Console.WriteLine($"Frame Size: {10}"); break;
+                        };
+                        /*
+                        Console.WriteLine(data.quality);
+                        Console.WriteLine(data.brightness);
+                        Console.WriteLine(data.contrast);
+                        Console.WriteLine(data.saturation);
+                        Console.WriteLine(data.sharpness);
+                        Console.WriteLine(data.special_effect);
+                        Console.WriteLine(data.wb_mode);
+                        Console.WriteLine(data.awb);
+                        Console.WriteLine(data.awb_gain);
+                        Console.WriteLine(data.aec);
+                        Console.WriteLine(data.aec2);
+                        Console.WriteLine(data.ae_level);
+                        Console.WriteLine(data.aec_value);
+                        Console.WriteLine(data.agc);
+                        Console.WriteLine(data.agc_gain);
+                        Console.WriteLine(data.gainceiling);
+                        Console.WriteLine(data.bpc);
+                        Console.WriteLine(data.wpc);
+                        Console.WriteLine(data.raw_gma);
+                        Console.WriteLine(data.lenc);
+                        Console.WriteLine(data.vflip);
+                        Console.WriteLine(data.hmirror);
+                        Console.WriteLine(data.dcw);
+                        Console.WriteLine(data.colorbar);
+                        Console.WriteLine(data.face_detect);
+                        Console.WriteLine(data.face_enroll);
+                        Console.WriteLine(data.face_recognize);
+                        */
+                    }
+                }
+            }
+            catch (System.Net.WebException)
+            {
+
+            }
+        }
 
 
         protected override void OnClosed(EventArgs e)
