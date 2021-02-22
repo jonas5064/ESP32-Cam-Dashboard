@@ -78,17 +78,17 @@ namespace IPCamera
         // Setup Remotes Cameras Settisng
         private void update_remote_cameras_status()
         {
-            // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-            // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-            //Console.WriteLine("Old Url: " + this.url);
-            int found = this.url.IndexOf(":81");
-            String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-            ur_l += "/status?username=" + this.camera.username + "&password=" + this.camera.password;
-            Console.WriteLine("New Url: " + ur_l);
-            HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-            request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
             try
             {
+                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                //Console.WriteLine("Old Url: " + this.url);
+                int found = this.url.IndexOf(":81");
+                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                ur_l += "/status?username=" + this.camera.username + "&password=" + this.camera.password;
+                Console.WriteLine("New Url: " + ur_l);
+                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     if (response.StatusCode.ToString().Equals("OK"))
