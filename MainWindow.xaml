@@ -21,15 +21,26 @@
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <DockPanel Grid.Row="0">
-            <ToolBarTray DockPanel.Dock="top" Background="black">
-                <ToolBar>
-                    <Button Content="Start"    Click="Start_clicked"    />
-                    <Button Content="Stop"     Click="Stop_clicked"     />
-                    <Button Content="Settings" Click="Settings_clicked" />
-                </ToolBar>
-            </ToolBarTray>
-        </DockPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="137*"/>
+                <ColumnDefinition Width="555*"/>
+                <ColumnDefinition Width="151*"/>
+                <ColumnDefinition Width="355*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0">
+                <ToolBarTray DockPanel.Dock="top" Background="black">
+                    <ToolBar>
+                        <Button Content="Start"    Click="Start_clicked"    />
+                        <Button Content="Stop"     Click="Stop_clicked"     />
+                        <Button Content="Settings" Click="Settings_clicked" />
+                    </ToolBar>
+                </ToolBarTray>
+            </DockPanel>
+            <Label Grid.Column="2" x:Name="date" Foreground="#990000"
+                   FontSize="20" FontFamily="Century Gothic" FontStretch="UltraExpanded"
+                   FontWeight="SemiBold"/>
+        </Grid>
 
         <!-- Cameras Grid -->
         <Grid Grid.Row="1" x:Name="cameras_grid"/>
@@ -41,7 +52,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <StackPanel Grid.Column="1" Orientation="Horizontal" >
                 <!--
                 <Button Content="Start"    Width="150" Click="Start_clicked"    />
@@ -49,7 +60,7 @@
                 <Button Content="Settings" Width="150" Click="Settings_clicked" />
                 -->
             </StackPanel>
-            
+
             <Grid Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="213*"/>
