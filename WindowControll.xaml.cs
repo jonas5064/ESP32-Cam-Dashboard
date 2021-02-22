@@ -22,6 +22,7 @@ namespace IPCamera
     {
         public Camera camera;
         public String url = "";
+        public bool remote_resolution_run = false;
         public bool remote_detection = false;
         public bool remote_recognition = false;
         String cam_resolution_order = "";
@@ -101,16 +102,17 @@ namespace IPCamera
                         String fsize = Convert.ToString(data.framesize).Trim();
                         switch (fsize)
                         {
-                            case "0": Console.WriteLine($"Frame Size: {0}"); break;
-                            case "3": Console.WriteLine($"Frame Size: {3}"); break;
-                            case "4": Console.WriteLine($"Frame Size: {4}"); break;
-                            case "5": Console.WriteLine($"Frame Size: {5}"); break;
-                            case "6": Console.WriteLine($"Frame Size: {6}"); break;
-                            case "7": Console.WriteLine($"Frame Size: {7}"); break;
-                            case "8": Console.WriteLine($"Frame Size: {8}"); break;
-                            case "9": Console.WriteLine($"Frame Size: {9}"); break;
-                            case "10": Console.WriteLine($"Frame Size: {10}"); break;
+                            case "0": this.remote_resolution.SelectedIndex = 8; break;
+                            case "3": this.remote_resolution.SelectedIndex = 7; break;
+                            case "4": this.remote_resolution.SelectedIndex = 6; break;
+                            case "5": this.remote_resolution.SelectedIndex = 5; break;
+                            case "6": this.remote_resolution.SelectedIndex = 4; break;
+                            case "7": this.remote_resolution.SelectedIndex = 3; break;
+                            case "8": this.remote_resolution.SelectedIndex = 2; break;
+                            case "9": this.remote_resolution.SelectedIndex = 1; break;
+                            case "10": this.remote_resolution.SelectedIndex = 0; break;
                         };
+                        remote_resolution_run = true;
                         /*
                         Console.WriteLine(data.quality);
                         Console.WriteLine(data.brightness);
@@ -640,7 +642,7 @@ namespace IPCamera
         // Remote Camera Resolution
         private void Resolution_combobox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (this.url != "")
+            if (remote_resolution_run)
             {
                 this.camera.Stop();
                 ComboBox cmb = sender as ComboBox;
