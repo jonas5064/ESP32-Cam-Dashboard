@@ -22,7 +22,7 @@ namespace IPCamera
     {
         public Camera camera;
         public String url = "";
-        public bool remote_resolution_run = false;
+        public bool remote_start_setup = false;
         public bool remote_detection = false;
         public bool remote_recognition = false;
         String cam_resolution_order = "";
@@ -98,9 +98,9 @@ namespace IPCamera
                         string responseFromServer = reader.ReadToEnd();
                         dynamic data = JObject.Parse(responseFromServer);
 
-                        // Set Frame Rezolution
-                        String fsize = Convert.ToString(data.framesize).Trim();
-                        switch (fsize)
+                        // Set Remote Rezolution
+                        String val = Convert.ToString(data.framesize).Trim();
+                        switch (val)
                         {
                             case "0": this.remote_resolution.SelectedIndex = 8; break;
                             case "3": this.remote_resolution.SelectedIndex = 7; break;
@@ -112,17 +112,47 @@ namespace IPCamera
                             case "9": this.remote_resolution.SelectedIndex = 1; break;
                             case "10": this.remote_resolution.SelectedIndex = 0; break;
                         };
-                        remote_resolution_run = true;
+                        // Set remote Quality 10 / 63
+                        val = Convert.ToString(data.quality).Trim();
+                        cameras_quality_slider.Value = Convert.ToDouble(val);
+                        // Set remote Britness  -2 / 2
+                        val = Convert.ToString(data.brightness).Trim();
+                        cameras_brightness_slider.Value = Convert.ToDouble(val);
+                        // Set remote Contrast  -2 / 2
+                        val = Convert.ToString(data.contrast).Trim();
+                        cameras_contrast_slider.Value = Convert.ToDouble(val);
+                        // Set remote Saturation  -2 / 2
+                        val = Convert.ToString(data.saturation).Trim();
+                        cameras_saturation_slider.Value = Convert.ToDouble(val);
+                        // Set Remote Rezolution
+                        val = Convert.ToString(data.special_effect).Trim();
+                        switch (val)
+                        {
+                            case "0": this.remote_specialeffect.SelectedIndex = 0; break;
+                            case "1": this.remote_specialeffect.SelectedIndex = 1; break;
+                            case "2": this.remote_specialeffect.SelectedIndex = 2; break;
+                            case "3": this.remote_specialeffect.SelectedIndex = 3; break;
+                            case "4": this.remote_specialeffect.SelectedIndex = 4; break;
+                            case "5": this.remote_specialeffect.SelectedIndex = 5; break;
+                            case "6": this.remote_specialeffect.SelectedIndex = 6; break;
+                        };
+                        // Set remote AWB  0/1
+                        val = Convert.ToString(data.awb).Trim();
+                        cameras_awb_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote AWB_Gain  0/1
+                        val = Convert.ToString(data.awb_gain).Trim();
+                        cameras_awb_gain_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set Remote Rezolution
+                        val = Convert.ToString(data.wb_mode).Trim();
+                        switch (val)
+                        {
+                            case "0": this.remote_wb_mode.SelectedIndex = 0; break;
+                            case "1": this.remote_wb_mode.SelectedIndex = 1; break;
+                            case "2": this.remote_wb_mode.SelectedIndex = 2; break;
+                            case "3": this.remote_wb_mode.SelectedIndex = 3; break;
+                            case "4": this.remote_wb_mode.SelectedIndex = 4; break;
+                        };
                         /*
-                        Console.WriteLine(data.quality);
-                        Console.WriteLine(data.brightness);
-                        Console.WriteLine(data.contrast);
-                        Console.WriteLine(data.saturation);
-                        Console.WriteLine(data.sharpness);
-                        Console.WriteLine(data.special_effect);
-                        Console.WriteLine(data.wb_mode);
-                        Console.WriteLine(data.awb);
-                        Console.WriteLine(data.awb_gain);
                         Console.WriteLine(data.aec);
                         Console.WriteLine(data.aec2);
                         Console.WriteLine(data.ae_level);
@@ -142,6 +172,7 @@ namespace IPCamera
                         Console.WriteLine(data.face_enroll);
                         Console.WriteLine(data.face_recognize);
                         */
+                        remote_start_setup = true;
                     }
                 }
             }
@@ -642,7 +673,7 @@ namespace IPCamera
         // Remote Camera Resolution
         private void Resolution_combobox_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (remote_resolution_run)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 ComboBox cmb = sender as ComboBox;
@@ -716,7 +747,7 @@ namespace IPCamera
         private void Quality_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt16(e.NewValue);
-            if (this.camera != null)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
@@ -742,7 +773,7 @@ namespace IPCamera
         private void Brightness_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt16(e.NewValue);
-            if (this.camera != null)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
@@ -768,7 +799,7 @@ namespace IPCamera
         private void Contrast_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt16(e.NewValue);
-            if (this.camera != null)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
@@ -794,7 +825,7 @@ namespace IPCamera
         private void Saturation_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
-            if (this.camera != null)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
@@ -819,7 +850,7 @@ namespace IPCamera
         // Remote Camera Specialeffect
         private void Specialeffect_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (this.url != "")
+            if (remote_start_setup)
             {
                 ComboBox cmb = sender as ComboBox;
                 String selection = cmb.SelectedValue.ToString();
@@ -882,45 +913,49 @@ namespace IPCamera
         // Remotes Camera AWB
         private void AWB_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (remote_start_setup)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=awb&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=awb&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            } else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=awb&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=awb&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
             }
@@ -929,46 +964,49 @@ namespace IPCamera
         // Remotes Camera AWB GAIN
         private void AWB_GAIN_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (remote_start_setup)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=awb_gain&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=awb_gain&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=awb_gain&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=awb_gain&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
             }
@@ -977,7 +1015,7 @@ namespace IPCamera
         // Remotes Camera WB Mode
         private void WB_MODE_Changed(object sender, SelectionChangedEventArgs e)
         {
-            if (this.url != "")
+            if (remote_start_setup)
             {
                 ComboBox cmb = sender as ComboBox;
                 String selection = cmb.SelectedValue.ToString();
@@ -1026,46 +1064,49 @@ namespace IPCamera
         // Remotes Camera AEC Sensor
         private void AEC_SENSOR_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (remote_start_setup)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=aec&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=aec&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=aec&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=aec&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
             }
@@ -1074,46 +1115,49 @@ namespace IPCamera
         // Remotes Camera AEC DSP SensorSensor
         private void AEC_DSP_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (remote_start_setup)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=aec2&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=aec2&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=aec2&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=aec2&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
             }
@@ -1123,7 +1167,7 @@ namespace IPCamera
         private void AE_LEVEL_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
-            if (this.camera != null)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
@@ -1148,46 +1192,49 @@ namespace IPCamera
         // AGC Checked
         private void AGC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
+            if (remote_start_setup)
             {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=agc&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=agc&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=agc&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                else
                 {
-                    if (response.StatusCode.ToString().Equals("OK"))
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=agc&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
                     }
                 }
             }
@@ -1197,7 +1244,7 @@ namespace IPCamera
         private void GAIN_CEILINGL_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
-            if (this.camera != null)
+            if (remote_start_setup)
             {
                 this.camera.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
@@ -1222,396 +1269,7 @@ namespace IPCamera
         // BPC Changed
         private void BPC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=bpc&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=bpc&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-        // WPC Changed
-        private void WPC_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=wpc&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=wpc&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-        // RAW GMA Changed
-        private void RAW_GMA_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=raw_gma&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=raw_gma&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-
-        // LENS CORRECTION Changed
-        private void LENS_CORRECTION_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=lenc&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=lenc&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-
-        // H MIRROR Changed
-        private void H_MIRROR_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=hmirror&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=hmirror&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-
-        // V FLIP Changed
-        private void V_FLIP_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=vflip&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=vflip&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-
-        // DCW DOWNSIZE Changed
-        private void DCW_DOWNSIZE_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=dcw&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=dcw&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-        //  COLOR BAR Changed
-        private void COLOR_BAR_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox c = sender as CheckBox;
-            if (c.IsChecked.Value)
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=colorbar&val=1";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-            else
-            {
-                this.camera.Stop();
-                // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
-                // Expected Url = http://192.168.1.50/control?var=framesize&val=0
-                //Console.WriteLine("Old Url: " + this.url);
-                int found = this.url.IndexOf(":81");
-                String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/control?var=colorbar&val=0";
-                //Console.WriteLine("New Url: " + ur_l);
-                HttpWebRequest request = WebRequest.CreateHttp(ur_l);
-                request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                {
-                    if (response.StatusCode.ToString().Equals("OK"))
-                    {
-                        this.camera.Start();
-                        //MainWindow.RestartApp();
-                    }
-                }
-            }
-        }
-
-
-        //  FACE DETECTION Changed
-        private void FACE_DETECTION_checkbox_Checked(object sender, RoutedEventArgs e)
-        {
-            if (Convert.ToInt16(cam_resolution_order) <= 5)
+            if (remote_start_setup)
             {
                 CheckBox c = sender as CheckBox;
                 if (c.IsChecked.Value)
@@ -1622,7 +1280,7 @@ namespace IPCamera
                     //Console.WriteLine("Old Url: " + this.url);
                     int found = this.url.IndexOf(":81");
                     String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                    ur_l += "/control?var=face_detect&val=1";
+                    ur_l += "/control?var=bpc&val=1";
                     //Console.WriteLine("New Url: " + ur_l);
                     HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                     request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -1630,7 +1288,6 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.remote_detection = true;
                             this.camera.Start();
                             //MainWindow.RestartApp();
                         }
@@ -1644,7 +1301,7 @@ namespace IPCamera
                     //Console.WriteLine("Old Url: " + this.url);
                     int found = this.url.IndexOf(":81");
                     String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                    ur_l += "/control?var=face_detect&val=0";
+                    ur_l += "/control?var=bpc&val=0";
                     //Console.WriteLine("New Url: " + ur_l);
                     HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                     request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -1652,27 +1309,20 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.remote_detection = false;
-                            this.remote_recognition = false;
                             this.camera.Start();
                             //MainWindow.RestartApp();
                         }
                     }
                 }
-            } else
-            {
-                MessageBox.Show("Cameras Resolution lowest from 680x480");
-                cameras_face_detection_checkbox.IsChecked = false;
             }
         }
 
-
-        //  FACE RECOGNITION Changed
-        private void FACE_RECOGNITION_checkbox_Checked(object sender, RoutedEventArgs e)
+        // WPC Changed
+        private void WPC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox c = sender as CheckBox;
-            if (this.remote_detection)
+            if (remote_start_setup)
             {
+                CheckBox c = sender as CheckBox;
                 if (c.IsChecked.Value)
                 {
                     this.camera.Stop();
@@ -1681,7 +1331,7 @@ namespace IPCamera
                     //Console.WriteLine("Old Url: " + this.url);
                     int found = this.url.IndexOf(":81");
                     String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                    ur_l += "/control?var=face_recognize&val=1";
+                    ur_l += "/control?var=wpc&val=1";
                     //Console.WriteLine("New Url: " + ur_l);
                     HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                     request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -1689,7 +1339,6 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.remote_recognition = true;
                             this.camera.Start();
                             //MainWindow.RestartApp();
                         }
@@ -1703,7 +1352,7 @@ namespace IPCamera
                     //Console.WriteLine("Old Url: " + this.url);
                     int found = this.url.IndexOf(":81");
                     String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
-                    ur_l += "/control?var=face_recognize&val=0";
+                    ur_l += "/control?var=wpc&val=0";
                     //Console.WriteLine("New Url: " + ur_l);
                     HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                     request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -1711,16 +1360,446 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.remote_recognition = false;
                             this.camera.Start();
                             //MainWindow.RestartApp();
                         }
                     }
                 }
-            } else
+            }
+        }
+
+        // RAW GMA Changed
+        private void RAW_GMA_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
             {
-                c.IsChecked = false;
-                MessageBox.Show("Face Detection is disabled");
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=raw_gma&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+                else
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=raw_gma&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // LENS CORRECTION Changed
+        private void LENS_CORRECTION_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=lenc&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+                else
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=lenc&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // H MIRROR Changed
+        private void H_MIRROR_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=hmirror&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+                else
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=hmirror&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // V FLIP Changed
+        private void V_FLIP_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=vflip&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+                else
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=vflip&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // DCW DOWNSIZE Changed
+        private void DCW_DOWNSIZE_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=dcw&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+                else
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=dcw&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
+        //  COLOR BAR Changed
+        private void COLOR_BAR_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                CheckBox c = sender as CheckBox;
+                if (c.IsChecked.Value)
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=colorbar&val=1";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+                else
+                {
+                    this.camera.Stop();
+                    // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                    // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                    //Console.WriteLine("Old Url: " + this.url);
+                    int found = this.url.IndexOf(":81");
+                    String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                    ur_l += "/control?var=colorbar&val=0";
+                    //Console.WriteLine("New Url: " + ur_l);
+                    HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                    request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode.ToString().Equals("OK"))
+                        {
+                            this.camera.Start();
+                            //MainWindow.RestartApp();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //  FACE DETECTION Changed
+        private void FACE_DETECTION_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                if (Convert.ToInt16(cam_resolution_order) <= 5)
+                {
+                    CheckBox c = sender as CheckBox;
+                    if (c.IsChecked.Value)
+                    {
+                        this.camera.Stop();
+                        // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                        // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                        //Console.WriteLine("Old Url: " + this.url);
+                        int found = this.url.IndexOf(":81");
+                        String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                        ur_l += "/control?var=face_detect&val=1";
+                        //Console.WriteLine("New Url: " + ur_l);
+                        HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                        request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode.ToString().Equals("OK"))
+                            {
+                                this.remote_detection = true;
+                                this.camera.Start();
+                                //MainWindow.RestartApp();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.camera.Stop();
+                        // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                        // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                        //Console.WriteLine("Old Url: " + this.url);
+                        int found = this.url.IndexOf(":81");
+                        String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                        ur_l += "/control?var=face_detect&val=0";
+                        //Console.WriteLine("New Url: " + ur_l);
+                        HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                        request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode.ToString().Equals("OK"))
+                            {
+                                this.remote_detection = false;
+                                this.remote_recognition = false;
+                                this.camera.Start();
+                                //MainWindow.RestartApp();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Cameras Resolution lowest from 680x480");
+                    cameras_face_detection_checkbox.IsChecked = false;
+                }
+            }
+        }
+
+
+        //  FACE RECOGNITION Changed
+        private void FACE_RECOGNITION_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (remote_start_setup)
+            {
+                CheckBox c = sender as CheckBox;
+                if (this.remote_detection)
+                {
+                    if (c.IsChecked.Value)
+                    {
+                        this.camera.Stop();
+                        // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                        // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                        //Console.WriteLine("Old Url: " + this.url);
+                        int found = this.url.IndexOf(":81");
+                        String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                        ur_l += "/control?var=face_recognize&val=1";
+                        //Console.WriteLine("New Url: " + ur_l);
+                        HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                        request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode.ToString().Equals("OK"))
+                            {
+                                this.remote_recognition = true;
+                                this.camera.Start();
+                                //MainWindow.RestartApp();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.camera.Stop();
+                        // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
+                        // Expected Url = http://192.168.1.50/control?var=framesize&val=0
+                        //Console.WriteLine("Old Url: " + this.url);
+                        int found = this.url.IndexOf(":81");
+                        String ur_l = this.url.Substring(0, found); // = http://192.168.1.50/
+                        ur_l += "/control?var=face_recognize&val=0";
+                        //Console.WriteLine("New Url: " + ur_l);
+                        HttpWebRequest request = WebRequest.CreateHttp(ur_l);
+                        request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        {
+                            if (response.StatusCode.ToString().Equals("OK"))
+                            {
+                                this.remote_recognition = false;
+                                this.camera.Start();
+                                //MainWindow.RestartApp();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    c.IsChecked = false;
+                    MessageBox.Show("Face Detection is disabled");
+                }
             }
         }
 

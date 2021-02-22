@@ -319,14 +319,14 @@
                     <ColumnDefinition Width="206*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_specialeffect" Foreground="#FFC9C9C9" FontSize="13" Content="Special Effect:"/>
-                <ComboBox Grid.Column="1" Margin="12,6" Height="23" Grid.ColumnSpan="2" SelectionChanged="Specialeffect_Changed">
-                    <ComboBoxItem Content="No Effect" IsSelected="True"/>
-                    <ComboBoxItem Content="Negative" IsSelected="False"/>
-                    <ComboBoxItem Content="Grayscale" IsSelected="False"/>
-                    <ComboBoxItem Content="Red Tint" IsSelected="False"/>
-                    <ComboBoxItem Content="Green Tint" IsSelected="False"/>
-                    <ComboBoxItem Content="Blue Tint" IsSelected="False"/>
-                    <ComboBoxItem Content="Sepia" IsSelected="False"/>
+                <ComboBox x:Name="remote_specialeffect" Grid.Column="1" Margin="12,6" Height="23" Grid.ColumnSpan="2" SelectionChanged="Specialeffect_Changed">
+                    <ComboBoxItem TabIndex="6" Content="No Effect"/>
+                    <ComboBoxItem TabIndex="5" Content="Negative"/>
+                    <ComboBoxItem TabIndex="4" Content="Grayscale"/>
+                    <ComboBoxItem TabIndex="3" Content="Red Tint"/>
+                    <ComboBoxItem TabIndex="2" Content="Green Tint"/>
+                    <ComboBoxItem TabIndex="1" Content="Blue Tint"/>
+                    <ComboBoxItem TabIndex="0" Content="Sepia"/>
                 </ComboBox>
             </Grid>
             <Grid Grid.Row="7">
@@ -352,12 +352,12 @@
                     <ColumnDefinition Width="116*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" x:Name="cameras_wb_mode" Foreground="#FFC9C9C9" FontSize="13" Content="WB Mode:"/>
-                <ComboBox Grid.Column="1" Margin="12,7" Height="23" SelectionChanged="WB_MODE_Changed">
-                    <ComboBoxItem Content="Auto" IsSelected="True"/>
-                    <ComboBoxItem Content="Sunny" IsSelected="False"/>
-                    <ComboBoxItem Content="Cloudy" IsSelected="False"/>
-                    <ComboBoxItem Content="Office" IsSelected="False"/>
-                    <ComboBoxItem Content="Home" IsSelected="False"/>
+                <ComboBox x:Name="remote_wb_mode" Grid.Column="1" Margin="12,7" Height="23" SelectionChanged="WB_MODE_Changed">
+                    <ComboBoxItem TabIndex="4" Content="Auto" IsSelected="True"/>
+                    <ComboBoxItem TabIndex="3" Content="Sunny" IsSelected="False"/>
+                    <ComboBoxItem TabIndex="2" Content="Cloudy" IsSelected="False"/>
+                    <ComboBoxItem TabIndex="1" Content="Office" IsSelected="False"/>
+                    <ComboBoxItem TabIndex="0" Content="Home" IsSelected="False"/>
                 </ComboBox>
             </Grid>
             <Grid Grid.Row="10">
