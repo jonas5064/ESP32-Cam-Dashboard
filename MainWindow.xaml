@@ -22,7 +22,7 @@
 
         <!-- Toolbar -->
         <DockPanel Grid.Row="0">
-            <ToolBarTray DockPanel.Dock="Top" Background="#000025">
+            <ToolBarTray DockPanel.Dock="top" Background="black">
                 <ToolBar>
                     <Button Content="Start"    Click="Start_clicked"    />
                     <Button Content="Stop"     Click="Stop_clicked"     />
