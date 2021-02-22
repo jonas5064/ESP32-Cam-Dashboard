@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPCamera", "IPCamera.csproj", "{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "..\Installer\Installer.vdproj", "{1FBD8199-A195-4645-8350-9BF82576B67B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,8 +21,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|ARM.Build.0 = Debug|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|ARM64.ActiveCfg = Debug|Any CPU
@@ -30,13 +32,22 @@ Global
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Debug|x86.Build.0 = Debug|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|ARM.ActiveCfg = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|ARM.Build.0 = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|ARM64.ActiveCfg = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|ARM64.Build.0 = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|x64.ActiveCfg = Release|x64
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|x86.ActiveCfg = Release|x86
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Debug|Any CPU.ActiveCfg = Debug
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Debug|ARM.ActiveCfg = Debug
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Debug|ARM64.ActiveCfg = Debug
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Debug|x64.ActiveCfg = Debug
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Debug|x86.ActiveCfg = Debug
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Release|Any CPU.ActiveCfg = Release
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Release|ARM.ActiveCfg = Release
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Release|ARM64.ActiveCfg = Release
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Release|x64.ActiveCfg = Release
+		{1FBD8199-A195-4645-8350-9BF82576B67B}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
