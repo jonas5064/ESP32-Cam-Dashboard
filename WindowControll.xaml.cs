@@ -100,6 +100,7 @@ namespace IPCamera
 
                         // Set Remote Rezolution
                         String val = Convert.ToString(data.framesize).Trim();
+                        cam_resolution_order = val;
                         switch (val)
                         {
                             case "0": this.remote_resolution.SelectedIndex = 8; break;
@@ -124,7 +125,7 @@ namespace IPCamera
                         // Set remote Saturation  -2 / 2
                         val = Convert.ToString(data.saturation).Trim();
                         cameras_saturation_slider.Value = Convert.ToDouble(val);
-                        // Set Remote Rezolution
+                        // Set Remote Special Effect
                         val = Convert.ToString(data.special_effect).Trim();
                         switch (val)
                         {
@@ -152,26 +153,53 @@ namespace IPCamera
                             case "3": this.remote_wb_mode.SelectedIndex = 3; break;
                             case "4": this.remote_wb_mode.SelectedIndex = 4; break;
                         };
-                        /*
-                        Console.WriteLine(data.aec);
-                        Console.WriteLine(data.aec2);
-                        Console.WriteLine(data.ae_level);
-                        Console.WriteLine(data.aec_value);
-                        Console.WriteLine(data.agc);
-                        Console.WriteLine(data.agc_gain);
-                        Console.WriteLine(data.gainceiling);
-                        Console.WriteLine(data.bpc);
-                        Console.WriteLine(data.wpc);
-                        Console.WriteLine(data.raw_gma);
-                        Console.WriteLine(data.lenc);
-                        Console.WriteLine(data.vflip);
-                        Console.WriteLine(data.hmirror);
-                        Console.WriteLine(data.dcw);
-                        Console.WriteLine(data.colorbar);
-                        Console.WriteLine(data.face_detect);
-                        Console.WriteLine(data.face_enroll);
-                        Console.WriteLine(data.face_recognize);
-                        */
+                        // Set remote AEC  0/1
+                        val = Convert.ToString(data.aec).Trim();
+                        cameras_aec_sensor_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote AEC dsp  0/1
+                        val = Convert.ToString(data.aec2).Trim();
+                        cameras_aec_dsp_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote AE Level  -2 / 2
+                        val = Convert.ToString(data.ae_level).Trim();
+                        cameras_ae_level_slider.Value = Convert.ToDouble(val);
+                        // Set remote AGC 0/1
+                        val = Convert.ToString(data.agc).Trim();
+                        cameras_agc_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote Gain Ceiling -2 / 2
+                        val = Convert.ToString(data.gainceiling).Trim();
+                        cameras_gain_ceiling_slider.Value = Convert.ToDouble(val);
+                        // Set remote BPC 0/1
+                        val = Convert.ToString(data.bpc).Trim();
+                        cameras_bpc_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote WPC 0/1
+                        val = Convert.ToString(data.wpc).Trim();
+                        cameras_wpc_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote RAW GMA 0/1
+                        val = Convert.ToString(data.raw_gma).Trim();
+                        cameras_raw_gma_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote LENS Corection 0/1
+                        val = Convert.ToString(data.lenc).Trim();
+                        cameras_lens_correction_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote H Mirror 0/1
+                        val = Convert.ToString(data.hmirror).Trim();
+                        cameras_h_mirror_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote H Mirror 0/1
+                        val = Convert.ToString(data.vflip).Trim();
+                        cameras_v_flip_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set remote DCW 0/1
+                        val = Convert.ToString(data.dcw).Trim();
+                        cameras_dcw_downsize_en_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set Color Bar 0/1
+                        val = Convert.ToString(data.colorbar).Trim();
+                        cameras_color_bar_checkbox.IsChecked = (val == "1" ? true : false);
+                        // Set Face Detection 0/1
+                        val = Convert.ToString(data.face_detect).Trim();
+                        cameras_face_detection_checkbox.IsChecked = (val == "1" ? true : false);
+                        this.remote_detection = (val == "1" ? true : false);
+                        // Set Face Recognition 0/1
+                        val = Convert.ToString(data.face_recognize).Trim();
+                        cameras_face_recognition_checkbox.IsChecked = (val == "1" ? true : false);
+                        this.remote_recognition = (val == "1" ? true : false);
                         remote_start_setup = true;
                     }
                 }
