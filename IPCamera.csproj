@@ -218,9 +218,16 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Database1_log.ldf">
-      <DependentUpon>Database1.mdf</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
+    <Resource Include="stop-recording.jpg" />
+    <Resource Include="start-recording.png" />
+    <Resource Include="pic.jpg" />
+    <Resource Include="down.png" />
+    <Resource Include="right.png" />
+    <Resource Include="left.png" />
+    <Resource Include="up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\VisioForge.DotNet.Core.Redist.Base.x86.12.1.26\build\VisioForge.DotNet.Core.Redist.Base.x86.targets" Condition="Exists('packages\VisioForge.DotNet.Core.Redist.Base.x86.12.1.26\build\VisioForge.DotNet.Core.Redist.Base.x86.targets')" />

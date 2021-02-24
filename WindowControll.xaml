@@ -207,7 +207,7 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label Grid.Column="0" Grid.Row="0" x:Name="network_streaming_label" Content="Network Streaming:" Foreground="#FFB4B4B4" FontSize="23"/>
+                <Label Grid.Column="0" Grid.Row="0" x:Name="network_streaming_label" Content="Network streaming on localhost:" Foreground="#FFB4B4B4" FontSize="23"/>
                 <CheckBox Grid.Row="1" x:Name="network_streaming_checkbox" Content="Network Streaming Enable" Foreground="#FFB4B4B4" FontSize="17" Margin="221,10,0,0" Unchecked="Network_stream_check" Click="Network_stream_check"/>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -222,8 +222,8 @@
                         <ColumnDefinition Width="319*" />
                         <ColumnDefinition Width="157*" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" x:Name="network_streaming_url_label" Content="IP:" Foreground="#FFB4B4B4" FontSize="17" Margin="277,5,0,10" RenderTransformOrigin="1.222,0.471"/>
-                    <TextBox Grid.Column="1" x:Name="network_streaming_url" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" LostFocus="network_streaming_url_LostFocus"/>
+                    <Label Grid.Column="0" x:Name="network_streaming_prefix_label" Content="Prefix:" Foreground="#FFB4B4B4" FontSize="17" Margin="251,5,0,10" RenderTransformOrigin="1.222,0.471"/>
+                    <TextBox Grid.Column="1" x:Name="network_streaming_prefix" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" LostFocus="network_streaming_prefix_LostFocus"/>
                 </Grid>
             </Grid>
 

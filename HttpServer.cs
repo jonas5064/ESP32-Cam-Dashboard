@@ -19,6 +19,7 @@ namespace IPCamera
         public bool run;
         public String ip = "";
         public String port = "";
+        public String prefix = "";
         public Camera cam;
 
         public HttpServer()
@@ -32,7 +33,7 @@ namespace IPCamera
             if (!this.ip.Equals("") && !this.port.Equals(""))
             {
                 Console.WriteLine("Listener Setup OK.");
-                String url = "http://" + ip + ":" + port + "/";
+                String url = $"http://{ip}:{port}/{prefix}/";
                 Console.WriteLine(url);
                 this.prefixes = new string[] { url };
                 if (!HttpListener.IsSupported)

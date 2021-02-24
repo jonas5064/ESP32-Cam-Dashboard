@@ -29,7 +29,10 @@ namespace IPCamera
 
         public WindowControll(Camera cam)
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            } catch (Exception) { }
 
             this.DataContext = this;
             // Setup this_camera
@@ -69,7 +72,7 @@ namespace IPCamera
             // Setuo Network streaming Settings
             network_streaming_checkbox.IsChecked = this.camera.net_stream;
             network_streaming_port.Text = Convert.ToString(this.camera.net_stream_port);
-            network_streaming_url.Text = this.camera.net_stream_url;
+            network_streaming_prefix.Text = this.camera.net_stream_prefix;
             // Setup Remotes Cameras Settisng
             update_remote_cameras_status();
         }
@@ -1997,7 +2000,7 @@ namespace IPCamera
             CheckBox c = sender as CheckBox;
             if (c.IsChecked.Value)
             {
-                if (network_streaming_port.Text.Length > 0 && network_streaming_url.Text.Length > 0)
+                if (network_streaming_port.Text.Length > 0)
                 {
                     this.camera.Net_stream = true;
                     // Update DataBase this Camera
@@ -2046,14 +2049,14 @@ namespace IPCamera
             cn.Close();
         }
 
-        // Network Streaming Port
-        private void network_streaming_url_LostFocus(object sender, RoutedEventArgs e)
+        // Network Streaming prefix
+        private void network_streaming_prefix_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
-            this.camera.Net_stream_url = (String)n.Text;
+            this.camera.net_stream_prefix = (String)n.Text;
             // Update DataBase this Camera
             SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-            String query = $"UPDATE dbo.myCameras SET net_stream_url='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+            String query = $"UPDATE dbo.myCameras SET net_stream_prefix='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
             SqlCommand cmd = new SqlCommand(query, cn);
             cn.Open();
             int result = cmd.ExecuteNonQuery();

@@ -179,8 +179,8 @@ namespace IPCamera
                         int darkness = (int)dataReader["Darkness"];
                         int move_sensitivity = (int)dataReader["Move_Sensitivity"];
 
-                        String net_stream_url_l = (String)dataReader["net_stream_url"].ToString().Trim();
                         String net_stream_port_l = (String)dataReader["net_stream_port"].ToString().Trim();
+                        String net_stream_prefix_l = (String)dataReader["net_stream_prefix"].ToString().Trim();
                         String net_stream_l = (String)dataReader["net_stream"].ToString().Trim();
                         try
                         {
@@ -203,8 +203,8 @@ namespace IPCamera
                                 down_req = down,
                                 right_req = right,
                                 left_req = left,
-                                net_stream_url = net_stream_url_l,
                                 net_stream_port = net_stream_port_l,
+                                net_stream_prefix = net_stream_prefix_l,
                                 Net_stream = (net_stream_l == "True")
                             };
                             MainWindow.cameras.Add(cam);

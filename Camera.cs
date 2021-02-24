@@ -47,7 +47,7 @@ namespace IPCamera
         public bool recording = false;
         public VideoCapture video;
         public static int count = 0;
-        public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\Database1.mdf;Integrated Security=True";
+        public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Alexp\\source\\repos\\Alexandros5880\\ESP32-Cam-Dashboard\\Database1.mdf;Integrated Security=True";
         public static String pictures_dir;
         public static String videos_dir;
         public static bool avi_format = false;
@@ -57,8 +57,9 @@ namespace IPCamera
         public String down_req = "";
         public String right_req = "";
         public String left_req = "";
-        public String net_stream_url = "";
+        public String net_stream_ip = "localhost";
         public String net_stream_port = "";
+        public String net_stream_prefix = "";
         public bool net_stream = false;
         HttpServer server = new HttpServer();
         public bool camera_oppened = false;
@@ -152,14 +153,15 @@ namespace IPCamera
             get { return this.net_stream; }
             set { 
                 this.net_stream = value;
-                if (this.net_stream_url.Length > 0 && this.net_stream_port.Length > 0)
+                if (this.net_stream_ip.Length > 0 && this.net_stream_port.Length > 0)
                 {
                     this.server.run = this.net_stream;
                     Console.WriteLine("Server,Run: " + Convert.ToString(this.net_stream));
                     if (this.net_stream)
                     {
                         this.server.port = this.net_stream_port;
-                        this.server.ip = this.net_stream_url;
+                        this.server.ip = this.net_stream_ip;
+                        this.server.prefix = this.net_stream_prefix;
                         this.server.cam = this;
                         // Start http this.server
                         this.server.setup();
@@ -179,12 +181,6 @@ namespace IPCamera
         {
             get { return this.net_stream_port; }
             set { this.net_stream_port = value; }
-        }
-
-        public String Net_stream_url
-        {
-            get { return this.net_stream_url; }
-            set { this.net_stream_url = value; }
         }
 
         // Setup Contrast Effext
