@@ -122,113 +122,21 @@ namespace IPCamera
                 }
             }
             // Save URLS
-            //Dictionary<String, String> urls = new Dictionary<String, String>();
-            //Dictionary<String, String> usernamepas = new Dictionary<String, String>();
             List<Cameras> cams = new List<Cameras>(8);
-            // Setup a list with the urls and the number of them.
-            if (url_1.Text != "" && name_1.Text != "")
+            try
             {
-                try
-                {
-                    //urls.Add(url_1.Text, name_1.Text);
-                    //usernamepas.Add(username_1.Text, password_1.Text);
-                    cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
+                cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Text));
+                cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Text));
+                cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Text));
+                cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Text));
+                cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Text));
+                cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Text));
+                cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Text));
+                cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Text));
             }
-            if (url_2.Text != "" && name_2.Text != "")
+            catch (System.ArgumentException)
             {
-                try
-                {
-                    //urls.Add(url_2.Text, name_2.Text);
-                    //usernamepas.Add(username_2.Text, password_2.Text);
-                    cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Text));
-                }
-                catch (System.ArgumentException)
-                {
 
-                }
-            }
-            if (url_3.Text != "" && name_3.Text != "")
-            {
-                try
-                {
-                    //urls.Add(url_3.Text, name_3.Text);
-                    //usernamepas.Add(username_3.Text, password_3.Text);
-                    cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
-            }
-            if (url_4.Text != "" && name_4.Text != "")
-            {
-                try
-                {
-                    //urls.Add(url_4.Text, name_4.Text);
-                    //usernamepas.Add(username_4.Text, password_4.Text);
-                    cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
-            }
-            if (url_5.Text != "" && name_5.Text != "")
-            {
-                try
-                {
-                    //urls.Add(url_5.Text, name_5.Text);
-                    //usernamepas.Add(username_5.Text, password_5.Text);
-                    cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
-            }
-            if (url_6.Text != "" && name_6.Text != "")
-            {
-                try
-                {
-                    //urls.Add(url_6.Text, name_6.Text);
-                    //usernamepas.Add(username_6.Text, password_6.Text);
-                    cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
-            }
-            if (url_7.Text != "" && name_7.Text != "")
-            {
-                try
-                {
-                    //urls.Add(url_7.Text, name_7.Text);
-                    //usernamepas.Add(username_7.Text, password_7.Text);
-                    cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
-            }
-            if (url_8.Text != "" && name_8.Text != "")
-            {
-                try
-                {
-                    //urls.Add(url_8.Text, name_8.Text);
-                    //usernamepas.Add(username_8.Text, password_8.Text);
-                    cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Text));
-                }
-                catch (System.ArgumentException)
-                {
-
-                }
             }
             int urls_num = cams.Count;
             // If urls.Count > 0
