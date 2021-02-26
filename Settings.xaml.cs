@@ -125,14 +125,46 @@ namespace IPCamera
             List<Cameras> cams = new List<Cameras>(8);
             try
             {
-                cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Text));
-                cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Text));
-                cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Text));
-                cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Text));
-                cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Text));
-                cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Text));
-                cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Text));
-                cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Text));
+                if (url_1.Text.Length > 0 && name_1.Text.Length > 0 &&
+                    name_1.Text.Length > 0 && password_1.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Text));
+                }
+                if (url_2.Text.Length > 0 && name_2.Text.Length > 0 &&
+                    name_2.Text.Length > 0 && password_2.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Text));
+                }
+                if (url_3.Text.Length > 0 && name_3.Text.Length > 0 &&
+                    name_3.Text.Length > 0 && password_3.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Text));
+                }
+                if (url_4.Text.Length > 0 && name_4.Text.Length > 0 &&
+                    name_4.Text.Length > 0 && password_4.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Text));
+                }
+                if (url_5.Text.Length > 0 && name_5.Text.Length > 0 &&
+                    name_5.Text.Length > 0 && password_5.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Text));
+                }
+                if (url_6.Text.Length > 0 && name_6.Text.Length > 0 &&
+                    name_6.Text.Length > 0 && password_6.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Text));
+                }
+                if (url_7.Text.Length > 0 && name_7.Text.Length > 0 &&
+                    name_7.Text.Length > 0 && password_7.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Text));
+                }
+                if (url_8.Text.Length > 0 && name_8.Text.Length > 0 &&
+                    name_8.Text.Length > 0 && password_8.Text.Length > 0)
+                {
+                    cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Text));
+                }
             }
             catch (System.ArgumentException)
             {
@@ -175,6 +207,19 @@ namespace IPCamera
                         }
                     }
                 }
+            }
+            else
+            {
+                // Clear Database
+                SqlConnection con = new SqlConnection(Camera.DB_connection_string);
+                SqlCommand cmd = new SqlCommand
+                {
+                    CommandText = "DELETE FROM dbo.MyCameras ",
+                    Connection = con
+                };
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
             }
             // Save Email Sender And Password
             if ( (!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
