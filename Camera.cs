@@ -32,6 +32,7 @@ namespace IPCamera
         public string id = "";
         public string username = "";
         public string password = "";
+        public bool isEsp32 = false;
         public int row = 0;
         public int coll = 0;
         public bool detection = false;
@@ -71,14 +72,28 @@ namespace IPCamera
             this.id = id;
 
             // Create an VideoCapture
-            this.video = new VideoCapture
+            if (!this.isEsp32)
             {
-                IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
+                this.video = new VideoCapture
                 {
-                    URL = this.url/*,
-                    Type = VisioForge.Types.VFIPSource.Auto_LAV*/
-                }
-            };
+                    IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
+                    {
+                        URL = this.url,
+                        Login = this.Username,
+                        Password = this.Password
+                    }
+                };
+            } else
+            {
+                this.video = new VideoCapture
+                {
+                    IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
+                    {
+                        URL = this.url/*,
+                        Type = VisioForge.Types.VFIPSource.Auto_LAV*/
+                    }
+                };
+            }
             this.video.OnError += OnError;
             this.video.MouseUp += CamerasFocused;
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;

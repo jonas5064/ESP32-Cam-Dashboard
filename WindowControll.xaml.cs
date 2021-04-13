@@ -74,11 +74,45 @@ namespace IPCamera
             network_streaming_port.Text = Convert.ToString(this.camera.net_stream_port);
             network_streaming_prefix.Text = this.camera.net_stream_prefix;
             // Setup Remotes Cameras Settisng
-            update_remote_cameras_status();
+            if(this.camera.isEsp32)
+            {
+                update_remote_cameras_status();
+            } else
+            {
+                remote_resolution.IsEnabled = false;
+                cameras_quality_slider.IsEnabled = false;
+                cameras_brightness_slider.IsEnabled = false;
+                cameras_contrast_slider.IsEnabled = false;
+                cameras_saturation_slider.IsEnabled = false;
+                remote_specialeffect.IsEnabled = false;
+                cameras_awb_checkbox.IsEnabled = false;
+                cameras_awb_gain_checkbox.IsEnabled = false;
+                remote_wb_mode.IsEnabled = false;
+                cameras_aec_sensor_checkbox.IsEnabled = false;
+                cameras_aec_dsp_checkbox.IsEnabled = false;
+                cameras_ae_level_slider.IsEnabled = false;
+                cameras_agc_checkbox.IsEnabled = false;
+                cameras_gain_ceiling_slider.IsEnabled = false;
+                cameras_bpc_checkbox.IsEnabled = false;
+                cameras_wpc_checkbox.IsEnabled = false;
+                cameras_raw_gma_checkbox.IsEnabled = false;
+                cameras_lens_correction_checkbox.IsEnabled = false;
+                cameras_h_mirror_checkbox.IsEnabled = false;
+                cameras_v_flip_checkbox.IsEnabled = false;
+                cameras_dcw_downsize_en_checkbox.IsEnabled = false;
+                cameras_color_bar_checkbox.IsEnabled = false;
+                cameras_face_detection_checkbox.IsEnabled = false;
+                cameras_face_recognition_checkbox.IsEnabled = false;
+                cameras_get_still_button.IsEnabled = false;
+                cameras_start_stream_button.IsEnabled = false;
+                cameras_enroll_face_button.IsEnabled = false;
+                cameras_reboot_button.IsEnabled = false;
+                cameras_hostpot_button.IsEnabled = false;
+            }
         }
 
 
-        // Setup Remotes Cameras Settisng
+        // Setup Remotes Cameras Settings
         private void update_remote_cameras_status()
         {
             try

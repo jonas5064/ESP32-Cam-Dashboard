@@ -182,6 +182,8 @@ namespace IPCamera
                         String net_stream_port_l = (String)dataReader["net_stream_port"].ToString().Trim();
                         String net_stream_prefix_l = (String)dataReader["net_stream_prefix"].ToString().Trim();
                         String net_stream_l = (String)dataReader["net_stream"].ToString().Trim();
+
+                        bool isEsp = (dataReader["isEsp32"].ToString().Trim() == "True");
                         try
                         {
                             bool rec = (recording == "True");
@@ -205,7 +207,8 @@ namespace IPCamera
                                 left_req = left,
                                 net_stream_port = net_stream_port_l,
                                 net_stream_prefix = net_stream_prefix_l,
-                                Net_stream = (net_stream_l == "True")
+                                Net_stream = (net_stream_l == "True"),
+                                isEsp32 = isEsp
                             };
                             MainWindow.cameras.Add(cam);
                         }
