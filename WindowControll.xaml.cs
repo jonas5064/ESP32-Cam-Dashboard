@@ -245,6 +245,10 @@ namespace IPCamera
             {
 
             }
+            catch (System.ArgumentOutOfRangeException)
+            {
+
+            }
         }
 
 
