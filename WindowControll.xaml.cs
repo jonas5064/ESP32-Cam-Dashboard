@@ -39,7 +39,7 @@ namespace IPCamera
             this.camera = cam;
             this.url = this.camera.url;
             // Add Title
-            cameras_title.Content = "Cameras Name: " + this.camera.name;
+            cameras_title.Content = this.camera.name;
             
             // Chech if Face_Recognition, Face Detection  is checked
             Face_det.IsChecked = (this.camera.Detection);
@@ -111,6 +111,12 @@ namespace IPCamera
             }
         }
 
+
+        // X Button Clicked
+        private void X_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
         // Setup Remotes Cameras Settings
         private void update_remote_cameras_status()

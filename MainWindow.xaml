@@ -8,9 +8,14 @@
         Title="IPCameras"
         WindowState="Maximized"
         AutomationProperties.Name="IPCameras"
+        Background="Black"
+        ResizeMode="NoResize"
+        WindowStyle="None">
+        <!--
         WindowStartupLocation="CenterScreen"
-        Background="Black" Height="198.6" Width="1025"
-        MinHeight="633" MinWidth="1206">
+        Height="198.6" Width="1025"
+        MinHeight="633" MinWidth="1206"
+        -->
 
     <!-- Main Grid -->
     <Grid x:Name="main_grid" >
@@ -25,8 +30,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="137*"/>
                 <ColumnDefinition Width="555*"/>
-                <ColumnDefinition Width="151*"/>
-                <ColumnDefinition Width="355*"/>
+                <ColumnDefinition Width="224*"/>
+                <ColumnDefinition Width="282*"/>
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Column="0">
                 <ToolBarTray DockPanel.Dock="top" Background="black">
@@ -40,6 +45,30 @@
             <Label Grid.Column="2" x:Name="date" Foreground="#990000"
                    FontSize="20" FontFamily="Century Gothic" FontStretch="UltraExpanded"
                    FontWeight="SemiBold"/>
+            <Button Grid.Column="3" Grid.Row="0" Content="X"
+                        FontSize="17" Click="X_Button_Click" 
+                        Height="29" Width="29" Margin="0 2 2 0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkRed"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
 
         <!-- Cameras Grid -->

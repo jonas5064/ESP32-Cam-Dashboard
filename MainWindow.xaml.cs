@@ -314,6 +314,11 @@ namespace IPCamera
             }
         }
 
+        // X Button Click
+        private void X_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
         // Find How Many Cameras is connected and open the write UI
         public void CreateVideosPage()

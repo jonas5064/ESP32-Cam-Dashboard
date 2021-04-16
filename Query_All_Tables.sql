@@ -1,4 +1,26 @@
-﻿CREATE TABLE [dbo].[myCameras] (
+﻿CREATE TABLE [dbo].[EmailSender] (
+    [Id]    INT           IDENTITY (1, 1) NOT NULL,
+    [Email] NCHAR (255)   NULL,
+    [Pass]  NVARCHAR (50) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[FilesDirs]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Name] NCHAR(250) NOT NULL, 
+    [Path] NCHAR(250) NOT NULL
+);
+
+CREATE TABLE [dbo].[FilesFormats] (
+    [Id]   INT NOT NULL IDENTITY(1,1),
+    [avi]  BIT DEFAULT ((0)) NOT NULL,
+    [mp4]  BIT DEFAULT ((0)) NOT NULL,
+    [webm] BIT DEFAULT ((0)) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[myCameras] (
     [Id]                NVARCHAR (50) NOT NULL,
     [urls]              NCHAR (333)   NOT NULL,
     [name]              NCHAR (50)    NOT NULL,
@@ -26,3 +48,20 @@
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+CREATE TABLE [dbo].[SMS]
+(
+	[Id]    INT           IDENTITY (1, 1) NOT NULL,
+    [AccountSID] NCHAR (255)   NOT NULL,
+    [AccountTOKEN]  NCHAR(255) NOT NULL,
+    [Phone] NCHAR(55) NOT NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[Users]
+(
+	[Id] INT NOT NULL IDENTITY PRIMARY KEY, 
+    [FirstName] NCHAR(255) NOT NULL,
+	[LastName] NCHAR(255) NOT NULL,
+	[Email] NCHAR(255) NOT NULL,
+	[Phone] NCHAR(255) NOT NULL,
+);

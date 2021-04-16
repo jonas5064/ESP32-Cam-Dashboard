@@ -231,6 +231,14 @@
     <Resource Include="up.png" />
   </ItemGroup>
   <ItemGroup>
+    <FileAssociation Include=".nun">
+      <Visible>False</Visible>
+      <Description>IPCameras Server and Esp32-Cam Supported</Description>
+      <Progid>101010101</Progid>
+      <DefaultIcon>ipCamera.ico</DefaultIcon>
+    </FileAssociation>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -238,14 +246,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <FileAssociation Include=".nun">
-      <Visible>False</Visible>
-      <Description>IPCameras Server and Esp32-Cam Supported</Description>
-      <Progid>101010101</Progid>
-      <DefaultIcon>ipCamera.ico</DefaultIcon>
-    </FileAssociation>
+    <Content Include="Query_All_Tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\VisioForge.DotNet.Core.Redist.Base.x86.12.1.26\build\VisioForge.DotNet.Core.Redist.Base.x86.targets" Condition="Exists('packages\VisioForge.DotNet.Core.Redist.Base.x86.12.1.26\build\VisioForge.DotNet.Core.Redist.Base.x86.targets')" />
