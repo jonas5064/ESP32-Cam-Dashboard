@@ -11,7 +11,7 @@
         Background="Black"
         ResizeMode="NoResize"
         WindowStyle="None">
-        <!--
+    <!--
         WindowStartupLocation="CenterScreen"
         Height="198.6" Width="1025"
         MinHeight="633" MinWidth="1206"
@@ -28,10 +28,10 @@
         <!-- Toolbar -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="137*"/>
-                <ColumnDefinition Width="555*"/>
-                <ColumnDefinition Width="224*"/>
-                <ColumnDefinition Width="282*"/>
+                <ColumnDefinition Width="193*"/>
+                <ColumnDefinition Width="251*"/>
+                <ColumnDefinition Width="169*"/>
+                <ColumnDefinition Width="155*"/>
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Column="0">
                 <ToolBarTray DockPanel.Dock="top" Background="black">
@@ -39,6 +39,7 @@
                         <Button Content="Start"    Click="Start_clicked"    />
                         <Button Content="Stop"     Click="Stop_clicked"     />
                         <Button Content="Settings" Click="Settings_clicked" />
+                        <Button Content="Login"    Click="Login_clicked"    />
                     </ToolBar>
                 </ToolBarTray>
             </DockPanel>

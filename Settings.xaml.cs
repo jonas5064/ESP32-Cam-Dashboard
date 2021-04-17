@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-
+using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace IPCamera
 {
@@ -443,9 +443,25 @@ namespace IPCamera
                     e.Column.IsReadOnly = true; // Makes the column as read only
                     e.Column.Width = 33;
                 }
+                if (e.Column.Header.ToString() == "FirstName")
+                {
+                    e.Column.Width = 100;
+                }
+                if (e.Column.Header.ToString() == "LastName")
+                {
+                    e.Column.Width = 100;
+                }
                 if (e.Column.Header.ToString() == "Email")
                 {
-                    e.Column.Width = 333;
+                    e.Column.Width = 300;
+                }
+                if (e.Column.Header.ToString() == "Password")
+                {
+                    e.Column.Width = 150;
+                }
+                if (e.Column.Header.ToString() == "Licences")
+                {
+                    e.Column.IsReadOnly = true; // Makes the column as read only
                 }
             };
             users_grid.CanUserDeleteRows = true;
@@ -517,52 +533,75 @@ namespace IPCamera
             String lname = LastName.Text;
             String email = Email.Text;
             String phone = Phone.Text;
-            // Insert to DB First to create an Id and then update MainWindow.myUsers
-            String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone) VALUES (@fname, @lname, @email, @phone)";
-            using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+            String selection = new_user_licenses.SelectedValue.ToString();
+            if (selection.Contains("Admin"))
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@fname", fname);
-                    command.Parameters.AddWithValue("@lname", lname);
-                    command.Parameters.AddWithValue("@email", email);
-                    command.Parameters.AddWithValue("@phone", phone);
-                    connection.Open();
-                    int result = command.ExecuteNonQuery();
-                    // Check Error
-                    if (result < 0)
-                        System.Windows.MessageBox.Show("Error inserting data into Database!");
-                }
-                connection.Close();
-                // Get The New User User From DB And Add Him To MainWindow.myUsers
-                query = $"SELECT Id, FirstName, LastName, Email, Phone FROM dbo.Users " +
-                                            $"WHERE FirstName=@fname AND LastName=@lname AND Email=@email AND Phone=@phone ";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@fname", fname);
-                    command.Parameters.AddWithValue("@lname", lname);
-                    command.Parameters.AddWithValue("@email", email);
-                    command.Parameters.AddWithValue("@phone", phone);
-                    connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
-                    while (dataReader.Read())
-                    {
-                        int id = (int)dataReader["Id"];
-                        String fname2 = dataReader["FirstName"].ToString().Trim();
-                        String lname2 = dataReader["LastName"].ToString().Trim();
-                        String email2 = dataReader["Email"].ToString().Trim();
-                        String phone2 = dataReader["Phone"].ToString().Trim();
-                        // Create The Usres Objects
-                        Users user = new Users(id, fname2, lname2, email2, phone2);
-                        MainWindow.myUsers.Add(user);
-                    }
-                }
-                connection.Close();
+                selection = "Admin";
             }
-            Console.WriteLine("ADD OK");
-            // Refresch Users Table
-            this.Close();
-            new Settings().Show();
+            else if (selection.Contains("Employee"))
+            {
+                selection = "Employee";
+            }
+            String password = Password.Text;
+            String repeat_pass = Repeat_Pass.Text;
+            if(password.Equals(repeat_pass))
+            {
+                // Insert to DB First to create an Id and then update MainWindow.myUsers
+                String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                                                        $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@fname", fname);
+                        command.Parameters.AddWithValue("@lname", lname);
+                        command.Parameters.AddWithValue("@email", email);
+                        command.Parameters.AddWithValue("@phone", phone);
+                        command.Parameters.AddWithValue("@licences", selection);
+                        command.Parameters.AddWithValue("@pass", password);
+                        connection.Open();
+                        int result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                    // Get The New User User From DB And Add Him To MainWindow.myUsers
+                    query = $"SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM dbo.Users " +
+                                                $"WHERE FirstName=@fname AND LastName=@lname AND Email=@email AND Phone=@phone AND Password=@pass";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@fname", fname);
+                        command.Parameters.AddWithValue("@lname", lname);
+                        command.Parameters.AddWithValue("@email", email);
+                        command.Parameters.AddWithValue("@phone", phone);
+                        command.Parameters.AddWithValue("@pass", password);
+                        connection.Open();
+                        SqlDataReader dataReader = command.ExecuteReader();
+                        while (dataReader.Read())
+                        {
+                            int id = (int)dataReader["Id"];
+                            String fname2 = dataReader["FirstName"].ToString().Trim();
+                            String lname2 = dataReader["LastName"].ToString().Trim();
+                            String email2 = dataReader["Email"].ToString().Trim();
+                            String phone2 = dataReader["Phone"].ToString().Trim();
+                            String licences = dataReader["Licences"].ToString().Trim();
+                            String pass = dataReader["Password"].ToString().Trim();
+                            // Create The Usres Objects
+                            Users user = new Users(id, fname2, lname2, email2, phone2, licences, pass);
+                            MainWindow.myUsers.Add(user);
+                        }
+                    }
+                    connection.Close();
+                }
+                Console.WriteLine("ADD OK");
+                // Refresch Users Table
+                this.Close();
+                new Settings().Show();
+            } else
+            {
+                System.Windows.Forms.MessageBox.Show("Rong Password.");
+            }
         }
 
         // Files format checkboxes

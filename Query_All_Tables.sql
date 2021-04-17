@@ -57,11 +57,13 @@ CREATE TABLE [dbo].[SMS]
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
-CREATE TABLE [dbo].[Users]
-(
-	[Id] INT NOT NULL IDENTITY PRIMARY KEY, 
-    [FirstName] NCHAR(255) NOT NULL,
-	[LastName] NCHAR(255) NOT NULL,
-	[Email] NCHAR(255) NOT NULL,
-	[Phone] NCHAR(255) NOT NULL,
+CREATE TABLE [dbo].[Users] (
+    [Id]        INT         IDENTITY (1, 1) NOT NULL,
+    [FirstName] NCHAR (255) NOT NULL,
+    [LastName]  NCHAR (255) NOT NULL,
+    [Email]     NCHAR (255) NOT NULL,
+    [Phone]     NCHAR (255) NOT NULL,
+    [Password] NCHAR(50) NOT NULL,
+    [Licences] NCHAR(100) NOT NULL, 
+    PRIMARY KEY CLUSTERED ([Id] ASC)
 );

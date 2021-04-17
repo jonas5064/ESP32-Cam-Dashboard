@@ -33,6 +33,7 @@ namespace IPCamera
         public string username = "";
         public string password = "";
         public bool isEsp32 = false;
+        WindowControll win_controll;
         public int row = 0;
         public int coll = 0;
         public bool detection = false;
@@ -465,8 +466,11 @@ namespace IPCamera
             if (this.camera_oppened == false)
             {
                 this.camera_oppened = true;
-                WindowControll win_controll = new WindowControll(this);
+                this.win_controll = new WindowControll(this);
                 win_controll.Show();
+            } else
+            {
+                this.win_controll.Activate();
             }
         }
 

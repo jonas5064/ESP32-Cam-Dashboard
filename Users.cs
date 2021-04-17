@@ -14,6 +14,8 @@ namespace IPCamera
         private String email = "";
         private String phone = "";
         public static int Count = 0;
+        public String licences;
+        public String password;
 
         public int Id
         {
@@ -45,14 +47,28 @@ namespace IPCamera
             set { this.phone = value; }
         }
 
+        public String Password
+        {
+            get { return this.password; }
+            set { this.password = value; }
+        }
+
+        public String Licences
+        {
+            get { return this.licences; }
+            set { this.licences = value; }
+        }
+
         // Constructor
-        public Users(int id, String fname, String lname, String email, String phone)
+        public Users(int id, String fname, String lname, String email, String phone, String licences, String password)
         {
             this.Id = id;
             this.Firstname = fname;
             this.Lastname = lname;
             this.Email = email;
             this.Phone = phone;
+            this.Licences = licences;
+            this.Password = password;
             Count++;
         }
 

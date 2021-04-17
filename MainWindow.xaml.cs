@@ -32,15 +32,18 @@ namespace IPCamera
         public static MainWindow main_window;
         public static List<Camera> cameras = new List<Camera>();
         public static List<Users> myUsers = new List<Users>();
+        public static Users user;
         public static Grid cams_grid;
         public static String email_send;
         public static String pass_send;
-
+        private Login login;
+        private Settings settings;
+        public static bool settings_oppened = false;
+        public static bool login_oppened = false;
         public static String twilioNumber;
         public static String twilioAccountSID;
         public static String twilioAccountToken;
-
-        public static bool settings_oppened = false;
+        
 
         public MainWindow()
         {
@@ -222,7 +225,7 @@ namespace IPCamera
 
                 // Get Users Data
                 myUsers.Clear();
-                query = "SELECT Id, FirstName, LastName, Email, Phone FROM dbo.Users";
+                query = "SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM dbo.Users";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
@@ -234,8 +237,10 @@ namespace IPCamera
                         String lname = dataReader["LastName"].ToString().Trim();
                         String email = dataReader["Email"].ToString().Trim();
                         String phone = dataReader["Phone"].ToString().Trim();
+                        String licences = dataReader["Licences"].ToString().Trim();
+                        String pass = dataReader["Password"].ToString().Trim();
                         // Create The Usres Objects
-                        Users user = new Users(id, fname, lname, email, phone);
+                        Users user = new Users(id, fname, lname, email, phone, licences, pass);
                         MainWindow.myUsers.Add(user);
                     }
                 }
@@ -309,8 +314,26 @@ namespace IPCamera
             {
                 settings_oppened = true;
                 Console.WriteLine("settings_oppened: " + Convert.ToString(settings_oppened));
-                Settings settings = new Settings();
+                this.settings = new Settings();
                 settings.Show();
+            } else
+            {
+                this.settings.Activate();
+            }
+        }
+
+        // Login Clicked
+        private void Login_clicked(object sender, RoutedEventArgs e)
+        {
+            if (login_oppened == false)
+            {
+                login_oppened = true;
+                Console.WriteLine("login_oppened: " + Convert.ToString(login_oppened));
+                this.login = new Login();
+                login.Show();
+            } else
+            {
+                this.login.Activate();
             }
         }
 

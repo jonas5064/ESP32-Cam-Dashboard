@@ -360,7 +360,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="45*" />
+                                <RowDefinition Height="35*" />
                                 <RowDefinition Height="35*" />
                                 <RowDefinition Height="35*" />
                                 <RowDefinition Height="35*" />
@@ -377,16 +377,16 @@
                                 <TextBox x:Name="FirstName" Grid.Column="1" Margin="3" />
                             </Grid>
                             <!-- Last Name -->
-                            <Grid Grid.Column="1" Grid.Row="1">
+                            <Grid Grid.Column="0" Grid.Row="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="56*" />
                                     <ColumnDefinition Width="131*" />
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Content="LastName:" Foreground="#FFB4B4B4"  Margin="13,0,0,0" />
-                                <TextBox x:Name="LastName" Grid.Column="1" Margin="3" />
+                                <Label Grid.Column="0" Content="LastName:" Foreground="#FFB4B4B4"  Margin="13,0,0,0"/>
+                                <TextBox x:Name="LastName" Grid.Column="1" Margin="3"/>
                             </Grid>
                             <!-- Email -->
-                            <Grid Grid.Column="0" Grid.Row="2">
+                            <Grid Grid.Column="1" Grid.Row="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="56*" />
                                     <ColumnDefinition Width="131*" />
@@ -395,13 +395,44 @@
                                 <TextBox x:Name="Email" Grid.Column="1" Margin="3" />
                             </Grid>
                             <!-- Phone -->
-                            <Grid Grid.Column="1" Grid.Row="2">
+                            <Grid Grid.Column="1" Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="56*" />
                                     <ColumnDefinition Width="131*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Content="Phone:" Foreground="#FFB4B4B4" Margin="13,0,0,0" />
                                 <TextBox x:Name="Phone" Grid.Column="1" Margin="3" />
+                            </Grid>
+                            <!-- Licences -->
+                            <Grid Grid.Column="0" Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="56*" />
+                                    <ColumnDefinition Width="131*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Licences:" Foreground="#FFB4B4B4" Margin="13,0,0,0"/>
+                                <ComboBox x:Name="new_user_licenses" Grid.Column="1" VerticalAlignment="Stretch" Margin="3">
+                                    <!-- SelectionChanged="User_Licences_Changed" -->
+                                    <ComboBoxItem TabIndex="0" Content="Admin" IsSelected="True"/>
+                                    <ComboBoxItem TabIndex="1" Content="Employee" IsSelected="False"/>
+                                </ComboBox>
+                            </Grid>
+                            <!-- Password -->
+                            <Grid Grid.Column="1" Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="56*" />
+                                    <ColumnDefinition Width="131*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Password:" Foreground="#FFB4B4B4" Margin="13,0,0,0" />
+                                <TextBox x:Name="Password" Grid.Column="1" Margin="3" />
+                            </Grid>
+                            <!-- Repeat Password -->
+                            <Grid Grid.Column="1" Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="56*" />
+                                    <ColumnDefinition Width="131*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Repeat Pas:" Foreground="#FFB4B4B4" Margin="13,0,0,0" />
+                                <TextBox x:Name="Repeat_Pass" Grid.Column="1" Margin="3" />
                             </Grid>
                         </Grid>
 
