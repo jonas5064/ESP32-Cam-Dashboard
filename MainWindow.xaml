@@ -36,10 +36,10 @@
             <DockPanel Grid.Column="0">
                 <ToolBarTray DockPanel.Dock="top" Background="black">
                     <ToolBar>
-                        <Button Content="Start"    Click="Start_clicked"    />
-                        <Button Content="Stop"     Click="Stop_clicked"     />
+                        <Button x:Name="login_logout_b" Content="Loggin"/>
+                        <Button Content="Start"    Click="Start_clicked" />
+                        <Button Content="Stop"     Click="Stop_clicked" />
                         <Button Content="Settings" Click="Settings_clicked" />
-                        <Button Content="Login"    Click="Login_clicked"    />
                     </ToolBar>
                 </ToolBarTray>
             </DockPanel>

@@ -463,14 +463,19 @@ namespace IPCamera
         // When click on camera
         public void CamerasFocused(object sender, MouseButtonEventArgs e)
         {
-            if (this.camera_oppened == false)
+            if (MainWindow.loged && MainWindow.myUsers.Contains(MainWindow.user)
+                && (MainWindow.user.Licences.Equals("Admin")))
             {
-                this.camera_oppened = true;
-                this.win_controll = new WindowControll(this);
-                win_controll.Show();
-            } else
-            {
-                this.win_controll.Activate();
+                if (this.camera_oppened == false)
+                {
+                    this.camera_oppened = true;
+                    this.win_controll = new WindowControll(this);
+                    win_controll.Show();
+                }
+                else
+                {
+                    this.win_controll.Activate();
+                }
             }
         }
 

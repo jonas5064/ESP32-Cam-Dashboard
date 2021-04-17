@@ -36,7 +36,8 @@ namespace IPCamera
         public static Grid cams_grid;
         public static String email_send;
         public static String pass_send;
-        private Login login;
+        public Login login;
+        public static bool loged = false;
         private Settings settings;
         public static bool settings_oppened = false;
         public static bool login_oppened = false;
@@ -50,6 +51,12 @@ namespace IPCamera
             InitializeComponent();
             // Set a Hundeler for this main window
             main_window = this;
+
+            login_logout_b.Click += (object sender, RoutedEventArgs e) =>
+            {
+                this.Loggin_clicked();
+            };
+
             cams_grid = cameras_grid;
             // Update Urls From Database
             UpdatesFromDB();
@@ -277,6 +284,34 @@ namespace IPCamera
             }
         }
 
+        // Loggin Button Click
+        public void Loggin_clicked()
+        {
+            if (login_oppened == false)
+            {
+                login_oppened = true;
+                Console.WriteLine("login_oppened: " + Convert.ToString(login_oppened));
+                this.login = new Login();
+                this.login.Show();
+            }
+            else
+            {
+                this.login.Activate();
+            }
+        }
+
+        // Loggout Button Click
+        public void Loggout_clicked()
+        {
+            MainWindow.user = null;
+            MainWindow.loged = false;
+            MainWindow.main_window.login_logout_b.Content = "Login";
+            login_logout_b.Click += (object sender, RoutedEventArgs e) =>
+            {
+                this.Loggin_clicked();
+            };
+        }
+
         // When Click Start Button
         private void Start_clicked(object sender, RoutedEventArgs e)
         {
@@ -310,30 +345,20 @@ namespace IPCamera
         // When Click Settings Button
         private void Settings_clicked(object sender, RoutedEventArgs e)
         {
-            if (settings_oppened == false)
+            if (MainWindow.loged && MainWindow.myUsers.Contains(MainWindow.user)
+                && (MainWindow.user.Licences.Equals("Admin")) )
             {
-                settings_oppened = true;
-                Console.WriteLine("settings_oppened: " + Convert.ToString(settings_oppened));
-                this.settings = new Settings();
-                settings.Show();
-            } else
-            {
-                this.settings.Activate();
-            }
-        }
-
-        // Login Clicked
-        private void Login_clicked(object sender, RoutedEventArgs e)
-        {
-            if (login_oppened == false)
-            {
-                login_oppened = true;
-                Console.WriteLine("login_oppened: " + Convert.ToString(login_oppened));
-                this.login = new Login();
-                login.Show();
-            } else
-            {
-                this.login.Activate();
+                if (settings_oppened == false)
+                {
+                    settings_oppened = true;
+                    Console.WriteLine("settings_oppened: " + Convert.ToString(settings_oppened));
+                    this.settings = new Settings();
+                    settings.Show();
+                }
+                else
+                {
+                    this.settings.Activate();
+                }
             }
         }
 

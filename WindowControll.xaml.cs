@@ -467,18 +467,21 @@ namespace IPCamera
         // UP, DOWN, LEFT,RIGHT use Http request api to controll he camera
         private void GET_request(String url)
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = client.GetAsync(url).Result;
-            if (response.IsSuccessStatusCode)
+            try
             {
-                String result = response.Content.ReadAsStringAsync().Result;
-                Console.WriteLine(result);
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-            }
-            client.Dispose();
+                HttpClient client = new HttpClient();
+                HttpResponseMessage response = client.GetAsync(url).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    String result = response.Content.ReadAsStringAsync().Result;
+                    Console.WriteLine(result);
+                }
+                else
+                {
+                    Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                }
+                client.Dispose();
+            } catch(System.InvalidOperationException) { }
         }
 
         private void UP_button_click(object sender, MouseButtonEventArgs e)
