@@ -7,14 +7,15 @@
         mc:Ignorable="d"
         Title="WindowControll"
         Background="#FF151515"
+        MinWidth="1100" MinHeight="730"
+        Width="1100" Height="730"
+        WindowState="Maximized">
+    <!--
+        WindowStyle="None"
+        Width="1210" Height="956"
         ResizeMode="NoResize"
         WindowState="Maximized"
-        WindowStyle="None"
-        d:DesignWidth="1643.354"
-        d:DesignHeight="804.122">
-    <!--
-        Width="1210" Height="956"
-        MinWidth="1300" MinHeight="1000">
+        MinWidth="1300" MinHeight="1000"
         -->
 
 
@@ -57,8 +58,7 @@
                        Content="Cameras Tittle"/>
                 <Label Grid.Row="1" x:Name="local_camera_title"
                        Foreground="#D58400" FontSize="15"
-                       Content="Local Machine Settings:"
-                       Margin="20 0 0 0"/>
+                       Content="Local Machine Settings:"/>
             </Grid>
             <!-- Brightness Slider -->
             <Grid Grid.Column="1" Grid.Row="2">
@@ -101,15 +101,15 @@
             <Grid Grid.Row="2" Grid.Column="2" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="105*" />
-                    <ColumnDefinition Width="110*" />
-                    <ColumnDefinition Width="243*" />
+                    <ColumnDefinition Width="113*" />
+                    <ColumnDefinition Width="111*" />
+                    <ColumnDefinition Width="187*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="29" />
                     <RowDefinition Height="45" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="45" />
+                    <RowDefinition />
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Column="1" Grid.Row="0">
                     <Label Content="On Movement:" Foreground="#FFB4B4B4" />
@@ -136,8 +136,8 @@
                 </Grid>
                 <Grid Grid.Column="1" Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="5*" />
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="135*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -166,7 +166,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" x:Name="network_streaming_label" 
-                       Content="Publicity Settings Of This Camera:" Foreground="#4B7BFA" 
+                       Content="Publicity Settings:" Foreground="#4B7BFA" 
                        FontSize="17"/>
                 <Grid Grid.Column="0" Grid.Row="1" Margin="56,0,0,0">
                     <Grid.RowDefinitions>
@@ -175,7 +175,10 @@
                         <RowDefinition Height="40"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <CheckBox Grid.Row="0" x:Name="network_streaming_checkbox" Content="Network Streaming Enable" Foreground="#FFB4B4B4" FontSize="17" Unchecked="Network_stream_check" Click="Network_stream_check" Margin="10,0,0,0"/>
+                    <CheckBox Grid.Row="0" x:Name="network_streaming_checkbox"
+                              Content="Network Enable" Foreground="#FFB4B4B4"
+                              FontSize="13" Unchecked="Network_stream_check" 
+                              Click="Network_stream_check" Margin="10,0,0,0"/>
 
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
@@ -184,7 +187,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" x:Name="network_streaming_port_label"
                                 Content="Port:" Foreground="#FFB4B4B4" 
-                                FontSize="15" VerticalAlignment="Center"
+                                FontSize="13" VerticalAlignment="Center"
                                 HorizontalAlignment="Left"/>
                         <TextBox Grid.Column="1" x:Name="network_streaming_port" 
                                      Height="23"
@@ -200,7 +203,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" x:Name="network_streaming_prefix_label"
                                    Content="Prefix:" Foreground="#FFB4B4B4" 
-                                   FontSize="15" VerticalAlignment="Center"
+                                   FontSize="13" VerticalAlignment="Center"
                                    HorizontalAlignment="Left"/>
                         <TextBox Grid.Column="1" x:Name="network_streaming_prefix"
                                      Height="23"
@@ -277,13 +280,13 @@
                     <RowDefinition Height="23*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Column="0" Grid.Row="0" x:Name="cameras_remote_title"
-                       Foreground="#D58400" FontSize="15" Content="Remote Cameras Settings:"/>
+                       Foreground="#D58400" FontSize="15" Content="ESP32-Cam Camera Settings:"/>
                 <Button Grid.Column="1" Grid.Row="0" Content="X"
                         FontSize="17" Click="X_Button_Click" 
                         Height="29" Width="29"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"
-                        Margin="0 3 3 0">
+                        Margin="0 3 3 0" Visibility="Hidden">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Template">
@@ -546,7 +549,7 @@
                     <Button Grid.Column="4" x:Name="cameras_hostpot_button" Content="HostPot" Margin="3" Click="Hostpot_Clicked"></Button>
                 </Grid>
             </Grid>
-            
+
         </Grid>
 
     </Grid>
