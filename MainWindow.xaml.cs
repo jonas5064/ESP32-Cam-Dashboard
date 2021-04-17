@@ -37,7 +37,60 @@ namespace IPCamera
         public static String email_send;
         public static String pass_send;
         public Login login;
-        public static bool loged = false;
+        public static bool logged = false;
+        public static bool Logged
+        {
+            set
+            {
+                MainWindow.logged = value;
+                // Save the logged User
+                if (MainWindow.logged)
+                {
+                    try
+                    {
+                        // Save to DataBase Pictures
+                        using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                        {
+                            String query = $"INSERT INTO dbo.Logged (Id) VALUES (@user)";
+                            using (SqlCommand command = new SqlCommand(query, connection))
+                            {
+                                command.Parameters.AddWithValue("@user", MainWindow.user.Email);
+                                connection.Open();
+                                int result = command.ExecuteNonQuery();
+                                // Check Error
+                                if (result < 0)
+                                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                            }
+                        }
+                    }
+                    catch( Exception ex)
+                    {
+                        MessageBox.Show($"MainWindows.Logged = True Error: \n{ex.Message}");
+                    }
+                    
+                }
+                else
+                {
+                    // Clear DataBase
+                    try
+                    {
+                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
+                        String query = "DELETE FROM dbo.Logged";
+                        SqlCommand cmd = new SqlCommand(query, cn);
+                        cn.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        cn.Close();
+                    }
+                    catch (System.Data.SqlClient.SqlException e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+            }
+            get { return MainWindow.logged; }
+        }
         private Settings settings;
         public static bool settings_oppened = false;
         public static bool login_oppened = false;
@@ -281,6 +334,36 @@ namespace IPCamera
                     }
                 }
                 connection.Close();
+
+                // Get Logged User If Existes
+                query = "SELECT Id FROM dbo.Logged";
+                String user_email = "";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    SqlDataReader dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        user_email = dataReader["Id"].ToString().Trim();
+                    }
+                }
+                connection.Close();
+                try
+                {
+                    var u = from user in MainWindow.myUsers where user.Email.Equals(user_email) select user;
+                    MainWindow.user = u.Single();
+                    MainWindow.logged = true;
+                    MainWindow.main_window.login_logout_b.Content = "Logout";
+                    MainWindow.main_window.login_logout_b.Click += (object send, RoutedEventArgs ev) =>
+                    {
+                        MainWindow.main_window.Loggout_clicked();
+                    };
+                }
+                catch(Exception e)
+                {
+                    //MessageBox.Show(e.Message);
+                }
+                
             }
         }
 
@@ -304,7 +387,7 @@ namespace IPCamera
         public void Loggout_clicked()
         {
             MainWindow.user = null;
-            MainWindow.loged = false;
+            MainWindow.Logged = false;
             MainWindow.main_window.login_logout_b.Content = "Login";
             login_logout_b.Click += (object sender, RoutedEventArgs e) =>
             {
@@ -345,7 +428,7 @@ namespace IPCamera
         // When Click Settings Button
         private void Settings_clicked(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.loged && MainWindow.myUsers.Contains(MainWindow.user)
+            if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user)
                 && (MainWindow.user.Licences.Equals("Admin")) )
             {
                 if (settings_oppened == false)

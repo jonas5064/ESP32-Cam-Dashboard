@@ -37,19 +37,20 @@ namespace IPCamera
             String password = Password.Text;
             try
             {
-                var v = from u in MainWindow.myUsers where (u.Email.Equals(email)) && (u.Password.Equals(password)) select u;
-                MainWindow.user = v.First();
-                MainWindow.loged = true;
+                var v = from user in MainWindow.myUsers where user.Email.Equals(email) && user.Password.Equals(password) select user;
+                MainWindow.user = v.Single();
+                MainWindow.Logged = true;
                 MainWindow.main_window.login_logout_b.Content = "Logout";
                 MainWindow.main_window.login_logout_b.Click += (object send, RoutedEventArgs ev) =>
                 {
                     MainWindow.main_window.Loggout_clicked();
                 };
                 this.Close();
-            } catch (Exception)
+            }
+            catch (Exception ex)
             {
-                MainWindow.loged = false;
-                MessageBox.Show("User Not Finded;");
+                MainWindow.Logged = false;
+                MessageBox.Show("User Not Founded.");
             }
             
         }

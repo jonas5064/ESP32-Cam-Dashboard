@@ -67,3 +67,8 @@ CREATE TABLE [dbo].[Users] (
     [Licences] NCHAR(100) NOT NULL, 
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
+
+CREATE TABLE [dbo].[Logged] (
+    [Id]   NCHAR (100) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
