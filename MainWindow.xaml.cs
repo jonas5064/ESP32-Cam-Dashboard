@@ -150,8 +150,8 @@ namespace IPCamera
                     Install_Requarements.Install_Req();
                 }
                 // Application Varaible to false this code won't runs again
-                //Properties.Settings.Default.FirstRun = false;
-                //Properties.Settings.Default.Save();
+                Properties.Settings.Default.FirstRun = false;
+                Properties.Settings.Default.Save();
             }
 
 

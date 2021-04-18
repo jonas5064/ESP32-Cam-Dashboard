@@ -8,8 +8,7 @@
         Title="WindowControll"
         Background="#FF151515"
         MinWidth="1100" MinHeight="730"
-        Width="1100" Height="730"
-        WindowState="Maximized">
+        Width="1100" Height="730">
     <!--
         WindowStyle="None"
         Width="1210" Height="956"
