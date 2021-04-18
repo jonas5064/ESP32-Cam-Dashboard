@@ -8,7 +8,8 @@
         Title="WindowControll"
         Background="#FF151515"
         MinWidth="1100" MinHeight="730"
-        Width="1100" Height="730">
+        Width="1100" Height="730"
+        ResizeMode="NoResize">
     <!--
         WindowStyle="None"
         Width="1210" Height="956"
@@ -210,6 +211,23 @@
                                      LostFocus="network_streaming_prefix_LostFocus"/>
                     </Grid>
                 </Grid>
+            </Grid>
+
+            <!-- Start/Stop Camera -->
+            <Grid Grid.Column="2" Grid.Row="4" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="141*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="138*"/>
+                    <ColumnDefinition Width="140*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Button Grid.Column="0" Grid.Row="0" Content="Start" Margin="5" Foreground="DarkGreen" Click="Start_Clicked"/>
+                <Button Grid.Column="2" Grid.Row="0" Content="Stop" Margin="5" Foreground="DarkRed" Click="Stop_Clicked"/>
             </Grid>
 
             <!-- Recording Grid -->

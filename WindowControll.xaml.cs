@@ -2423,6 +2423,19 @@ namespace IPCamera
             }
         }
 
+        // Start Button Clicked (Starting camera)
+        private void Start_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.camera.Start();
+        }
+
+        // Stop Button Clicked (Stoping camera)
+        private void Stop_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.camera.Stop();
+        }
+
+        
     }
 
         
