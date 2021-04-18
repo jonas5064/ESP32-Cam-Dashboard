@@ -409,54 +409,61 @@ namespace IPCamera
         // Setup Recording Mode
         private void Setup_recording_mode()
         {
-            if (this.Recording)
+            try
             {
-                // Video mode == capture
-                this.video.Mode = VFVideoCaptureMode.IPCapture;
-                // Setup the right file name
-                DateTime now = DateTime.Now;
-                String date = now.ToString("F");
-                date = date.Replace(":", ".");
-                String dir_path = Camera.videos_dir + "\\" + this.name;
-                if (!Directory.Exists(dir_path)) // Directory with the name of the camera
+                if (this.Recording)
                 {
-                    Directory.CreateDirectory(dir_path);
+                    // Video mode == capture
+                    this.video.Mode = VFVideoCaptureMode.IPCapture;
+                    // Setup the right file name
+                    DateTime now = DateTime.Now;
+                    String date = now.ToString("F");
+                    date = date.Replace(":", ".");
+                    String dir_path = Camera.videos_dir + "\\" + this.name;
+                    if (!Directory.Exists(dir_path)) // Directory with the name of the camera
+                    {
+                        Directory.CreateDirectory(dir_path);
+                    }
+                    // Start Recording
+                    // AVI
+                    if (avi_format)
+                    {
+                        String file = dir_path + "\\" + date + ".avi";
+                        this.video.Output_Filename = file;
+                        this.video.Output_Format = new VFAVIOutput();
+                    }
+                    // MP4
+                    if (mp4_format)
+                    {
+                        String file = dir_path + "\\" + date + ".mp4";
+                        this.video.Output_Filename = file;
+                        this.video.Output_Format = new VFMP4v8v10Output();
+                    }
+                    // WEBM
+                    if (webm_format)
+                    {
+                        String file = dir_path + "\\" + date + ".webm";
+                        this.video.Output_Filename = file;
+                        this.video.Output_Format = new VFWebMOutput();
+                    }
                 }
-                // Start Recording
-                // AVI
-                if (avi_format)
+                else
                 {
-                    String file = dir_path + "\\" + date + ".avi";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFAVIOutput();
-                }
-                // MP4
-                if (mp4_format)
-                {
-                    String file = dir_path + "\\" + date + ".mp4";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFMP4v8v10Output();
-                }
-                // WEBM
-                if (webm_format)
-                {
-                    String file = dir_path + "\\" + date + ".webm";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFWebMOutput();
+                    // Setup video mode to preview
+                    this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
                 }
             }
-            else
+            catch( Exception ex)
             {
-                // Setup video mode to preview
-                this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
         
 
         // On Error EVnt
-        private void OnError(object sender, VisioForge.Types.ErrorsEventArgs e)
+        private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
         {
-            //System.Windows.MessageBox.Show($"[OnError]   {e.Message}");
+            Console.WriteLine($"Level:{ex.Level}\nStackTrace:{ex.StackTrace}\nMessage:{ex.Message}");
             //throw new NotImplementedException();
         }
 
