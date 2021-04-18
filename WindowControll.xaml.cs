@@ -32,7 +32,10 @@ namespace IPCamera
             try
             {
                 InitializeComponent();
-            } catch (Exception) { }
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+            }
 
             this.DataContext = this;
             // Setup this_camera
@@ -247,13 +250,13 @@ namespace IPCamera
                     }
                 }
             }
-            catch (System.Net.WebException)
+            catch (System.Net.WebException ex)
             {
-
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
-            catch (System.ArgumentOutOfRangeException)
+            catch (System.ArgumentOutOfRangeException ex)
             {
-
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
 
@@ -283,9 +286,9 @@ namespace IPCamera
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException se)
+                catch (System.Data.SqlClient.SqlException ex)
                 {
-                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
                 // Restart Camera
                 this.camera.Stop();
@@ -316,9 +319,9 @@ namespace IPCamera
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException se)
+                catch (System.Data.SqlClient.SqlException ex)
                 {
-                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
                 // Restart Camera
                 this.camera.Stop();
@@ -349,9 +352,9 @@ namespace IPCamera
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException se)
+                catch (System.Data.SqlClient.SqlException ex)
                 {
-                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
                 // Restart Camera
                 this.camera.Stop();
@@ -377,9 +380,9 @@ namespace IPCamera
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException se)
+                catch (System.Data.SqlClient.SqlException ex)
                 {
-                    System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
                 // Restart Camera
                 this.camera.Stop();
@@ -407,9 +410,9 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
 
@@ -433,9 +436,9 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
 
@@ -458,9 +461,9 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
 
@@ -481,7 +484,11 @@ namespace IPCamera
                     Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
                 }
                 client.Dispose();
-            } catch(System.InvalidOperationException) { }
+            }
+            catch(System.InvalidOperationException ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+            }
         }
 
         private void UP_button_click(object sender, MouseButtonEventArgs e)
@@ -744,8 +751,14 @@ namespace IPCamera
                     cn.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException) { }
-            catch (System.NullReferenceException) { }
+            catch (System.Data.SqlClient.SqlException ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+            }
+            catch (System.NullReferenceException ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+            }
         }
 
         // Remote Camera Resolution
@@ -812,9 +825,10 @@ namespace IPCamera
                                 this.camera.Start();
                             }
                         }
-                    } catch(Exception er)
+                    }
+                    catch(Exception ex)
                     {
-                        System.Windows.MessageBox.Show("[ERROR] " + er.Message);
+                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                     }
                 }
             }
@@ -981,9 +995,10 @@ namespace IPCamera
                             //MainWindow.RestartApp();
                         }
                     }
-                } catch(Exception)
+                }
+                catch(Exception ex)
                 {
-
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
             }
         }
@@ -1936,8 +1951,10 @@ namespace IPCamera
                         //MainWindow.RestartApp();
                     }
                 }
-            } catch (System.Net.WebException)
+            }
+            catch (System.Net.WebException ex)
             {
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 this.camera.Start();
             }
         }
@@ -1965,9 +1982,9 @@ namespace IPCamera
                         }
                     }
                 }
-                catch (System.Net.WebException)
+                catch (System.Net.WebException ex)
                 {
-
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
             } else
             {
@@ -1998,9 +2015,9 @@ namespace IPCamera
                     }
                 }
             }
-            catch (System.Net.WebException)
+            catch (System.Net.WebException ex)
             {
-
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
 
@@ -2027,9 +2044,9 @@ namespace IPCamera
                     }
                 }
             }
-            catch (System.Net.WebException)
+            catch (System.Net.WebException ex)
             {
-
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
 

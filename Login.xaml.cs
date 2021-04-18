@@ -51,6 +51,10 @@ namespace IPCamera
             {
                 MainWindow.Logged = false;
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
+                if(ex.Message.Contains("Sequence contains no elements"))
+                {
+                    MessageBox.Show("Check your Email or Password!");
+                }
             }
             
         }

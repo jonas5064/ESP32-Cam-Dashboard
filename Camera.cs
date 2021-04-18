@@ -365,9 +365,9 @@ namespace IPCamera
                     this.video.Start();
                     //this.video.StartAsync();
                 }
-                catch (System.AccessViolationException)
+                catch (System.AccessViolationException ex)
                 {
-                    throw new NotImplementedException();
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
             }
         }
@@ -382,9 +382,9 @@ namespace IPCamera
                     this.video.Stop();
                     //this.video.StopAsync();
                 }
-                catch (System.AccessViolationException)
+                catch (System.AccessViolationException ex)
                 {
-                    throw new NotImplementedException();
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
                 
             }
@@ -559,12 +559,11 @@ namespace IPCamera
                     }
                     catch (SmtpException ex)
                     {
-                        //System.Windows.MessageBox.Show($"[SmtpException]   {ex.Message}");
-                        Console.WriteLine($"[SmtpException]   {ex.Message}");
+                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[Exception]   {ex.Message}");
+                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                     }
                 }
                 if (this.On_move_pic)

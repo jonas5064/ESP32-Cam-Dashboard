@@ -112,25 +112,32 @@ namespace IPCamera
             if (Properties.Settings.Default.FirstRun == true)
             {
                 // Create an Admin User
-                String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
-                                                        $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                try
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                                                            $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
+                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                     {
-                        command.Parameters.AddWithValue("@fname", "admin");
-                        command.Parameters.AddWithValue("@lname", "admin");
-                        command.Parameters.AddWithValue("@email", "admin@admin.com");
-                        command.Parameters.AddWithValue("@phone", "");
-                        command.Parameters.AddWithValue("@licences", "Admin");
-                        command.Parameters.AddWithValue("@pass", "1234");
-                        connection.Open();
-                        int result = command.ExecuteNonQuery();
-                        // Check Error
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@fname", "admin");
+                            command.Parameters.AddWithValue("@lname", "admin");
+                            command.Parameters.AddWithValue("@email", "admin@admin.com");
+                            command.Parameters.AddWithValue("@phone", "");
+                            command.Parameters.AddWithValue("@licences", "Admin");
+                            command.Parameters.AddWithValue("@pass", "1234");
+                            connection.Open();
+                            int result = command.ExecuteNonQuery();
+                            // Check Error
+                            if (result < 0)
+                                System.Windows.MessageBox.Show("Error inserting data into Database!");
+                        }
+                        connection.Close();
                     }
-                    connection.Close();
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
                 // Shows To User The Administrator Ask for Requarements Instalation
                 System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show(
@@ -143,8 +150,8 @@ namespace IPCamera
                     Install_Requarements.Install_Req();
                 }
                 // Application Varaible to false this code won't runs again
-                Properties.Settings.Default.FirstRun = false;
-                Properties.Settings.Default.Save();
+                //Properties.Settings.Default.FirstRun = false;
+                //Properties.Settings.Default.Save();
             }
 
 
@@ -410,7 +417,6 @@ namespace IPCamera
             if (login_oppened == false)
             {
                 login_oppened = true;
-                Console.WriteLine("login_oppened: " + Convert.ToString(login_oppened));
                 this.login = new Login();
                 this.login.Show();
             }

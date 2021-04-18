@@ -51,7 +51,10 @@ namespace IPCamera
                     try
                     {
                         this.listener.Prefixes.Add(s);
-                    } catch (System.Net.HttpListenerException) { }
+                    } catch (System.Net.HttpListenerException ex)
+                    {
+                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                    }
                 }
                 this.listener.Start();
                 Console.WriteLine("Listening...");
@@ -108,7 +111,10 @@ namespace IPCamera
 
                     //enc.Frames.Clear();
                     //response.Headers.Clear();
-                } catch (Exception) { }
+                } catch (Exception ex)
+                {
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                }
             }
             
         }
