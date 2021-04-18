@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("IPCamera")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Suports IP Cameras and esp32 cameras.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Alexandros Platanios")]
 [assembly: AssemblyProduct("IPCamera")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright ©  2020 Alexandros Platanios")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
