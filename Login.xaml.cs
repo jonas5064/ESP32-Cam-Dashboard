@@ -50,7 +50,7 @@ namespace IPCamera
             catch (Exception ex)
             {
                 MainWindow.Logged = false;
-                MessageBox.Show("User Not Founded.");
+                Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
             
         }

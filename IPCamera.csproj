@@ -70,6 +70,64 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TEST|AnyCPU'">
+    <OutputPath>bin\TEST\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TEST|x64'">
+    <OutputPath>bin\x64\TEST\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TEST|x86'">
+    <OutputPath>bin\x86\TEST\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ΤΕΣΤ2|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ΤΕΣΤ2\</OutputPath>
+    <DocumentationFile>bin\Release\IPCamera.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ΤΕΣΤ2|x64'">
+    <OutputPath>bin\x64\ΤΕΣΤ2\</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ΤΕΣΤ2|x86'">
+    <OutputPath>bin\x86\ΤΕΣΤ2\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ΤΕΣΤ|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ΤΕΣΤ\</OutputPath>
+    <DocumentationFile>bin\Release\IPCamera.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ΤΕΣΤ|x64'">
+    <OutputPath>bin\x64\ΤΕΣΤ\</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ΤΕΣΤ|x86'">
+    <OutputPath>bin\x86\ΤΕΣΤ\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup|AnyCPU'">
+    <OutputPath>bin\Setup\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup|x64'">
+    <OutputPath>bin\x64\Setup\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Setup|x86'">
+    <OutputPath>bin\x86\Setup\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -146,6 +204,7 @@
     </ApplicationDefinition>
     <Compile Include="Camera.cs" />
     <Compile Include="HttpServer.cs" />
+    <Compile Include="Install_Requarements.cs" />
     <Compile Include="Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -237,14 +296,7 @@
     <Resource Include="left.png" />
     <Resource Include="up.png" />
   </ItemGroup>
-  <ItemGroup>
-    <FileAssociation Include=".nun">
-      <Visible>False</Visible>
-      <Description>IPCameras Server and Esp32-Cam Supported</Description>
-      <Progid>101010101</Progid>
-      <DefaultIcon>ipCamera.ico</DefaultIcon>
-    </FileAssociation>
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

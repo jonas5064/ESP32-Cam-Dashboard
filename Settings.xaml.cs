@@ -166,9 +166,9 @@ namespace IPCamera
                     cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Text, camera8_esp32.IsChecked.Value));
                 }
             }
-            catch (System.ArgumentException)
+            catch (System.ArgumentException ex)
             {
-
+                Console.WriteLine($"Source:{ex.Source}\nParamnAME:{ex.ParamName}\n{ex.Message}");
             }
             int urls_num = cams.Count;
             // If urls.Count > 0
@@ -266,11 +266,15 @@ namespace IPCamera
                         
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     if (!email_send_textbox.Text.Equals(""))
                     {
                         System.Windows.MessageBox.Show("Not Valid Email!");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Source:{ex.Source}\n\n{ex.Message}");
                     }
                 } 
             }
@@ -565,7 +569,7 @@ namespace IPCamera
                         if (result < 0)
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                     }
-                    connection.Close();
+                    //connection.Close();
                     // Get The New User User From DB And Add Him To MainWindow.myUsers
                     query = $"SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM dbo.Users " +
                                                 $"WHERE FirstName=@fname AND LastName=@lname AND Email=@email AND Phone=@phone AND Password=@pass";
@@ -641,9 +645,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
             }
         }
         private void AVI_unchencked(object sender, EventArgs e)
@@ -678,9 +682,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
             }
         }
 
@@ -720,9 +724,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
             }
         }
         private void MP4_unchencked(object sender, EventArgs e)
@@ -757,9 +761,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
             }
         }
 
@@ -799,9 +803,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
             }
         }
         private void WEBM_unchencked(object sender, EventArgs e)
@@ -836,9 +840,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException se)
+            catch (System.Data.SqlClient.SqlException ex)
             {
-                System.Windows.MessageBox.Show("Error updateting Face_Detection true into Database!  [ERROR CODE]: " + se);
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
             }
         }
 

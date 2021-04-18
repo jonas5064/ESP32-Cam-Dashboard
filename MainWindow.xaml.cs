@@ -83,9 +83,9 @@ namespace IPCamera
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                         cn.Close();
                     }
-                    catch (System.Data.SqlClient.SqlException e)
+                    catch (System.Data.SqlClient.SqlException ex)
                     {
-                        MessageBox.Show(e.Message);
+                        Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
                     }
                 }
             }
@@ -101,29 +101,66 @@ namespace IPCamera
 
         public MainWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            } catch (System.Windows.Markup.XamlParseException ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+            }
+
+            if (Properties.Settings.Default.FirstRun == true)
+            {
+                // Create an Admin User
+                String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                                                        $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
+                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@fname", "admin");
+                        command.Parameters.AddWithValue("@lname", "admin");
+                        command.Parameters.AddWithValue("@email", "admin@admin.com");
+                        command.Parameters.AddWithValue("@phone", "");
+                        command.Parameters.AddWithValue("@licences", "Admin");
+                        command.Parameters.AddWithValue("@pass", "1234");
+                        connection.Open();
+                        int result = command.ExecuteNonQuery();
+                        // Check Error
+                        if (result < 0)
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    }
+                    connection.Close();
+                }
+                // Shows To User The Administrator Ask for Requarements Instalation
+                System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show(
+                                "Standar Admininstrator!\n\n" +
+                                "Email: [admin@admin.com]\nPassword: [1234].\n\n" +
+                                "Install Requarements ?", "Next", MessageBoxButton.OKCancel);
+                if (dialogResult.ToString().Equals("OK"))
+                {
+                    // Install Requarements
+                    Install_Requarements.Install_Req();
+                }
+                // Application Varaible to false this code won't runs again
+                Properties.Settings.Default.FirstRun = false;
+                Properties.Settings.Default.Save();
+            }
+
+
             // Set a Hundeler for this main window
             main_window = this;
-
+            // Setup login logout button for start
             login_logout_b.Click += (object sender, RoutedEventArgs e) =>
             {
                 this.Loggin_clicked();
             };
-
+            // Handler to cameras grid
             cams_grid = cameras_grid;
             // Update Urls From Database
             UpdatesFromDB();
             // Open he Cameras Windows
             CreateVideosPage();
-
-            /*
-            HttpServer server = new HttpServer();
-            server.ip = "localhost";
-            server.port = "8000";
-            server.setup();
-            _ = server.ListenAsync();
-            //server.close();
-            */
 
             //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -275,9 +312,9 @@ namespace IPCamera
                             };
                             MainWindow.cameras.Add(cam);
                         }
-                        catch (System.ArgumentException)
+                        catch (System.ArgumentException ex)
                         {
-
+                            Console.WriteLine($"Source:{ex.Source}\nParamName:{ex.ParamName}\n{ex.Message}");
                         }
                     }
                 }
@@ -359,9 +396,9 @@ namespace IPCamera
                         MainWindow.main_window.Loggout_clicked();
                     };
                 }
-                catch(Exception e)
+                catch(Exception ex)
                 {
-                    //MessageBox.Show(e.Message);
+                    Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
                 }
                 
             }
