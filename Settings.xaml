@@ -10,7 +10,8 @@
         Height="600"
         Width="1000"
         WindowStartupLocation="CenterScreen"
-        Background="#FF151515">
+        Background="#FF151515"
+        ResizeMode="NoResize">
 
 
     <Grid>
