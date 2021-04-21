@@ -11,6 +11,53 @@ namespace IPCamera
 {
     class Install_Requarements
     {
+        public static bool first_time_runs;
+        public static bool First_time_runs
+        {
+            get 
+            {
+                String file = $"{GetRootDir()}\\first_run.txt";
+                if (File.Exists(file))
+                {
+                    String str = System.IO.File.ReadAllText(file);
+                    //MessageBox.Show($"First Time Runs: {str}");
+                    if (str.Contains('1'))
+                    {
+                        first_time_runs = true;
+                    }
+                    else
+                    {
+                        first_time_runs = false;
+                    }
+                    return first_time_runs;
+                }
+                else
+                {
+                    first_time_runs = true;
+                    return first_time_runs;
+                }
+            }
+            set
+            {
+                string file = $"{GetRootDir()}\\first_run.txt";
+                // Create the file, or overwrite if the file exists.
+                using (FileStream fs = File.Create(file))
+                {
+                    byte[] info;
+                    if (value.Equals(true))
+                    {
+                        info = new UTF8Encoding(true).GetBytes("1");
+                    }
+                    else
+                    {
+                        info = new UTF8Encoding(true).GetBytes("0");
+                    }
+                    // Add some information to the file.
+                    fs.Write(info, 0, info.Length);
+                }
+                first_time_runs = true;
+            }
+        }
         public static String GetRootDir()
         {
             String cur_dir = Environment.CurrentDirectory;

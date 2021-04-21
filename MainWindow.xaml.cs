@@ -102,16 +102,9 @@ namespace IPCamera
 
         public MainWindow()
         {
-            try
-            {
-                InitializeComponent();
-            } catch (System.Windows.Markup.XamlParseException ex)
-            {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
-                Thread.Sleep(3000);
-            }
 
-            if (Properties.Settings.Default.FirstRun == true)
+            // Runs only one time and install some requarements
+            if (Install_Requarements.First_time_runs)
             {
                 try
                 {
@@ -154,17 +147,33 @@ namespace IPCamera
                         Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
                     }
                     // Application Varaible to false this code won't runs again
-                    Properties.Settings.Default.FirstRun = false;
-                    Properties.Settings.Default.Save();
+                    Install_Requarements.First_time_runs = false;
                 }
                 catch (Exception ex)
                 {
                     // Application Varaible to false this code won't runs again
-                    Properties.Settings.Default.FirstRun = true;
-                    Properties.Settings.Default.Save();
+                    Install_Requarements.First_time_runs = true;
                     Console.WriteLine($"\n\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
                     Thread.Sleep(3000);
                 }
+            }
+
+            //MessageBox.Show($"Continue ???");
+
+            // Initialize Main Window
+            try
+            {
+                InitializeComponent();
+            }
+            catch (System.Windows.Markup.XamlParseException ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Thread.Sleep(3000);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                Thread.Sleep(3000);
             }
 
 
