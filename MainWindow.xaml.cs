@@ -111,7 +111,7 @@ namespace IPCamera
                 Thread.Sleep(3000);
             }
 
-            if (Properties.Settings.Default.FirstRun == false)
+            if (Properties.Settings.Default.FirstRun == true)
             {
                 try
                 {
