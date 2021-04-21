@@ -22,6 +22,7 @@ using VisioForge.Controls.UI.WPF;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net;
+using System.IO;
 
 namespace IPCamera
 {
@@ -101,68 +102,69 @@ namespace IPCamera
 
         public MainWindow()
         {
-            // Create Database Connection String
-            try
-            {
-                string db_file_path = $"{Install_Requarements.GetRootDir()}Database1.mdf";
-                Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
-                Console.WriteLine($"Database Connation String: {Camera.DB_connection_string}");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-            }
             try
             {
                 InitializeComponent();
             } catch (System.Windows.Markup.XamlParseException ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Thread.Sleep(3000);
             }
 
             if (Properties.Settings.Default.FirstRun == true)
             {
-                // Create an Admin User
                 try
                 {
-                    String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
-                                                            $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
-                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
-                    {
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@fname", "admin");
-                            command.Parameters.AddWithValue("@lname", "admin");
-                            command.Parameters.AddWithValue("@email", "admin@admin.com");
-                            command.Parameters.AddWithValue("@phone", "");
-                            command.Parameters.AddWithValue("@licences", "Admin");
-                            command.Parameters.AddWithValue("@pass", "1234");
-                            connection.Open();
-                            int result = command.ExecuteNonQuery();
-                            // Check Error
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        connection.Close();
-                    }
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                }
-                // Shows To User The Administrator Ask for Requarements Instalation
-                System.Windows.Forms.DialogResult dialogResult = (System.Windows.Forms.DialogResult)MessageBox.Show(
-                                "Standar Admininstrator!\n\n" +
-                                "Email: [admin@admin.com]\nPassword: [1234].\n\n" +
-                                "Install Requarements ?", "Next", MessageBoxButton.OKCancel);
-                if (dialogResult.ToString().Equals("OK"))
-                {
+                    // Create Database Connection String
+                    string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
+                    Console.WriteLine($"DB Dir: {db_file_path}");
+                    Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
+                    Console.WriteLine($"Database Connation String: {Camera.DB_connection_string}");
+                    //MessageBox.Show($"DB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}");
                     // Install Requarements
                     Install_Requarements.Install_Req();
+                    try
+                    {
+                        // Create an Admin User
+                        String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                                                                $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
+                        using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                        {
+                            using (SqlCommand command = new SqlCommand(query, connection))
+                            {
+                                command.Parameters.AddWithValue("@fname", "admin");
+                                command.Parameters.AddWithValue("@lname", "admin");
+                                command.Parameters.AddWithValue("@email", "admin@admin.com");
+                                command.Parameters.AddWithValue("@phone", "");
+                                command.Parameters.AddWithValue("@licences", "Admin");
+                                command.Parameters.AddWithValue("@pass", "1234");
+                                connection.Open();
+                                int result = command.ExecuteNonQuery();
+                                // Check Error
+                                if (result < 0)
+                                {
+                                    Console.WriteLine("Error inserting Admin into Database!");
+                                }
+                            }
+                            connection.Close();
+                        }
+                    }
+                    catch (System.Data.SqlClient.SqlException ex)
+                    {
+                        Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                    }
+                    // Application Varaible to false this code won't runs again
+                    Properties.Settings.Default.FirstRun = false;
+                    Properties.Settings.Default.Save();
                 }
-                // Application Varaible to false this code won't runs again
-                Properties.Settings.Default.FirstRun = false;
-                Properties.Settings.Default.Save();
+                catch (Exception ex)
+                {
+                    // Application Varaible to false this code won't runs again
+                    Properties.Settings.Default.FirstRun = true;
+                    Properties.Settings.Default.Save();
+                    Console.WriteLine($"\n\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
+                    Thread.Sleep(3000);
+                }
             }
 
 

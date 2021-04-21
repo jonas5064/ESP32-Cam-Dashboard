@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPCamera", "IPCamera.csproj", "{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Install", "..\Install\Install.vdproj", "{E3935BD0-35FF-4018-8215-25C4112D3E59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -52,6 +54,21 @@ Global
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|ARM64.Build.0 = Release|Any CPU
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|x64.ActiveCfg = Release|x64
 		{2B19CCBD-2884-4C3A-9E76-C39CB676D2A4}.Release|x86.ActiveCfg = Release|x86
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.All|Any CPU.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.All|ARM.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.All|ARM64.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.All|x64.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.All|x86.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Debug|Any CPU.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Debug|ARM.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Debug|ARM64.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Debug|x64.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Debug|x86.ActiveCfg = Debug
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Release|Any CPU.ActiveCfg = Release
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Release|ARM.ActiveCfg = Release
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Release|ARM64.ActiveCfg = Release
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Release|x64.ActiveCfg = Release
+		{E3935BD0-35FF-4018-8215-25C4112D3E59}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
