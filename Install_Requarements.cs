@@ -29,7 +29,6 @@ namespace IPCamera
                     .ToArray();
             */
             String[] exes = {
-                "NDP472-KB4054531-Web" , "NetFx64",
                 "redist_dotnet_base_x64" , "redist_dotnet_base_x86",
                 "redist_dotnet_ffmpeg_exe_x64" , "redist_dotnet_ffmpeg_exe_x86",
                 "redist_dotnet_ffmpeg_x86" , "redist_dotnet_lav_x64",
@@ -37,8 +36,8 @@ namespace IPCamera
                 "redist_dotnet_mp4_x86" , "redist_dotnet_vlc_x64",
                 "redist_dotnet_vlc_x86" , "redist_dotnet_webm_x86",
                 "redist_dotnet_webm_x86" , "redist_dotnet_xiph_x86",
-                "SQLServer2016-SSEI-Expr"
             };
+            // "NDP472-KB4054531-Web" , "NetFx64", "SQLServer2016-SSEI-Expr" , 
             foreach (String file in exes)
             {
                 String exe = $"{req_dir}{file}.exe";
