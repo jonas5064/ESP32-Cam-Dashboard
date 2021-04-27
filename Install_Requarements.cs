@@ -21,6 +21,7 @@ namespace IPCamera
                     String file = $"{GetRootDir()}\\first_run.txt";
                     if (File.Exists(file))
                     {
+                        Console.WriteLine("File EXISTS.");
                         String str = System.IO.File.ReadAllText(file);
                         //MessageBox.Show($"First Time Runs: {str}");
                         if (str.Contains('1'))
@@ -35,6 +36,7 @@ namespace IPCamera
                     }
                     else
                     {
+                        Console.WriteLine("File NOT EXISTS.");
                         first_time_runs = true;
                         return first_time_runs;
                     }

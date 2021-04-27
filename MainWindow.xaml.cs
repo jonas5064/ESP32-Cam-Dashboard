@@ -104,11 +104,11 @@ namespace IPCamera
         {
             try
             {
-                Console.WriteLine("First Step");
+                Console.WriteLine("Staring Main...");
                 // Runs only one time and install some requarements
                 if (Install_Requarements.First_time_runs)
                 {
-                    Console.WriteLine("Second Step");
+                    Console.WriteLine("Inside First Time Run.");
                     try
                     {
                         // Create Database Connection String
@@ -160,7 +160,7 @@ namespace IPCamera
                         Thread.Sleep(5000);
                     }
                 }
-                Console.WriteLine("Thrierd Step");
+                Console.WriteLine("Starting the base application...");
                 //MessageBox.Show($"Continue ???");
 
                 // Initialize Main Window
