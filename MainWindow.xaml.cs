@@ -119,9 +119,9 @@ namespace IPCamera
                         //MessageBox.Show($"DB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}");
                         // Install Requarements
                         Install_Requarements.Install_Req();
+                        // Create an Admin User
                         try
                         {
-                            // Create an Admin User
                             String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
                                                                     $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
                             using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
