@@ -102,100 +102,114 @@ namespace IPCamera
 
         public MainWindow()
         {
-
-            // Runs only one time and install some requarements
-            if (Install_Requarements.First_time_runs)
+            try
             {
-                try
+                Console.WriteLine("First Step");
+                // Runs only one time and install some requarements
+                if (Install_Requarements.First_time_runs)
                 {
-                    // Create Database Connection String
-                    string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
-                    Console.WriteLine($"DB Dir: {db_file_path}");
-                    Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
-                    Console.WriteLine($"Database Connation String: {Camera.DB_connection_string}");
-                    //MessageBox.Show($"DB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}");
-                    // Install Requarements
-                    Install_Requarements.Install_Req();
+                    Console.WriteLine("Second Step");
                     try
                     {
-                        // Create an Admin User
-                        String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
-                                                                $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
-                        using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                        // Create Database Connection String
+                        string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
+                        Console.WriteLine($"DB Dir: {db_file_path}");
+                        Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
+                        Console.WriteLine($"Database Connation String: {Camera.DB_connection_string}");
+                        //MessageBox.Show($"DB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}");
+                        // Install Requarements
+                        Install_Requarements.Install_Req();
+                        try
                         {
-                            using (SqlCommand command = new SqlCommand(query, connection))
+                            // Create an Admin User
+                            String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                                                                    $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
+                            using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                             {
-                                command.Parameters.AddWithValue("@fname", "admin");
-                                command.Parameters.AddWithValue("@lname", "admin");
-                                command.Parameters.AddWithValue("@email", "admin@admin.com");
-                                command.Parameters.AddWithValue("@phone", "");
-                                command.Parameters.AddWithValue("@licences", "Admin");
-                                command.Parameters.AddWithValue("@pass", "1234");
-                                connection.Open();
-                                int result = command.ExecuteNonQuery();
-                                // Check Error
-                                if (result < 0)
+                                using (SqlCommand command = new SqlCommand(query, connection))
                                 {
-                                    Console.WriteLine("Error inserting Admin into Database!");
+                                    command.Parameters.AddWithValue("@fname", "admin");
+                                    command.Parameters.AddWithValue("@lname", "admin");
+                                    command.Parameters.AddWithValue("@email", "admin@admin.com");
+                                    command.Parameters.AddWithValue("@phone", "");
+                                    command.Parameters.AddWithValue("@licences", "Admin");
+                                    command.Parameters.AddWithValue("@pass", "1234");
+                                    connection.Open();
+                                    int result = command.ExecuteNonQuery();
+                                    // Check Error
+                                    if (result < 0)
+                                    {
+                                        Console.WriteLine("Error inserting Admin into Database!");
+                                    }
                                 }
+                                connection.Close();
                             }
-                            connection.Close();
                         }
+                        catch (System.Data.SqlClient.SqlException ex)
+                        {
+                            Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                        }
+                        // Application Varaible to false this code won't runs again
+                        Install_Requarements.First_time_runs = false;
                     }
-                    catch (System.Data.SqlClient.SqlException ex)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                        // Application Varaible to false this code won't runs again
+                        Install_Requarements.First_time_runs = true;
+                        Console.WriteLine($"\n\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
+                        Thread.Sleep(5000);
                     }
-                    // Application Varaible to false this code won't runs again
-                    Install_Requarements.First_time_runs = false;
+                }
+                Console.WriteLine("Thrierd Step");
+                //MessageBox.Show($"Continue ???");
+
+                // Initialize Main Window
+                try
+                {
+                    InitializeComponent();
+                }
+                catch (System.Windows.Markup.XamlParseException ex)
+                {
+                    Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                    Thread.Sleep(5000);
                 }
                 catch (Exception ex)
                 {
-                    // Application Varaible to false this code won't runs again
-                    Install_Requarements.First_time_runs = true;
-                    Console.WriteLine($"\n\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
-                    Thread.Sleep(3000);
+                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                    Thread.Sleep(5000);
                 }
-            }
 
-            //MessageBox.Show($"Continue ???");
 
-            // Initialize Main Window
-            try
-            {
-                InitializeComponent();
+                // Set a Hundeler for this main window
+                main_window = this;
+                // Setup login logout button for start
+                login_logout_b.Click += (object sender, RoutedEventArgs e) =>
+                {
+                    this.Loggin_clicked();
+                };
+                // Handler to cameras grid
+                cams_grid = cameras_grid;
+                // Update Urls From Database
+                UpdatesFromDB();
+                // Open he Cameras Windows
+                CreateVideosPage();
+
+                //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
+                System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                dispatcherTimer.Start();
             }
-            catch (System.Windows.Markup.XamlParseException ex)
+            catch (System.IO.FileLoadException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
-                Thread.Sleep(3000);
+                Console.WriteLine($"\n\n[ERROR] MainWindow\n\n");
+                Thread.Sleep(5000);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                Thread.Sleep(3000);
+                Thread.Sleep(5000);
             }
-
-
-            // Set a Hundeler for this main window
-            main_window = this;
-            // Setup login logout button for start
-            login_logout_b.Click += (object sender, RoutedEventArgs e) =>
-            {
-                this.Loggin_clicked();
-            };
-            // Handler to cameras grid
-            cams_grid = cameras_grid;
-            // Update Urls From Database
-            UpdatesFromDB();
-            // Open he Cameras Windows
-            CreateVideosPage();
-
-            //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
         }
 
         // Set DateTime
