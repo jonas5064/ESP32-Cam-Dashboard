@@ -49,7 +49,6 @@ namespace IPCamera
                 {
                     try
                     {
-                        // Save to DataBase Pictures
                         using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
                         {
                             String query = $"INSERT INTO dbo.Logged (Id) VALUES (@user)";
