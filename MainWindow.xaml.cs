@@ -110,12 +110,6 @@ namespace IPCamera
                     Console.WriteLine("Inside First Time Run.");
                     try
                     {
-                        // Create Database Connection String
-                        string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
-                        Console.WriteLine($"DB Dir: {db_file_path}");
-                        Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
-                        Console.WriteLine($"Database Connation String: {Camera.DB_connection_string}");
-                        //MessageBox.Show($"DB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}");
                         // Install Requarements
                         Install_Requarements.Install_Req();
                         // Create an Admin User
@@ -160,7 +154,13 @@ namespace IPCamera
                     }
                 }
                 Console.WriteLine("Starting the base application...");
-                //MessageBox.Show($"Continue ???");
+
+                // Create Database Connection String
+                string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
+                Console.WriteLine($"DB Dir: {db_file_path}");
+                Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
+                Console.WriteLine($"Database Connation String: {Camera.DB_connection_string}");
+                //MessageBox.Show($"DB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}");
 
                 // Initialize Main Window
                 try
