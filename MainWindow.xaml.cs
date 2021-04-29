@@ -155,7 +155,7 @@ namespace IPCamera
                 }
                 Console.WriteLine("Starting the base application...");
 
-                // Create Database Connection String
+                // Create Database Connection String 
                 string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
                 Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
                 Console.WriteLine($"\n\nDB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}\n\n");
