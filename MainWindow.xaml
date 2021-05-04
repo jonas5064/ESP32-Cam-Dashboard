@@ -6,12 +6,13 @@
         x:Class="IPCamera.MainWindow"
         mc:Ignorable="d"
         Title="IPCameras"
-        WindowState="Maximized"
         AutomationProperties.Name="IPCameras"
         Background="Black"
         ResizeMode="NoResize"
+        MinHeight="633" MinWidth="1206"
         WindowStyle="None">
     <!--
+        WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
         Height="198.6" Width="1025"
         MinHeight="633" MinWidth="1206"
