@@ -9,7 +9,7 @@
         AutomationProperties.Name="IPCameras"
         Background="Black"
         ResizeMode="NoResize"
-        MinHeight="633" MinWidth="1206"
+        WindowState="Maximized"
         WindowStyle="None">
     <!--
         WindowState="Maximized"
