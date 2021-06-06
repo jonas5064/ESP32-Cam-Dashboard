@@ -49,7 +49,6 @@ namespace IPCamera
         public bool recording = false;
         public VideoCapture video;     
         public static int count = 0;
-        public static String DB_connection_string = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\IPCameras\\Database1.mdf;Integrated Security=True";
         public static String pictures_dir;
         public static String videos_dir;
         public static bool avi_format = false;
@@ -71,11 +70,6 @@ namespace IPCamera
             this.url = url;
             this.name = name;
             this.id = id;
-
-            // Create Database Connection String
-            string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
-            Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
-            Console.WriteLine($"\n\nDB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}\n\n");
 
             // Create an VideoCapture
             if (!this.isEsp32)

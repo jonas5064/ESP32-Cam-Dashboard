@@ -23,6 +23,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net;
 using System.IO;
+using MySql.Data.MySqlClient;
 
 namespace IPCamera
 {
@@ -49,10 +50,10 @@ namespace IPCamera
                 {
                     try
                     {
-                        using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                        using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                         {
-                            String query = $"INSERT INTO dbo.Logged (Id) VALUES (@user)";
-                            using (SqlCommand command = new SqlCommand(query, connection))
+                            String query = $"INSERT INTO Logged (Id) VALUES (@user)";
+                            using (MySqlCommand command = new MySqlCommand(query, connection))
                             {
                                 command.Parameters.AddWithValue("@user", MainWindow.user.Email);
                                 connection.Open();
@@ -74,18 +75,18 @@ namespace IPCamera
                     // Clear DataBase
                     try
                     {
-                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                        String query = "DELETE FROM dbo.Logged";
-                        SqlCommand cmd = new SqlCommand(query, cn);
+                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                        String query = "DELETE FROM Logged";
+                        MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
                         int result = cmd.ExecuteNonQuery();
                         if (result < 0)
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                         cn.Close();
                     }
-                    catch (System.Data.SqlClient.SqlException ex)
+                    catch (MySqlException ex)
                     {
-                        Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                        Console.WriteLine($"Source: {ex.Message}");
                     }
                 }
             }
@@ -115,11 +116,11 @@ namespace IPCamera
                         // Create an Admin User
                         try
                         {
-                            String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                            String query = $"INSERT INTO Users (FirstName, LastName, Email, Phone, Licences, Password)" +
                                                                     $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
-                            using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                            using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                             {
-                                using (SqlCommand command = new SqlCommand(query, connection))
+                                using (MySqlCommand command = new MySqlCommand(query, connection))
                                 {
                                     command.Parameters.AddWithValue("@fname", "admin");
                                     command.Parameters.AddWithValue("@lname", "admin");
@@ -138,9 +139,9 @@ namespace IPCamera
                                 connection.Close();
                             }
                         }
-                        catch (System.Data.SqlClient.SqlException ex)
+                        catch (MySqlException ex)
                         {
-                            Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                            Console.WriteLine($"Source: {ex.Message}");
                         }
                         // Application Varaible to false this code won't runs again
                         Install_Requarements.First_time_runs = false;
@@ -155,10 +156,12 @@ namespace IPCamera
                 }
                 Console.WriteLine("Starting the base application...");
 
+                /*
                 // Create Database Connection String 
                 string db_file_path = $"{Install_Requarements.GetRootDir()}\\Database1.mdf";
-                Camera.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
-                Console.WriteLine($"\n\nDB Dir: {db_file_path}\n\nDatabase Connation String: {Camera.DB_connection_string}\n\n");
+                App.DB_connection_string = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={db_file_path};Integrated Security=True";
+                Console.WriteLine($"\n\nDB Dir: {db_file_path}\n\nDatabase Connation String: {App.DB_connection_string}\n\n");
+                */
 
                 // Initialize Main Window
                 try
@@ -230,14 +233,14 @@ namespace IPCamera
         {
             cameras.Clear();
             // Get Data From DB
-            using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+            using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
             {
                 // Get Files Paths Data
-                String query = "SELECT Name, Path FROM dbo.FilesDirs";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                String query = "SELECT Name, Path FROM FilesDirs";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         String name = dataReader["Name"].ToString().Trim();
@@ -255,11 +258,11 @@ namespace IPCamera
                 connection.Close();
 
                 // Get  Files Format Data
-                query = "SELECT avi, mp4, webm FROM dbo.FilesFormats";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                query = "SELECT avi, mp4, webm FROM FilesFormats";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         // String avi = dataReader["avi"].ToString().Trim();
@@ -273,11 +276,11 @@ namespace IPCamera
                 connection.Close();
 
                 // Get Cameras Data
-                query = "SELECT * FROM dbo.myCameras";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                query = "SELECT * FROM MyCameras";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         String id = dataReader["id"].ToString().Trim();
@@ -362,11 +365,11 @@ namespace IPCamera
 
                 // Get Users Data
                 myUsers.Clear();
-                query = "SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM dbo.Users";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                query = "SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM Users";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         int id = (int)dataReader["Id"];
@@ -379,16 +382,17 @@ namespace IPCamera
                         // Create The Usres Objects
                         Users user = new Users(id, fname, lname, email, phone, licences, pass);
                         MainWindow.myUsers.Add(user);
+                        Console.WriteLine($"\nUser: {id} {fname} {lname} {email} {phone} {licences} {pass}");
                     }
                 }
                 connection.Close();
 
                 // Get Email_send Pass_send
-                query = "SELECT Email, Pass FROM dbo.EmailSender";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                query = "SELECT Email, Pass FROM EmailSender";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         email_send = dataReader["Email"].ToString().Trim();
@@ -398,11 +402,11 @@ namespace IPCamera
                 connection.Close();
 
                 // Get SMS SID, SMS TOKEN, SMS PHONE
-                query = "SELECT AccountSID,AccountTOKEN,Phone FROM dbo.SMS";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                query = "SELECT AccountSID,AccountTOKEN,Phone FROM SMS";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         twilioAccountSID = dataReader["AccountSID"].ToString().Trim();
@@ -413,12 +417,12 @@ namespace IPCamera
                 connection.Close();
 
                 // Get Logged User If Existes
-                query = "SELECT Id FROM dbo.Logged";
+                query = "SELECT Id FROM Logged";
                 String user_email = "";
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
-                    SqlDataReader dataReader = command.ExecuteReader();
+                    MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
                         user_email = dataReader["Id"].ToString().Trim();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Windows;
@@ -80,19 +81,19 @@ namespace IPCamera
             if (txtEditor_pictures.Text != "" && txtEditor_videos.Text != "")
             {
                 // Clear DataBase
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = "DELETE FROM dbo.FilesDirs";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = "DELETE FROM FilesDirs";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Save to DataBase Pictures
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    query = $"INSERT INTO dbo.FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    query = $"INSERT INTO FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@id", 1);
                         command.Parameters.AddWithValue("@name", "Pictures");
@@ -105,10 +106,10 @@ namespace IPCamera
                     }
                 }
                 // Save to DataBase Videos
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    query = $"INSERT INTO dbo.FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    query = $"INSERT INTO FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@id", 2);
                         command.Parameters.AddWithValue("@name", "Videos");
@@ -175,10 +176,10 @@ namespace IPCamera
             if (urls_num > 0)
             {
                 // Clear Database
-                SqlConnection con = new SqlConnection(Camera.DB_connection_string);
-                SqlCommand cmd = new SqlCommand
+                MySqlConnection con = new MySqlConnection(App.DB_connection_string);
+                MySqlCommand cmd = new MySqlCommand
                 {
-                    CommandText = "DELETE FROM dbo.MyCameras ",
+                    CommandText = "DELETE FROM MyCameras ",
                     Connection = con
                 };
                 con.Open();
@@ -189,10 +190,10 @@ namespace IPCamera
                     Guid guid = Guid.NewGuid();
                     String my_id = guid.ToString();
                     // Save Data To Database
-                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                    using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                     {
-                        String query = $"INSERT INTO dbo.MyCameras (id,urls,name,username,password,isEsp32 ) VALUES (@id,@urls,@name,@username,@password,@isESP)";
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        String query = $"INSERT INTO MyCameras (id,urls,name,username,password,isEsp32 ) VALUES (@id,@urls,@name,@username,@password,@isESP)";
+                        using (MySqlCommand command = new MySqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@id", my_id);
                             command.Parameters.AddWithValue("@urls", d.url);
@@ -212,10 +213,10 @@ namespace IPCamera
             else
             {
                 // Clear Database
-                SqlConnection con = new SqlConnection(Camera.DB_connection_string);
-                SqlCommand cmd = new SqlCommand
+                MySqlConnection con = new MySqlConnection(App.DB_connection_string);
+                MySqlCommand cmd = new MySqlCommand
                 {
-                    CommandText = "DELETE FROM dbo.MyCameras ",
+                    CommandText = "DELETE FROM MyCameras ",
                     Connection = con
                 };
                 con.Open();
@@ -234,19 +235,19 @@ namespace IPCamera
                     if (addr.Address == email_send_textbox.Text)
                     {
                         // Delete From Table The Last
-                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                        String query = $"DELETE FROM dbo.EmailSender";
-                        SqlCommand cmd = new SqlCommand(query, cn);
+                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                        String query = $"DELETE FROM EmailSender";
+                        MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
                         int result = cmd.ExecuteNonQuery();
                         if (result < 0)
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                         cn.Close();
                         // Save Data To Database
-                        using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                        using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                         {
-                            query = $"INSERT INTO dbo.EmailSender (Email,Pass) VALUES (@email,@pass)";
-                            using (SqlCommand command = new SqlCommand(query, connection))
+                            query = $"INSERT INTO EmailSender (Email,Pass) VALUES (@email,@pass)";
+                            using (MySqlCommand command = new MySqlCommand(query, connection))
                             {
                                 command.Parameters.AddWithValue("@email", email_send_textbox.Text);
                                 command.Parameters.AddWithValue("@pass", pass_send_textbox.Password);
@@ -284,19 +285,19 @@ namespace IPCamera
                 !sms_account_phone.Text.Equals(MainWindow.twilioNumber))
             {
                 // Delete From Table The Last
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.SMS";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM SMS";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Save Data To Database
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    query = $"INSERT INTO dbo.SMS (AccountSID,AccountTOKEN,Phone) VALUES (@sid,@token,@phone)";
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    query = $"INSERT INTO SMS (AccountSID,AccountTOKEN,Phone) VALUES (@sid,@token,@phone)";
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@sid", sms_account_ssid.Text);
                         command.Parameters.AddWithValue("@token", sms_account_token.Text);
@@ -485,9 +486,9 @@ namespace IPCamera
                     if (!MainWindow.myUsers.Contains(u))
                     {
                         // Delete This User From DB
-                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                        String query = $"DELETE FROM dbo.Users WHERE Id='{u.Id}'";
-                        SqlCommand cmd = new SqlCommand(query, cn);
+                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                        String query = $"DELETE FROM Users WHERE Id='{u.Id}'";
+                        MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
                         int result = cmd.ExecuteNonQuery();
                         if (result < 0)
@@ -511,11 +512,11 @@ namespace IPCamera
                         Console.WriteLine("UPDATE OK");
                         //Console.WriteLine($"ID: {u.Id}  FName: {u.Firstname}  LName: {u.Lastname}  Email: {u.Email}  Phone: {u.Phone}");
                         // Update DataBase with this user
-                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                        String query = $"UPDATE dbo.Users SET FirstName='{u.Firstname}', " +
+                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                        String query = $"UPDATE Users SET FirstName='{u.Firstname}', " +
                                                         $"LastName='{u.Lastname}', Email='{u.Email}', " +
                                                         $"Phone='{u.Phone}' WHERE Id='{u.Id}'";
-                        SqlCommand cmd = new SqlCommand(query, cn);
+                        MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
                         int result = cmd.ExecuteNonQuery();
                         if (result < 0)
@@ -553,11 +554,11 @@ namespace IPCamera
                 if (password.Equals(repeat_pass))
                 {
                     // Insert to DB First to create an Id and then update MainWindow.myUsers
-                    String query = $"INSERT INTO dbo.Users (FirstName, LastName, Email, Phone, Licences, Password)" +
+                    String query = $"INSERT INTO Users (FirstName, LastName, Email, Phone, Licences, Password)" +
                                                             $" VALUES (@fname, @lname, @email, @phone, @licences, @pass)";
-                    using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                    using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                     {
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (MySqlCommand command = new MySqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@fname", fname);
                             command.Parameters.AddWithValue("@lname", lname);
@@ -573,9 +574,9 @@ namespace IPCamera
                         }
                         //connection.Close();
                         // Get The New User User From DB And Add Him To MainWindow.myUsers
-                        query = $"SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM dbo.Users " +
+                        query = $"SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM Users " +
                                                     $"WHERE FirstName=@fname AND LastName=@lname AND Email=@email AND Phone=@phone AND Password=@pass";
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (MySqlCommand command = new MySqlCommand(query, connection))
                         {
                             command.Parameters.AddWithValue("@fname", fname);
                             command.Parameters.AddWithValue("@lname", lname);
@@ -583,7 +584,7 @@ namespace IPCamera
                             command.Parameters.AddWithValue("@phone", phone);
                             command.Parameters.AddWithValue("@pass", password);
                             connection.Open();
-                            SqlDataReader dataReader = command.ExecuteReader();
+                            MySqlDataReader dataReader = command.ExecuteReader();
                             while (dataReader.Read())
                             {
                                 int id = (int)dataReader["Id"];
@@ -610,9 +611,9 @@ namespace IPCamera
                     System.Windows.Forms.MessageBox.Show("Rong Password.");
                 }
             }
-            catch(System.Data.SqlClient.SqlException ex)
+            catch(MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
                 if (ex.Message.Contains("Violation of UNIQUE KEY constraint"))
                 {
                     System.Windows.MessageBox.Show("This User Exists");
@@ -631,19 +632,19 @@ namespace IPCamera
             try
             {
                 // Delete Data From DB
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.FilesFormats";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM FilesFormats";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 1);
                         command.Parameters.AddWithValue("@mp4", 0);
@@ -657,9 +658,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
             }
         }
         private void AVI_unchencked(object sender, EventArgs e)
@@ -668,19 +669,19 @@ namespace IPCamera
             try
             {
                 // Delete Data From DB
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.FilesFormats";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM FilesFormats";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 0);
@@ -694,9 +695,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
             }
         }
 
@@ -710,19 +711,19 @@ namespace IPCamera
             try
             {
                 // Delete Data From DB
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.FilesFormats";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM FilesFormats";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 1);
@@ -736,9 +737,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
             }
         }
         private void MP4_unchencked(object sender, EventArgs e)
@@ -747,19 +748,19 @@ namespace IPCamera
             try
             {
                 // Delete Data From DB
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.FilesFormats";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM FilesFormats";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 0);
@@ -773,9 +774,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
             }
         }
 
@@ -789,19 +790,19 @@ namespace IPCamera
             try
             {
                 // Delete Data From DB
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.FilesFormats";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM FilesFormats";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 0);
@@ -815,9 +816,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
             }
         }
         private void WEBM_unchencked(object sender, EventArgs e)
@@ -826,19 +827,19 @@ namespace IPCamera
             try
             {
                 // Delete Data From DB
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"DELETE FROM dbo.FilesFormats";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"DELETE FROM FilesFormats";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO dbo.FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (SqlConnection connection = new SqlConnection(Camera.DB_connection_string))
+                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 0);
@@ -852,9 +853,9 @@ namespace IPCamera
                     connection.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
-                Console.WriteLine($"Source:{ex.Source}\nLine:{ex.LineNumber}\n{ex.Message}");
+                Console.WriteLine($"Source: {ex.Message}");
             }
         }
 
@@ -911,9 +912,9 @@ namespace IPCamera
                 {
                     Console.WriteLine("Update DATABASE");
                     // Update Data To Database
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = "UPDATE dbo.myCameras SET Up_req=@up, Down_req=@down, Left_req=@left, Right_req=@right WHERE name=@cam_name";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = "UPDATE MyCameras SET Up_req=@up, Down_req=@down, Left_req=@left, Right_req=@right WHERE name=@cam_name";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cmd.Parameters.AddWithValue("@up", up_text.Text);
                     cmd.Parameters.AddWithValue("@down", down_text.Text);
                     cmd.Parameters.AddWithValue("@left", left_text.Text);

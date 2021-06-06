@@ -12,6 +12,7 @@ using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
+using MySql.Data.MySqlClient;
 
 namespace IPCamera
 {
@@ -277,16 +278,16 @@ namespace IPCamera
                 try
                 {
                     // Update DataBase this Camera Object field Face Detection 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.MyCameras SET Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE MyCameras SET Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException ex)
+                catch (MySqlException ex)
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
@@ -310,16 +311,16 @@ namespace IPCamera
                 try
                 {
                     // Update DataBase this Camera Object field Face Detection 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.MyCameras SET Face_Detection='{0}', Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE MyCameras SET Face_Detection='{0}', Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException ex)
+                catch (MySqlException ex)
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
@@ -343,16 +344,16 @@ namespace IPCamera
                 try
                 {
                     // Update DataBase this Camera Object field Face Detection 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{1}', Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE MyCameras SET Face_Recognition='{1}', Face_Detection='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException ex)
+                catch (MySqlException ex)
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
@@ -371,16 +372,16 @@ namespace IPCamera
                 try
                 {
                     // Update DataBase this Camera Object field Face Detection 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.MyCameras SET Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE MyCameras SET Face_Recognition='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
                 }
-                catch (System.Data.SqlClient.SqlException ex)
+                catch (MySqlException ex)
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
@@ -401,16 +402,16 @@ namespace IPCamera
             try
             {
                 // Update DataBase this Camera Object field Face Detection 1
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Brightness='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"UPDATE MyCameras SET Brightness='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
@@ -427,16 +428,16 @@ namespace IPCamera
             try
             {
                 // Update DataBase this Camera Object field Face Detection 1
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Contrast='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"UPDATE MyCameras SET Contrast='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
@@ -452,16 +453,16 @@ namespace IPCamera
             try
             {
                 // Update DataBase this Camera Object field Face Detection 1
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.MyCameras SET Darkness='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"UPDATE MyCameras SET Darkness='{val}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
@@ -531,9 +532,9 @@ namespace IPCamera
                     rec_label.Content = "Recording";
                     rec_label.Foreground = Brushes.Red;
                     // Update DataBase this Camera Object field Recording 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET Recording='{true}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET Recording='{true}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -561,9 +562,9 @@ namespace IPCamera
                     rec_label.Content = "Stop Recording";
                     rec_label.Foreground = Brushes.Gray;
                     // Update DataBase this Camera Object field Recording 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET Recording='{false}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET Recording='{false}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -591,9 +592,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_sms = true;
                     // Update DataBase this Camera Object field On_Move_SMS 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_SMS='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_SMS='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -617,9 +618,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_sms = false;
                     // Update DataBase this Camera Object field On_Move_SMS 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_SMS='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_SMS='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -645,9 +646,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_email = true;
                     // Update DataBase this Camera Object field On_Move_EMAIL 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_EMAIL='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_EMAIL='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -671,9 +672,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_email = false;
                     // Update DataBase this Camera Object field On_Move_EMAIL 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_EMAIL='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_EMAIL='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -699,9 +700,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_pic = true;
                     // Update DataBase this Camera Object field On_Move_Pic 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_Pic='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_Pic='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -725,9 +726,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_pic = false;
                     // Update DataBase this Camera Object field On_Move_Pic 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_Pic='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_Pic='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -753,9 +754,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_rec = true;
                     // Update DataBase this Camera Object field On_Move_Rec 1
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_Rec='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_Rec='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -779,9 +780,9 @@ namespace IPCamera
                 {
                     this.camera.On_move_rec = false;
                     // Update DataBase this Camera Object field On_Move_Rec 0
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET On_Move_Rec='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET On_Move_Rec='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -811,9 +812,9 @@ namespace IPCamera
                     this.camera.On_move_sensitivity = val;
                     Console.WriteLine(this.camera.On_move_sensitivity.ToString());
                     // Update DataBases Move_Sensitivity
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -821,7 +822,7 @@ namespace IPCamera
                     cn.Close();
                 }
             }
-            catch (System.Data.SqlClient.SqlException ex)
+            catch (MySqlException ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
@@ -2343,9 +2344,9 @@ namespace IPCamera
                     {
                         this.camera.Net_stream = true;
                         // Update DataBase this Camera
-                        SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                        String query = $"UPDATE dbo.myCameras SET net_stream='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                        SqlCommand cmd = new SqlCommand(query, cn);
+                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                        String query = $"UPDATE myCameras SET net_stream='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                        MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
                         int result = cmd.ExecuteNonQuery();
                         if (result < 0)
@@ -2361,9 +2362,9 @@ namespace IPCamera
                 {
                     this.camera.Net_stream = false;
                     // Update DataBase this Camera
-                    SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                    String query = $"UPDATE dbo.myCameras SET net_stream='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                    SqlCommand cmd = new SqlCommand(query, cn);
+                    MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                    String query = $"UPDATE myCameras SET net_stream='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    MySqlCommand cmd = new MySqlCommand(query, cn);
                     cn.Open();
                     int result = cmd.ExecuteNonQuery();
                     if (result < 0)
@@ -2385,9 +2386,9 @@ namespace IPCamera
                 TextBox n = sender as TextBox;
                 this.camera.Net_stream_port = (String)n.Text;
                 // Update DataBase this Camera
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.myCameras SET net_stream_port='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"UPDATE myCameras SET net_stream_port='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
@@ -2408,9 +2409,9 @@ namespace IPCamera
                 TextBox n = sender as TextBox;
                 this.camera.net_stream_prefix = (String)n.Text;
                 // Update DataBase this Camera
-                SqlConnection cn = new SqlConnection(Camera.DB_connection_string);
-                String query = $"UPDATE dbo.myCameras SET net_stream_prefix='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
-                SqlCommand cmd = new SqlCommand(query, cn);
+                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+                String query = $"UPDATE myCameras SET net_stream_prefix='{(String)n.Text}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                MySqlCommand cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 int result = cmd.ExecuteNonQuery();
                 if (result < 0)
