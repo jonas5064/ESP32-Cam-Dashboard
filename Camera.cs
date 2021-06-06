@@ -361,6 +361,7 @@ namespace IPCamera
             {
                 try
                 {
+                    //Console.WriteLine($"Camera Start.");
                     // If Rcording is enable setup recording mode
                     Setup_recording_mode();
                     // Start Cameres
@@ -370,6 +371,10 @@ namespace IPCamera
                 catch (System.AccessViolationException ex)
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                }
+                catch (System.Reflection.TargetInvocationException ex)
+                {
+                    Console.WriteLine($"OnStart: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
             }
         }
@@ -381,6 +386,7 @@ namespace IPCamera
             {
                 try
                 {
+                    //Console.WriteLine($"Camera Stop.");
                     this.video.Stop();
                     //this.video.StopAsync();
                 }
@@ -388,7 +394,11 @@ namespace IPCamera
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
-                
+                catch (System.Reflection.TargetInvocationException ex)
+                {
+                    Console.WriteLine($"OnStop: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                }
+
             }
         }
 
@@ -449,14 +459,21 @@ namespace IPCamera
                         this.video.Output_Filename = file;
                         this.video.Output_Format = new VFWebMOutput();
                     }
+                    Console.WriteLine($"Camera Start Recording OK.");
                 }
                 else
                 {
                     // Setup video mode to preview
                     this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+                    Console.WriteLine($"Camera Stop Recording OK.");
                 }
+                Console.WriteLine($"Camera Start Recording OK.");
             }
-            catch( Exception ex)
+            catch (System.Reflection.TargetInvocationException ex)
+            {
+                Console.WriteLine($"SetupRecordingMode: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
