@@ -64,6 +64,7 @@ namespace IPCamera
         public bool net_stream = false;
         HttpServer server = new HttpServer();
         public bool camera_oppened = false;
+        public int framerate = 16;
 
         public Camera(String url, String name, String id, bool rec)
         {
@@ -108,6 +109,8 @@ namespace IPCamera
             };
             this.video.OnMotion += this.OnMotion;
             //this.video.Video_Still_Frames_Grabber_Enabled = true;
+            // Set Frame Rates
+            this.video.Video_FrameRate = this.framerate;
             count++;
         }
 
@@ -419,6 +422,7 @@ namespace IPCamera
                     String date = now.ToString("F");
                     date = date.Replace(":", ".");
                     String dir_path = Camera.videos_dir + "\\" + this.name;
+                    Console.WriteLine($"\n\nRecording File Path:  {dir_path}\n\n");
                     if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                     {
                         Directory.CreateDirectory(dir_path);
