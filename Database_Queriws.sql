@@ -14,9 +14,9 @@ CREATE TABLE FilesDirs
 
 CREATE TABLE FilesFormats (
     Id   INT NOT NULL AUTO_INCREMENT,
-    avi  BIT DEFAULT ((0)) NOT NULL,
-    mp4  BIT DEFAULT ((0)) NOT NULL,
-    webm BIT DEFAULT ((0)) NOT NULL,
+    avi  BOOLEAN DEFAULT ((0)) NOT NULL,
+    mp4  BOOLEAN DEFAULT ((0)) NOT NULL,
+    webm BOOLEAN DEFAULT ((0)) NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
 
@@ -28,23 +28,23 @@ CREATE TABLE MyCameras (
     password          NCHAR (50)    NULL,
     net_stream_port   NCHAR (255)   NULL,
     net_stream_prefix NCHAR (255)   NULL,
-    net_stream        BIT           DEFAULT ((0)) NULL,
-    Face_Detection    BIT           DEFAULT ((0)) NOT NULL,
-    Face_Recognition  BIT           DEFAULT ((0)) NOT NULL,
+    net_stream        BOOLEAN           DEFAULT ((0)) NULL,
+    Face_Detection    BOOLEAN           DEFAULT ((0)) NOT NULL,
+    Face_Recognition  BOOLEAN           DEFAULT ((0)) NOT NULL,
     Brightness        INT           DEFAULT ((0)) NOT NULL,
     Contrast          INT           DEFAULT ((0)) NOT NULL,
     Darkness          INT           DEFAULT ((0)) NOT NULL,
-    Recording         BIT           DEFAULT ((0)) NOT NULL,
-    On_Move_Pic       BIT           DEFAULT ((0)) NOT NULL,
-    On_Move_Rec       BIT           DEFAULT ((0)) NOT NULL,
-    On_Move_SMS       BIT           DEFAULT ((0)) NOT NULL,
-    On_Move_EMAIL     BIT           DEFAULT ((0)) NOT NULL,
+    Recording         BOOLEAN           DEFAULT ((0)) NOT NULL,
+    On_Move_Pic       BOOLEAN           DEFAULT ((0)) NOT NULL,
+    On_Move_Rec       BOOLEAN           DEFAULT ((0)) NOT NULL,
+    On_Move_SMS       BOOLEAN           DEFAULT ((0)) NOT NULL,
+    On_Move_EMAIL     BOOLEAN           DEFAULT ((0)) NOT NULL,
     Move_Sensitivity  INT           DEFAULT ((2)) NOT NULL,
     Up_req            NCHAR (255)   NULL,
     Down_req          NCHAR (255)   NULL,
     Left_req          NCHAR (255)   NULL,
     Right_req         NCHAR (255)   NULL,
-    isEsp32  BIT NOT NULL DEFAULT ((0)),
+    isEsp32  BOOLEAN NOT NULL DEFAULT ((0)),
     PRIMARY KEY CLUSTERED (Id ASC)
 );
 
@@ -89,4 +89,5 @@ VALUES ('admin', 'admin', 'admin@admin.com',
 SELECT * FROM Users;
 
 
-DROP TABLE myCameras;
+DROP TABLE MyCameras;
+DROP TABLE FilesFormats;

@@ -206,6 +206,7 @@ namespace IPCamera
                             // Check Error
                             if (result < 0)
                                 System.Windows.MessageBox.Show("Error inserting data into Database!");
+                            connection.Close();
                         }
                     }
                 }
@@ -646,9 +647,9 @@ namespace IPCamera
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@avi", 1);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
+                        command.Parameters.AddWithValue("@avi", true);
+                        command.Parameters.AddWithValue("@mp4", false);
+                        command.Parameters.AddWithValue("@webm", false);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -683,9 +684,9 @@ namespace IPCamera
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
+                        command.Parameters.AddWithValue("@avi", false);
+                        command.Parameters.AddWithValue("@mp4", false);
+                        command.Parameters.AddWithValue("@webm", false);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -725,9 +726,9 @@ namespace IPCamera
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 1);
-                        command.Parameters.AddWithValue("@webm", 0);
+                        command.Parameters.AddWithValue("@avi", false);
+                        command.Parameters.AddWithValue("@mp4", true);
+                        command.Parameters.AddWithValue("@webm", false);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -762,9 +763,9 @@ namespace IPCamera
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
+                        command.Parameters.AddWithValue("@avi", false);
+                        command.Parameters.AddWithValue("@mp4", false);
+                        command.Parameters.AddWithValue("@webm", false);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -804,9 +805,9 @@ namespace IPCamera
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 1);
+                        command.Parameters.AddWithValue("@avi", false);
+                        command.Parameters.AddWithValue("@mp4", false);
+                        command.Parameters.AddWithValue("@webm", true);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -841,9 +842,9 @@ namespace IPCamera
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
+                        command.Parameters.AddWithValue("@avi", false);
+                        command.Parameters.AddWithValue("@mp4", false);
+                        command.Parameters.AddWithValue("@webm", false);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
