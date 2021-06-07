@@ -258,7 +258,7 @@ namespace IPCamera
                 connection.Close();
 
                 // Get  Files Format Data
-                query = "SELECT avi, mp4, webm FROM FilesFormats";
+                query = "SELECT avi, mp4 FROM FilesFormats";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -270,7 +270,6 @@ namespace IPCamera
                         //String webm = dataReader["webm"].ToString().Trim();
                         Camera.avi_format = (dataReader["avi"].ToString().Trim() == "True");
                         Camera.mp4_format = (dataReader["mp4"].ToString().Trim() == "True");
-                        Camera.webm_format = (dataReader["webm"].ToString().Trim() == "True");
                     }
                 }
                 connection.Close();

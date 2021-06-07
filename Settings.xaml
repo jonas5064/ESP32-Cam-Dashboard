@@ -191,8 +191,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <CheckBox x:Name="avi_checkbox" Checked="AVI_chencked" Unchecked="AVI_unchencked"  Grid.Column="1" Grid.Row="0" Content="AVI" Foreground="#FFB4B4B4" />
-                            <CheckBox x:Name="mp4_checkbox" Checked="MP4_chencked" Unchecked="MP4_unchencked"  Grid.Column="1" Grid.Row="1" Content="MP4" Foreground="#FFB4B4B4" />
-                            <CheckBox x:Name="webm_checkbox" Checked="WEBM_chencked" Unchecked="WEBM_unchencked"  Grid.Column="2" Grid.Row="0" Content="WEBM" Foreground="#FFB4B4B4" />
+                            <CheckBox x:Name="mp4_checkbox" Checked="MP4_chencked" Unchecked="MP4_unchencked"  Grid.Column="2" Grid.Row="0" Content="MP4" Foreground="#FFB4B4B4" />
                         </Grid>
 
                         <!-- On Movement -->

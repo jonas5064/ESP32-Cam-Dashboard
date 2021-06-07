@@ -47,13 +47,15 @@ namespace IPCamera
         public int contrast = 0;
         public int darkness = 0;
         public bool recording = false;
+        public bool running = false;
         public VideoCapture video;     
         public static int count = 0;
         public static String pictures_dir;
         public static String videos_dir;
+
         public static bool avi_format = false;
         public static bool mp4_format = false;
-        public static bool webm_format = false;
+
         public String up_req = "";
         public String down_req = "";
         public String right_req = "";
@@ -64,7 +66,7 @@ namespace IPCamera
         public bool net_stream = false;
         HttpServer server = new HttpServer();
         public bool camera_oppened = false;
-        public int framerate = 16;
+        public int framerate = 0;
 
         public Camera(String url, String name, String id, bool rec)
         {
@@ -108,7 +110,7 @@ namespace IPCamera
             };
             this.video.OnMotion += this.OnMotion;
             //this.video.Video_Still_Frames_Grabber_Enabled = true;
-            // Set Frame Rates
+            this.Framerate = 33;
             this.video.Video_FrameRate = this.framerate;
             this.Recording = rec;
             count++;
@@ -125,6 +127,21 @@ namespace IPCamera
         {
             return this.video;
         }
+
+        // Set Frame Rates
+        public int Framerate
+        {
+            get
+            {
+                return this.framerate;
+            }
+            set
+            {
+                this.framerate = value;
+                this.video.Video_FrameRate = this.framerate;
+            }
+        }
+
 
         // Setup Username
         public String Username
@@ -371,6 +388,7 @@ namespace IPCamera
                 {
                     Console.WriteLine($"Camera Start.");
                     this.video.Start();
+                    this.running = true;
                     //this.video.StartAsync();
                 }
                 catch (System.AccessViolationException ex)
@@ -393,6 +411,7 @@ namespace IPCamera
                 {
                     Console.WriteLine($"Camera Stop.");
                     this.video.Stop();
+                    this.running = false;
                     //this.video.StopAsync();
                 }
                 catch (System.AccessViolationException ex)
@@ -429,7 +448,11 @@ namespace IPCamera
 
             try
             {
-                this.video.Stop();
+                bool was_running = this.running ? true : false;
+                if (this.running)
+                {
+                    this.video.Stop();
+                }
                 // Video mode == capture
                 this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
                 // Setup the right file name
@@ -437,7 +460,7 @@ namespace IPCamera
                 String date = now.ToString("F");
                 date = date.Replace(":", ".");
                 String dir_path = Camera.videos_dir + "\\" + this.name;
-                Console.WriteLine($"\n\nRecording File Path:  {dir_path}\n\n");
+                Console.WriteLine($"\nRecording File Path:  {dir_path}\n");
                 if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
                     Directory.CreateDirectory(dir_path);
@@ -457,15 +480,10 @@ namespace IPCamera
                     this.video.Output_Filename = file;
                     this.video.Output_Format = new VFMP4v8v10Output();
                 }
-                // WEBM
-                if (webm_format)
+                if (this.running && was_running)
                 {
-                    String file = dir_path + "\\" + date + ".webm";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFWebMOutput();
+                    this.video.Start();
                 }
-                this.video.Start();
-                Console.WriteLine($"Camera Start Recording OK.");
             }
             catch (System.Reflection.TargetInvocationException ex)
             {
@@ -480,10 +498,17 @@ namespace IPCamera
         // Stop Recording
         public void StopRecording()
         {
-            this.video.Stop();
+            bool was_running = this.running ? true : false;
+            if (this.running)
+            {
+                this.video.Stop();
+            }
             this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             Console.WriteLine($"Camera Stop Recording");
-            this.video.Start();
+            if (this.running && was_running)
+            {
+                this.video.Start();
+            }
         }
 
 

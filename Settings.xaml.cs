@@ -331,7 +331,6 @@ namespace IPCamera
             // Saved Files Formats
             avi_checkbox.IsChecked = Camera.avi_format;
             mp4_checkbox.IsChecked = Camera.mp4_format;
-            webm_checkbox.IsChecked = Camera.webm_format;
             // Feel the urls
             if (Camera.count > 0)
             {
@@ -627,9 +626,7 @@ namespace IPCamera
         {
             Camera.avi_format = true;
             Camera.mp4_format = false;
-            Camera.webm_format = false;
             mp4_checkbox.IsChecked = false;
-            webm_checkbox.IsChecked = false;
             try
             {
                 // Delete Data From DB
@@ -642,14 +639,13 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                query = $"INSERT INTO FilesFormats (avi, mp4) VALUES (@avi, @mp4)";
                 using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 1);
                         command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -679,14 +675,13 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                query = $"INSERT INTO FilesFormats (avi, mp4) VALUES (@avi, @mp4)";
                 using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -706,9 +701,7 @@ namespace IPCamera
         {
             Camera.mp4_format = true;
             Camera.avi_format = false;
-            Camera.webm_format = false;
             avi_checkbox.IsChecked = false;
-            webm_checkbox.IsChecked = false;
             try
             {
                 // Delete Data From DB
@@ -721,14 +714,13 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                query = $"INSERT INTO FilesFormats (avi, mp4) VALUES (@avi, @mp4)";
                 using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 1);
-                        command.Parameters.AddWithValue("@webm", 0);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error
@@ -758,93 +750,13 @@ namespace IPCamera
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Insert Data To DB
-                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
+                query = $"INSERT INTO FilesFormats (avi, mp4) VALUES (@avi, @mp4)";
                 using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@avi", 0);
                         command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
-                        connection.Open();
-                        result = command.ExecuteNonQuery();
-                        // Check Error
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    }
-                    connection.Close();
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"Source: {ex.Message}");
-            }
-        }
-
-        private void WEBM_chencked(object sender, EventArgs e)
-        {
-            Camera.webm_format = true;
-            Camera.mp4_format = false;
-            Camera.avi_format = false;
-            mp4_checkbox.IsChecked = false;
-            avi_checkbox.IsChecked = false;
-            try
-            {
-                // Delete Data From DB
-                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
-                String query = $"DELETE FROM FilesFormats";
-                MySqlCommand cmd = new MySqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
-                // Insert Data To DB
-                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
-                {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 1);
-                        connection.Open();
-                        result = command.ExecuteNonQuery();
-                        // Check Error
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    }
-                    connection.Close();
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"Source: {ex.Message}");
-            }
-        }
-        private void WEBM_unchencked(object sender, EventArgs e)
-        {
-            Camera.webm_format = false;
-            try
-            {
-                // Delete Data From DB
-                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
-                String query = $"DELETE FROM FilesFormats";
-                MySqlCommand cmd = new MySqlCommand(query, cn);
-                cn.Open();
-                int result = cmd.ExecuteNonQuery();
-                if (result < 0)
-                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                cn.Close();
-                // Insert Data To DB
-                query = $"INSERT INTO FilesFormats (avi, mp4, webm) VALUES (@avi, @mp4, @webm)";
-                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
-                {
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@avi", 0);
-                        command.Parameters.AddWithValue("@mp4", 0);
-                        command.Parameters.AddWithValue("@webm", 0);
                         connection.Open();
                         result = command.ExecuteNonQuery();
                         // Check Error

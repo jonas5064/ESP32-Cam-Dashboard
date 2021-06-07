@@ -16,7 +16,6 @@ CREATE TABLE FilesFormats (
     Id   INT NOT NULL AUTO_INCREMENT,
     avi  BOOLEAN DEFAULT ((0)) NOT NULL,
     mp4  BOOLEAN DEFAULT ((0)) NOT NULL,
-    webm BOOLEAN DEFAULT ((0)) NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
 
@@ -90,4 +89,5 @@ SELECT * FROM Users;
 
 
 DROP TABLE MyCameras;
+DROP TABLE FilesDirs;
 DROP TABLE FilesFormats;
