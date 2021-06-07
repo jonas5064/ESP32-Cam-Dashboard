@@ -40,6 +40,8 @@ namespace IPCamera
         public static String pass_send;
         public Login login;
         public static bool logged = false;
+        public static long video_files_time_size = 60 * 60 * 60;
+
         public static bool Logged
         {
             set
@@ -210,6 +212,38 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 Thread.Sleep(5000);
             }
+
+
+            // If Cameras Recording Start Scheduling
+            System.Timers.Timer recording_Cicle = new System.Timers.Timer();
+            recording_Cicle.Interval = video_files_time_size;
+            recording_Cicle.Elapsed += (Object source, System.Timers.ElapsedEventArgs e) =>
+            {
+                Dispatcher.Invoke((Action)delegate ()
+               {
+                    try
+                    {
+                        foreach (Camera cam in MainWindow.cameras)
+                        {
+                            if (cam.Recording)
+                            {
+                                cam.StopRecording();
+                                cam.StartRecording();
+                            }
+                        }
+                    }
+                    catch (System.InvalidOperationException ex)
+                    {
+                        Console.WriteLine($"\n\nInvalidOperationException:\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\n\nException:\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
+                    }
+               });
+            };
+            recording_Cicle.AutoReset = true;
+            recording_Cicle.Enabled = true;
         }
 
         // Set DateTime

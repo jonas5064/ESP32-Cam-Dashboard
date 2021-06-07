@@ -10,6 +10,8 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -55,6 +57,7 @@ namespace IPCamera
 
         public static bool avi_format = false;
         public static bool mp4_format = false;
+        System.Timers.Timer recordingTimer;
 
         public String up_req = "";
         public String down_req = "";
@@ -112,6 +115,7 @@ namespace IPCamera
             //this.video.Video_Still_Frames_Grabber_Enabled = true;
             this.Framerate = 33;
             this.video.Video_FrameRate = this.framerate;
+            // Set Recording Variable
             this.Recording = rec;
             count++;
         }
@@ -336,6 +340,7 @@ namespace IPCamera
                 if (this.recording)
                 {
                     this.StartRecording();
+
                 }
                 else
                 {
@@ -441,7 +446,7 @@ namespace IPCamera
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 
-        
+
         // Start Recording
         public void StartRecording()
         {
@@ -471,6 +476,7 @@ namespace IPCamera
                 {
                     String file = dir_path + "\\" + date + ".avi";
                     this.video.Output_Filename = file;
+                    VFAVIOutput avi = new VFAVIOutput();
                     this.video.Output_Format = new VFAVIOutput();
                 }
                 // MP4
