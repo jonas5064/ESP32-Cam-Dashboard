@@ -100,7 +100,6 @@ namespace IPCamera
             this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
             this.video.Video_Effects_Enabled = true;
             this.video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
-            this.Recording = rec;
             // Motion Detection Setup
             this.video.Motion_Detection = new MotionDetectionSettings
             {
@@ -111,6 +110,7 @@ namespace IPCamera
             //this.video.Video_Still_Frames_Grabber_Enabled = true;
             // Set Frame Rates
             this.video.Video_FrameRate = this.framerate;
+            this.Recording = rec;
             count++;
         }
 
@@ -316,6 +316,14 @@ namespace IPCamera
             get { return this.recording; }
             set { 
                 this.recording = value;
+                if (this.recording)
+                {
+                    this.StartRecording();
+                }
+                else
+                {
+                    this.StopRecording();
+                }
             }
         }
 
@@ -361,10 +369,7 @@ namespace IPCamera
             {
                 try
                 {
-                    //Console.WriteLine($"Camera Start.");
-                    // If Rcording is enable setup recording mode
-                    Setup_recording_mode();
-                    // Start Cameres
+                    Console.WriteLine($"Camera Start.");
                     this.video.Start();
                     //this.video.StartAsync();
                 }
@@ -386,7 +391,7 @@ namespace IPCamera
             {
                 try
                 {
-                    //Console.WriteLine($"Camera Stop.");
+                    Console.WriteLine($"Camera Stop.");
                     this.video.Stop();
                     //this.video.StopAsync();
                 }
@@ -418,55 +423,48 @@ namespace IPCamera
         }
 
         
-        // Setup Recording Mode
-        private void Setup_recording_mode()
+        // Start Recording
+        public void StartRecording()
         {
+
             try
             {
-                if (this.Recording)
+                this.video.Stop();
+                // Video mode == capture
+                this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
+                // Setup the right file name
+                DateTime now = DateTime.Now;
+                String date = now.ToString("F");
+                date = date.Replace(":", ".");
+                String dir_path = Camera.videos_dir + "\\" + this.name;
+                Console.WriteLine($"\n\nRecording File Path:  {dir_path}\n\n");
+                if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
-                    // Video mode == capture
-                    this.video.Mode = VFVideoCaptureMode.IPCapture;
-                    // Setup the right file name
-                    DateTime now = DateTime.Now;
-                    String date = now.ToString("F");
-                    date = date.Replace(":", ".");
-                    String dir_path = Camera.videos_dir + "\\" + this.name;
-                    Console.WriteLine($"\n\nRecording File Path:  {dir_path}\n\n");
-                    if (!Directory.Exists(dir_path)) // Directory with the name of the camera
-                    {
-                        Directory.CreateDirectory(dir_path);
-                    }
-                    // Start Recording
-                    // AVI
-                    if (avi_format)
-                    {
-                        String file = dir_path + "\\" + date + ".avi";
-                        this.video.Output_Filename = file;
-                        this.video.Output_Format = new VFAVIOutput();
-                    }
-                    // MP4
-                    if (mp4_format)
-                    {
-                        String file = dir_path + "\\" + date + ".mp4";
-                        this.video.Output_Filename = file;
-                        this.video.Output_Format = new VFMP4v8v10Output();
-                    }
-                    // WEBM
-                    if (webm_format)
-                    {
-                        String file = dir_path + "\\" + date + ".webm";
-                        this.video.Output_Filename = file;
-                        this.video.Output_Format = new VFWebMOutput();
-                    }
-                    Console.WriteLine($"Camera Start Recording OK.");
+                    Directory.CreateDirectory(dir_path);
                 }
-                else
+                // Start Recording
+                // AVI
+                if (avi_format)
                 {
-                    // Setup video mode to preview
-                    this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
-                    Console.WriteLine($"Camera Stop Recording OK.");
+                    String file = dir_path + "\\" + date + ".avi";
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFAVIOutput();
                 }
+                // MP4
+                if (mp4_format)
+                {
+                    String file = dir_path + "\\" + date + ".mp4";
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFMP4v8v10Output();
+                }
+                // WEBM
+                if (webm_format)
+                {
+                    String file = dir_path + "\\" + date + ".webm";
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFWebMOutput();
+                }
+                this.video.Start();
                 Console.WriteLine($"Camera Start Recording OK.");
             }
             catch (System.Reflection.TargetInvocationException ex)
@@ -478,10 +476,19 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
-        
 
-        // On Error EVnt
-        private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
+        // Stop Recording
+        public void StopRecording()
+        {
+            this.video.Stop();
+            this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+            Console.WriteLine($"Camera Stop Recording");
+            this.video.Start();
+        }
+
+
+    // On Error EVnt
+    private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
         {
             Console.WriteLine($"Level:{ex.Level}\nStackTrace:{ex.StackTrace}\nMessage:{ex.Message}");
             //throw new NotImplementedException();

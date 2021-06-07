@@ -529,6 +529,7 @@ namespace IPCamera
                 if (!this.camera.Recording)
                 {
                     this.camera.Recording = true;
+                    // Setup Field
                     rec_label.Content = "Recording";
                     rec_label.Foreground = Brushes.Red;
                     // Update DataBase this Camera Object field Recording 1
@@ -540,10 +541,11 @@ namespace IPCamera
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
-                    // Restart Camera
-                    this.camera.Stop();
-                    this.camera.Start();
                 }
+            }
+            catch (System.Reflection.TargetInvocationException ex)
+            {
+                Console.WriteLine($"SetupRecordingMode: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
             catch (Exception ex)
             {
@@ -559,6 +561,7 @@ namespace IPCamera
                 if (this.camera.Recording)
                 {
                     this.camera.Recording = false;
+                    // Setup Field
                     rec_label.Content = "Stop Recording";
                     rec_label.Foreground = Brushes.Gray;
                     // Update DataBase this Camera Object field Recording 0
@@ -570,9 +573,6 @@ namespace IPCamera
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
-                    // Restart Camera
-                    this.camera.Stop();
-                    this.camera.Start();
                 }
             }
             catch (Exception ex)
