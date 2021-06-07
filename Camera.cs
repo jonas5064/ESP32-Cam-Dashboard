@@ -1,22 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using System.Timers;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using System.Threading;
 
 //using VisioForge.Controls.UI.WinForms;
 using VisioForge.Controls.UI.WPF;
@@ -24,6 +14,9 @@ using VisioForge.Types;
 using VisioForge.Types.OutputFormat;
 // https://help.visioforge.com/sdks_net/html/T_VisioForge_Controls_UI_WPF_VideoCapture.htm
 using VisioForge.Types.VideoEffects;
+using MailKit;
+using MailKit.Security;
+using MimeKit;
 
 namespace IPCamera
 {
@@ -44,7 +37,7 @@ namespace IPCamera
         public bool on_move_email = false;
         public bool on_move_pic = false;
         public bool on_move_rec = false;
-        public int on_move_sensitivity = 2;
+        public int on_move_sensitivity = 4;
         public int brightness = 0;
         public int contrast = 0;
         public int darkness = 0;
@@ -339,11 +332,12 @@ namespace IPCamera
                 this.recording = value;
                 if (this.recording)
                 {
+                    Console.WriteLine("Start Recording.");
                     this.StartRecording();
-
                 }
                 else
                 {
+                    Console.WriteLine("Stop Recording.");
                     this.StopRecording();
                 }
             }
@@ -450,7 +444,6 @@ namespace IPCamera
         // Start Recording
         public void StartRecording()
         {
-
             try
             {
                 bool was_running = this.running ? true : false;
@@ -518,10 +511,10 @@ namespace IPCamera
         }
 
 
-    // On Error EVnt
-    private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
+        // On Error EVnt
+        private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
         {
-            Console.WriteLine($"Level:{ex.Level}\nStackTrace:{ex.StackTrace}\nMessage:{ex.Message}");
+            Console.WriteLine($"\n\nOnError: Level:{ex.Level}\nStackTrace:{ex.StackTrace}\nMessage:{ex.Message}\n\n");
             //throw new NotImplementedException();
         }
 
@@ -553,63 +546,133 @@ namespace IPCamera
                 //Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
                 if (this.On_move_email)
                 {
-                    try
+                    Console.WriteLine($"Motion Detected Send Email Message.  [Before] Time.now: {DateTime.Now} " +
+                        $"Time.before: {last_email_date_onmove.AddMinutes(1)}");
+
+                    // When Send Get the DateTime
+                    if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
                     {
+                        last_email_date_onmove = DateTime.Now;
+
                         /*
-                        Console.WriteLine($"Motion Detected Send Email Message.  [Before]    " +
-                            $"Time.now: {DateTime.Now}  Time.before: {last_email_date_onmove.AddMinutes(1)}");
+                        // Grab a Pic
+                        BitmapSource bmpS = this.video.Frame_GetCurrent();
+                        // BitmapSource to Stream
+                        MemoryStream stream = new MemoryStream();
+                        GetBitmap(bmpS).Save(stream, ImageFormat.Jpeg);
                         */
-                        // When Send Get the DateTime
-                        if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
+
+
+                        
+                        // Return to Sending Email
+                        String host = "";
+                        int port = 993;
+                        String fromEmail = MainWindow.email_send;
+                        String fromPassword = MainWindow.pass_send;
+                        String subject = this.name;
+                        String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
+
+                        if (fromEmail.Contains("gmail"))
                         {
-                            last_email_date_onmove = DateTime.Now;
+                            host = "smtp.gmail.com";
+                        }
+                        else if (fromEmail.Contains("yahoo"))
+                        {
+                            host = "imap.mail.yahoo.com";
+                        }
+                        else if (fromEmail.Contains("live"))
+                        {
+                            host = "smtp.live.com";
+                        }
 
-                            /*
-                            // Grab a Pic
-                            BitmapSource bmpS = this.video.Frame_GetCurrent();
-                            // BitmapSource to Stream
-                            MemoryStream stream = new MemoryStream();
-                            GetBitmap(bmpS).Save(stream, ImageFormat.Jpeg);
-                            */
 
-                            // Return to Sending Email
-                            String host = "";
-                            int port = 587;
-                            String fromEmail = MainWindow.email_send;
-                            if (fromEmail.Contains("gmail"))
+
+
+                        // Add All Recievers
+                        foreach (Users u in MainWindow.myUsers)
+                        {
+                            var mailMessage = new MimeMessage();
+                            mailMessage.From.Add(new MailboxAddress("Officee", fromEmail));
+                            mailMessage.To.Add(new MailboxAddress(u.Firstname + " " + u.Lastname, u.Email));
+                            mailMessage.Subject = subject;
+                            mailMessage.Body = new TextPart("plain")
                             {
-                                host = "smtp.gmail.com";
-                            }
-                            else if (fromEmail.Contains("yahoo"))
+                                Text = body
+                            };
+
+                            using (var smtpClient = new MailKit.Net.Smtp.SmtpClient())
                             {
-                                host = "smtp.mail.yahoo.com";
+                                Console.WriteLine($"\nHost: {host}    Email: {fromEmail}    Password: {fromPassword}\n");
+                                smtpClient.Connect(host, port, false);
+                                smtpClient.Authenticate(fromEmail, fromPassword);
+                                smtpClient.Send(mailMessage);
+                                smtpClient.Disconnect(true);
                             }
-                            else if (fromEmail.Contains("live"))
+                        }
+
+
+
+                        /*
+                        // Add All Recievers
+                        foreach (Users u in MainWindow.myUsers)
+                        {
+
+                            var smtpClient = new SmtpClient(host)
                             {
-                                host = "	smtp.live.com";
-                            }
-                            String fromPassword = MainWindow.pass_send;
-                            String subject = this.name;
-                            String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
-                            // Create a Message
-                            MailMessage msg = new MailMessage();
-                            msg.From = new MailAddress(fromEmail);
-                            /*
-                            // Add Image to message OK
-                            System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Image.Jpeg);
-                            System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(stream, ct);
-                            attach.ContentDisposition.FileName = "img.jpeg";
-                            msg.Attachments.Add(attach);
-                            */
-                            // Add All Recievers
-                            foreach (Users u in MainWindow.myUsers)
+                                Port = port,
+                                Credentials = new NetworkCredential(fromEmail, fromPassword),
+                                EnableSsl = true,
+                            };
+
+                            var mailMessage = new MailMessage
+                            {
+                                From = new MailAddress(fromEmail),
+                                Subject = subject,
+                                Body = body,
+                                IsBodyHtml = false,
+                            };
+                            mailMessage.To.Add(u.Email);
+
+                            smtpClient.Send(mailMessage);
+                        }
+                        */
+
+
+
+
+
+                        /*
+                        // Create a Message
+                        MailMessage msg = new MailMessage();
+                        msg.From = new MailAddress(fromEmail);
+                        */
+
+                        /*
+                        // Add Image to message OK
+                        System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Image.Jpeg);
+                        System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(stream, ct);
+                        attach.ContentDisposition.FileName = "img.jpeg";
+                        msg.Attachments.Add(attach);
+                        */
+
+                        /*
+                        // Add All Recievers
+                        foreach (Users u in MainWindow.myUsers)
+                        {
+                            if (!u.Email.Contains("admin"))
                             {
                                 msg.To.Add(u.Email);
                                 Console.WriteLine($"Send Email From: {fromEmail}  Pass: {fromPassword}  To: {u.Email}");
                             }
-                            msg.Subject = subject;
-                            msg.Body = body;
+                        }
+
+                        msg.Subject = subject;
+                        msg.Body = body;
+
+                        try
+                        {
                             // Create Email Connection Object
+
                             SmtpClient smtp = new SmtpClient(host)
                             {
                                 Port = port,
@@ -618,17 +681,18 @@ namespace IPCamera
                                 Credentials = new NetworkCredential(fromEmail, fromPassword),
                                 DeliveryMethod = SmtpDeliveryMethod.Network
                             };
+
+                            //SmtpClient smtp = new SmtpClient(host);
+                            //smtp.UseDefaultCredentials = true;
                             // Send Email
                             smtp.Send(msg);  // Doesn't Works
-                        } 
-                    }
-                    catch (SmtpException ex)
-                    {
-                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                            Console.WriteLine("Emails Sends.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"\n\nException:\n{ex.Message}\n\n");
+                        }
+                        */
                     }
                 }
                 if (this.On_move_pic)
@@ -638,11 +702,7 @@ namespace IPCamera
                 }
                 if (this.On_move_rec)
                 {
-                    Console.WriteLine("Start Recording.");
-                    // Recording for some time
-                    this.Recording = true;
-                    Thread.Sleep(1000 * 10 * 60);
-                    this.Recording = false;
+                    
                 }
                 if (this.On_move_sms)
                 {

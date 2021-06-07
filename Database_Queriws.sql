@@ -86,6 +86,7 @@ VALUES ('admin', 'admin', 'admin@admin.com',
         '', 'Admin', '1234');
 
 SELECT * FROM Users;
+SELECT * FROM EmailSender;
 
 
 DROP TABLE MyCameras;

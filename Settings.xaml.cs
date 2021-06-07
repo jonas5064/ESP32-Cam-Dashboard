@@ -571,6 +571,7 @@ namespace IPCamera
                             // Check Error
                             if (result < 0)
                                 System.Windows.MessageBox.Show("Error inserting data into Database!");
+                            connection.Close();
                         }
                         //connection.Close();
                         // Get The New User User From DB And Add Him To MainWindow.myUsers

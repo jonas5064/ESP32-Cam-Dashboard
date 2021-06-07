@@ -644,7 +644,6 @@ namespace IPCamera
             {
                 if (!this.camera.On_move_email)
                 {
-                    this.camera.On_move_email = true;
                     // Update DataBase this Camera Object field On_Move_EMAIL 1
                     MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
                     String query = $"UPDATE MyCameras SET On_Move_EMAIL='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -654,9 +653,8 @@ namespace IPCamera
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
-                    // Restart Camera
-                    this.camera.Stop();
-                    this.camera.Start();
+                    // Set The Camera
+                    this.camera.On_move_email = true;
                 }
             }
             catch (Exception ex)
@@ -670,7 +668,6 @@ namespace IPCamera
             {
                 if (this.camera.On_move_email)
                 {
-                    this.camera.On_move_email = false;
                     // Update DataBase this Camera Object field On_Move_EMAIL 0
                     MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
                     String query = $"UPDATE MyCameras SET On_Move_EMAIL='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -680,9 +677,8 @@ namespace IPCamera
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
-                    // Restart Camera
-                    this.camera.Stop();
-                    this.camera.Start();
+                    // Set The Camera
+                    this.camera.On_move_email = false;
                 }
             }
             catch (Exception ex)
@@ -752,7 +748,6 @@ namespace IPCamera
             {
                 if (!this.camera.On_move_rec)
                 {
-                    this.camera.On_move_rec = true;
                     // Update DataBase this Camera Object field On_Move_Rec 1
                     MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
                     String query = $"UPDATE MyCameras SET On_Move_Rec='{1}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -762,9 +757,8 @@ namespace IPCamera
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
-                    // Restart Camera
-                    this.camera.Stop();
-                    this.camera.Start();
+                    // Set Cameras Settings On Movement True
+                    this.camera.On_move_rec = true;
                 }
             }
             catch (Exception ex)
@@ -778,7 +772,6 @@ namespace IPCamera
             {
                 if (this.camera.On_move_rec)
                 {
-                    this.camera.On_move_rec = false;
                     // Update DataBase this Camera Object field On_Move_Rec 0
                     MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
                     String query = $"UPDATE MyCameras SET On_Move_Rec='{0}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
@@ -788,9 +781,8 @@ namespace IPCamera
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
                     cn.Close();
-                    // Restart Camera
-                    this.camera.Stop();
-                    this.camera.Start();
+                    // Set Cameras Settings On Movement False
+                    this.camera.On_move_rec = false;
                 }
             }
             catch (Exception ex)

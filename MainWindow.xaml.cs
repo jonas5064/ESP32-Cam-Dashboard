@@ -1,28 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using VisioForge.Types.OutputFormat;
-using VisioForge.Types.VideoEffects;
-using VisioForge.Controls.UI.WPF;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Net;
-using System.IO;
 using MySql.Data.MySqlClient;
 
 namespace IPCamera
@@ -40,7 +21,7 @@ namespace IPCamera
         public static String pass_send;
         public Login login;
         public static bool logged = false;
-        public static long video_files_time_size = 60 * 60 * 60;
+        public static int video_files_time_size = 3600000; // 1 Hour
 
         public static bool Logged
         {
@@ -227,8 +208,8 @@ namespace IPCamera
                         {
                             if (cam.Recording)
                             {
-                                cam.StopRecording();
-                                cam.StartRecording();
+                               cam.StopRecording();
+                               cam.StartRecording();
                             }
                         }
                     }
