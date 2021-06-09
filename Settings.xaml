@@ -57,49 +57,49 @@
                         <TextBox Grid.Row="1" Grid.Column="0" x:Name="url_1" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="1" Grid.Column="1" x:Name="name_1" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="1" Grid.Column="2" x:Name="username_1" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="1" Grid.Column="3" x:Name="password_1" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="1" Grid.Column="3" x:Name="password_1" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="1"  Grid.Column="4" x:Name="camera1_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 2 -->
                         <TextBox Grid.Row="2" Grid.Column="0" x:Name="url_2" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="2" Grid.Column="1" x:Name="name_2" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="2" Grid.Column="2" x:Name="username_2" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="2" Grid.Column="3" x:Name="password_2" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="2" Grid.Column="3" x:Name="password_2" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="2"  Grid.Column="4" x:Name="camera2_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 3 -->
                         <TextBox Grid.Row="3" Grid.Column="0" x:Name="url_3" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="3" Grid.Column="1" x:Name="name_3" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="3" Grid.Column="2" x:Name="username_3" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="3" Grid.Column="3" x:Name="password_3" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="3" Grid.Column="3" x:Name="password_3" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="3"  Grid.Column="4" x:Name="camera3_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 4 -->
                         <TextBox Grid.Row="4" Grid.Column="0" x:Name="url_4" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="4" Grid.Column="1" x:Name="name_4" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="4" Grid.Column="2" x:Name="username_4" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="4" Grid.Column="3" x:Name="password_4" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="4" Grid.Column="3" x:Name="password_4" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="4"  Grid.Column="4" x:Name="camera4_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 5 -->
                         <TextBox Grid.Row="5" Grid.Column="0" x:Name="url_5" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="5" Grid.Column="1" x:Name="name_5" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="5" Grid.Column="2" x:Name="username_5" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="5" Grid.Column="3" x:Name="password_5" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="5" Grid.Column="3" x:Name="password_5" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="5"  Grid.Column="4" x:Name="camera5_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 6 -->
                         <TextBox Grid.Row="6" Grid.Column="0" x:Name="url_6" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="6" Grid.Column="1" x:Name="name_6" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="6" Grid.Column="2" x:Name="username_6" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="6" Grid.Column="3" x:Name="password_6" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="6" Grid.Column="3" x:Name="password_6" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="6"  Grid.Column="4" x:Name="camera6_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 7 -->
                         <TextBox Grid.Row="7" Grid.Column="0" x:Name="url_7" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="7" Grid.Column="1" x:Name="name_7" Margin="7,2,7,3" FontSize="14"/>
                         <TextBox Grid.Row="7" Grid.Column="2" x:Name="username_7" Margin="7,2,7,3" FontSize="14"/>
-                        <TextBox Grid.Row="7" Grid.Column="3" x:Name="password_7" Margin="7,2,7,3" FontSize="14"/>
+                        <PasswordBox Grid.Row="7" Grid.Column="3" x:Name="password_7" Margin="7,2,7,3" FontSize="14"/>
                         <CheckBox Grid.Row="7"  Grid.Column="4" x:Name="camera7_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Cameras URL 8 -->
                         <TextBox Grid.Row="8" Grid.Column="0" x:Name="url_8" Margin="7,2,7,41" FontSize="14"/>
                         <TextBox Grid.Row="8" Grid.Column="1" x:Name="name_8" Margin="7,2,7,41" FontSize="14"/>
                         <TextBox Grid.Row="8" Grid.Column="2" x:Name="username_8" Margin="7,2,7,41" FontSize="14"/>
-                        <TextBox Grid.Row="8" Grid.Column="3" x:Name="password_8" Margin="7,2,7,41" FontSize="14"/>
+                        <PasswordBox Grid.Row="8" Grid.Column="3" x:Name="password_8" Margin="7,2,7,41" FontSize="14"/>
                         <CheckBox Grid.Row="8"  Grid.Column="4" x:Name="camera8_esp32" Foreground="#FFB4B4B4" Margin="40,5,0,0"/>
                         <!-- Button Apply -->
                         <Button Content="Apply" Grid.Column="3" HorizontalAlignment="Left" Grid.Row="9" FontSize="18" VerticalAlignment="Top" Width="131" Height="37" RenderTransformOrigin="-0.189,0.449" Click="Apply_Click"/>
