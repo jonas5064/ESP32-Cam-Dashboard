@@ -34,7 +34,7 @@ namespace IPCamera
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             String email = Email.Text;
-            String password = Password.Text;
+            String password = Password.Password;
             try
             {
                 var v = from user in MainWindow.myUsers where user.Email.Equals(email) && user.Password.Equals(password) select user;

@@ -430,7 +430,8 @@
                                     <ColumnDefinition Width="131*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Content="Password:" Foreground="#FFB4B4B4" Margin="13,0,0,0" />
-                                <TextBox x:Name="Password" Grid.Column="1" Margin="3" />
+                                <!--<TextBox x:Name="Password" Grid.Column="1" Margin="3" />-->
+                                <PasswordBox x:Name="Password" Grid.Column="1" Margin="3" />
                             </Grid>
                             <!-- Repeat Password -->
                             <Grid Grid.Column="1" Grid.Row="3">
@@ -439,7 +440,8 @@
                                     <ColumnDefinition Width="131*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Content="Repeat Pas:" Foreground="#FFB4B4B4" Margin="13,0,0,0" />
-                                <TextBox x:Name="Repeat_Pass" Grid.Column="1" Margin="3" />
+                                <!--<TextBox x:Name="Repeat_Pass" Grid.Column="1" Margin="3"/>-->
+                                <PasswordBox x:Name="Repeat_Pass" Grid.Column="1" Margin="3"/>
                             </Grid>
                         </Grid>
 

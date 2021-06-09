@@ -549,8 +549,8 @@ namespace IPCamera
                 {
                     selection = "Employee";
                 }
-                String password = Password.Text;
-                String repeat_pass = Repeat_Pass.Text;
+                String password = Password.Password;
+                String repeat_pass = Repeat_Pass.Password;
                 if (password.Equals(repeat_pass))
                 {
                     // Insert to DB First to create an Id and then update MainWindow.myUsers
