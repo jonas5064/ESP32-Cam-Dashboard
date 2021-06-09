@@ -14,8 +14,8 @@ namespace IPCamera
         private String email = "";
         private String phone = "";
         public static int Count = 0;
-        public String licences;
-        public String password;
+        private String licences;
+        private String password;
 
         public int Id
         {

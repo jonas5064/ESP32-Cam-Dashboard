@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,13 +14,27 @@ namespace IPCamera
     {
 
         List<Users> users;
+        public List<Users> Users
+        {
+            get
+            {
+                return this.users;
+            }
+            set
+            {
+                this.users = value;
+            }
+        }
+
 
         public Settings()
         {
+
             InitializeComponent();
 
             this.Update_settings_page();
 
+            // Fill The Users in The Users DataGrid
             this.FillUsers();
 
             // Fill the TextBoxes With the Data
@@ -437,9 +452,9 @@ namespace IPCamera
         public void FillUsers()
         {
             // Save list with users before
-            users = new List<Users>(MainWindow.myUsers);
+            this.Users = new List<Users>(MainWindow.myUsers);
             // Add the List To DataGrid
-            users_grid.ItemsSource = MainWindow.myUsers;
+            users_grid.ItemsSource = this.Users;
             // Make Id Column No Editable
             users_grid.AutoGeneratingColumn += (object sender, DataGridAutoGeneratingColumnEventArgs e) =>
             {
@@ -450,26 +465,26 @@ namespace IPCamera
                 }
                 if (e.Column.Header.ToString() == "FirstName")
                 {
-                    e.Column.Width = 100;
+                    e.Column.MinWidth = 111;
                 }
                 if (e.Column.Header.ToString() == "LastName")
                 {
-                    e.Column.Width = 100;
+                    e.Column.MinWidth = 111;
                 }
                 if (e.Column.Header.ToString() == "Email")
                 {
-                    e.Column.Width = 300;
+                    e.Column.MinWidth = 311;
                 }
                 if (e.Column.Header.ToString() == "Password")
                 {
-                    e.Column.Width = 150;
+                    e.Column.MinWidth = 200;
+                    e.Cancel = true;
                 }
                 if (e.Column.Header.ToString() == "Licences")
                 {
                     e.Column.IsReadOnly = true; // Makes the column as read only
                 }
             };
-            users_grid.CanUserDeleteRows = true;
         }
 
         // Users Apply Button
@@ -899,4 +914,5 @@ namespace IPCamera
 
         }
     }
+
 }

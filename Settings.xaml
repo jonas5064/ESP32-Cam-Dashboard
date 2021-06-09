@@ -3,16 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IPCamera"
         mc:Ignorable="d"
         Title="Settings"
-        xmlns:tools1="clr-namespace:IPCamera.Tools"
         Height="600"
         Width="1000"
         WindowStartupLocation="CenterScreen"
         Background="#FF151515"
         ResizeMode="NoResize">
-
 
     <Grid>
 
@@ -345,12 +342,16 @@
 
                     <!-- Users Table -->
                     <DataGrid x:Name="users_grid" Background="#2F2F2F" Grid.Row="0"
-                                                    SelectionUnit="FullRow" SelectionMode="Extended"
-                                                    AutoGenerateColumns="True" CanUserResizeColumns="True"
-                                                    ColumnWidth="*"
-                                                    ScrollViewer.CanContentScroll="True" 
-                                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                SelectionUnit="FullRow"
+                                SelectionMode="Extended"
+                                CanUserResizeColumns="True"
+                                CanUserDeleteRows="True"
+                                CanUserAddRows="True"
+                                ColumnWidth="*"
+                                AutoGenerateColumns="True"
+                                ScrollViewer.CanContentScroll="True" 
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto">
                     </DataGrid>
 
                     <!-- Add Users Form And Button Grid-->
