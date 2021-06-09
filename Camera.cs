@@ -576,35 +576,14 @@ namespace IPCamera
                             host = "smtp.live.com";
                         }
 
-
-                        // Get Current Directory
-                        //string path = Directory.GetCurrentDirectory();
+                        // Create a File with a pic
                         String img_name = "email_pic.jpeg";
-                        //img_name = path + "\\" + img_name;
-                        //Console.WriteLine("\n\nThe current directory is {0}", img_name);
-
-
-                        // Create a File with a pic                        
                         this.video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
-
-                        /*
-                        //String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
-                        String body = 
-                            "<html>" +
-                                "<head>" +
-                                "</head" +
-                                "<body>" +
-                                    "<h1>" + $"[{this.name}]" + "</h1>" +
-                                    "<h3>" + "Detect Motion at:" + "</h3>" +
-                                    "<h2>" + $"[{DateTime.Now}]" + "</h2>" +
-                                    $"<img src=\"{img_name}\" />" +
-                                "</body>" +
-                            "</html>";
-                        */
 
                         // Add All Recievers
                         foreach (Users u in MainWindow.myUsers)
                         {
+                            /// Create HTML Body
                             var builder = new BodyBuilder();
                             var pathImage = Path.Combine(Directory.GetCurrentDirectory(), img_name);
                             var image = builder.LinkedResources.Add(pathImage);
@@ -622,19 +601,14 @@ namespace IPCamera
                                                                 , image.ContentId
                                                             );
 
-
+                            // Create Email Message
                             var mailMessage = new MimeMessage();
                             mailMessage.From.Add(new MailboxAddress("Officee", fromEmail));
                             mailMessage.To.Add(new MailboxAddress(u.Firstname + " " + u.Lastname, u.Email));
                             mailMessage.Subject = subject;
                             mailMessage.Body = builder.ToMessageBody();
-                            /*
-                            mailMessage.Body = new TextPart("html")
-                            {
-                                Text = body
-                            };
-                            */
 
+                            // Send Email Message
                             using (var smtpClient = new MailKit.Net.Smtp.SmtpClient())
                             {
                                 Console.WriteLine($"\nHost: {host}    Email: {fromEmail}    Password: {fromPassword}\n");
