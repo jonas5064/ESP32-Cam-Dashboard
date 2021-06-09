@@ -17,6 +17,8 @@ using VisioForge.Types.VideoEffects;
 using MailKit;
 using MailKit.Security;
 using MimeKit;
+using System.Windows.Media.Imaging;
+using MimeKit.Utils;
 
 namespace IPCamera
 {
@@ -554,23 +556,12 @@ namespace IPCamera
                     {
                         last_email_date_onmove = DateTime.Now;
 
-                        /*
-                        // Grab a Pic
-                        BitmapSource bmpS = this.video.Frame_GetCurrent();
-                        // BitmapSource to Stream
-                        MemoryStream stream = new MemoryStream();
-                        GetBitmap(bmpS).Save(stream, ImageFormat.Jpeg);
-                        */
-
-
-                        
                         // Return to Sending Email
                         String host = "";
-                        int port = 993;
+                        int port = 587;
                         String fromEmail = MainWindow.email_send;
                         String fromPassword = MainWindow.pass_send;
                         String subject = this.name;
-                        String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
 
                         if (fromEmail.Contains("gmail"))
                         {
@@ -586,19 +577,63 @@ namespace IPCamera
                         }
 
 
+                        // Get Current Directory
+                        //string path = Directory.GetCurrentDirectory();
+                        String img_name = "email_pic.jpeg";
+                        //img_name = path + "\\" + img_name;
+                        //Console.WriteLine("\n\nThe current directory is {0}", img_name);
 
+
+                        // Create a File with a pic                        
+                        this.video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
+
+                        /*
+                        //String body = $"[{this.name}]  Detect Motion at  [{DateTime.Now}]";
+                        String body = 
+                            "<html>" +
+                                "<head>" +
+                                "</head" +
+                                "<body>" +
+                                    "<h1>" + $"[{this.name}]" + "</h1>" +
+                                    "<h3>" + "Detect Motion at:" + "</h3>" +
+                                    "<h2>" + $"[{DateTime.Now}]" + "</h2>" +
+                                    $"<img src=\"{img_name}\" />" +
+                                "</body>" +
+                            "</html>";
+                        */
 
                         // Add All Recievers
                         foreach (Users u in MainWindow.myUsers)
                         {
+                            var builder = new BodyBuilder();
+                            var pathImage = Path.Combine(Directory.GetCurrentDirectory(), img_name);
+                            var image = builder.LinkedResources.Add(pathImage);
+                            image.ContentId = MimeUtils.GenerateMessageId();
+                            builder.HtmlBody = string.Format($"<html>" +
+                                                                   "<head>" +
+                                                                   "</head" +
+                                                                   "<body>" +
+                                                                       "<h1>" + $"[{this.name}]" + "</h1>" +
+                                                                       "<h3>" + "Detect Motion at:" + "</h3>" +
+                                                                       "<h2>" + $"[{DateTime.Now}]" + "</h2>" +
+                                                                       @"<img src=""cid:{0}"">" +
+                                                                   "</body>" +
+                                                               "</head>"
+                                                                , image.ContentId
+                                                            );
+
+
                             var mailMessage = new MimeMessage();
                             mailMessage.From.Add(new MailboxAddress("Officee", fromEmail));
                             mailMessage.To.Add(new MailboxAddress(u.Firstname + " " + u.Lastname, u.Email));
                             mailMessage.Subject = subject;
-                            mailMessage.Body = new TextPart("plain")
+                            mailMessage.Body = builder.ToMessageBody();
+                            /*
+                            mailMessage.Body = new TextPart("html")
                             {
                                 Text = body
                             };
+                            */
 
                             using (var smtpClient = new MailKit.Net.Smtp.SmtpClient())
                             {
@@ -610,89 +645,8 @@ namespace IPCamera
                             }
                         }
 
-
-
-                        /*
-                        // Add All Recievers
-                        foreach (Users u in MainWindow.myUsers)
-                        {
-
-                            var smtpClient = new SmtpClient(host)
-                            {
-                                Port = port,
-                                Credentials = new NetworkCredential(fromEmail, fromPassword),
-                                EnableSsl = true,
-                            };
-
-                            var mailMessage = new MailMessage
-                            {
-                                From = new MailAddress(fromEmail),
-                                Subject = subject,
-                                Body = body,
-                                IsBodyHtml = false,
-                            };
-                            mailMessage.To.Add(u.Email);
-
-                            smtpClient.Send(mailMessage);
-                        }
-                        */
-
-
-
-
-
-                        /*
-                        // Create a Message
-                        MailMessage msg = new MailMessage();
-                        msg.From = new MailAddress(fromEmail);
-                        */
-
-                        /*
-                        // Add Image to message OK
-                        System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Image.Jpeg);
-                        System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(stream, ct);
-                        attach.ContentDisposition.FileName = "img.jpeg";
-                        msg.Attachments.Add(attach);
-                        */
-
-                        /*
-                        // Add All Recievers
-                        foreach (Users u in MainWindow.myUsers)
-                        {
-                            if (!u.Email.Contains("admin"))
-                            {
-                                msg.To.Add(u.Email);
-                                Console.WriteLine($"Send Email From: {fromEmail}  Pass: {fromPassword}  To: {u.Email}");
-                            }
-                        }
-
-                        msg.Subject = subject;
-                        msg.Body = body;
-
-                        try
-                        {
-                            // Create Email Connection Object
-
-                            SmtpClient smtp = new SmtpClient(host)
-                            {
-                                Port = port,
-                                EnableSsl = true,
-                                UseDefaultCredentials = true,
-                                Credentials = new NetworkCredential(fromEmail, fromPassword),
-                                DeliveryMethod = SmtpDeliveryMethod.Network
-                            };
-
-                            //SmtpClient smtp = new SmtpClient(host);
-                            //smtp.UseDefaultCredentials = true;
-                            // Send Email
-                            smtp.Send(msg);  // Doesn't Works
-                            Console.WriteLine("Emails Sends.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"\n\nException:\n{ex.Message}\n\n");
-                        }
-                        */
+                        // Delete The Image
+                        File.Delete(img_name);
                     }
                 }
                 if (this.On_move_pic)
@@ -727,5 +681,26 @@ namespace IPCamera
             }
         }
 
+
+        /*
+        public static Bitmap GetBitmap(BitmapSource source)
+        {
+            Bitmap bmp = new Bitmap(
+              source.PixelWidth,
+              source.PixelHeight,
+              PixelFormat.Format32bppPArgb);
+            BitmapData data = bmp.LockBits(
+              new Rectangle(Point.Empty, bmp.Size),
+              ImageLockMode.WriteOnly,
+              PixelFormat.Format32bppPArgb);
+            source.CopyPixels(
+              Int32Rect.Empty,
+              data.Scan0,
+              data.Height * data.Stride,
+              data.Stride);
+            bmp.UnlockBits(data);
+            return bmp;
+        }
+        */
     }
 }
