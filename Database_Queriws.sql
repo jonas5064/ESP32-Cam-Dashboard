@@ -85,7 +85,14 @@ INSERT INTO Users (FirstName, LastName, Email, Phone, Licences, Password)
 VALUES ('admin', 'admin', 'admin@admin.com',
         '', 'Admin', '1234');
 
+
+
+
+UPDATE MyCameras SET net_stream_prefix='camera1', net_stream_port='80', net_stream='0'
+        WHERE urls='http://192.168.1.30:81/stream' AND Name='Camera 1';
+
 SELECT * FROM Users;
+SELECT * FROM MyCameras;
 SELECT * FROM EmailSender;
 
 

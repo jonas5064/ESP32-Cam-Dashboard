@@ -2204,7 +2204,14 @@ namespace IPCamera
                 cn.Close();
 
                 // On Movement SMS
-                query = $"UPDATE MyCameras SET On_Move_SMS='{(this.camera.On_move_sms ? 1 : 0)}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                if (this.camera.On_move_sms)
+                {
+                    query = $"UPDATE MyCameras SET On_Move_SMS=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
+                else
+                {
+                    query = $"UPDATE MyCameras SET On_Move_SMS=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 result = cmd.ExecuteNonQuery();
@@ -2215,7 +2222,14 @@ namespace IPCamera
                 cn.Close();
 
                 // On Movement EMAIL
-                query = $"UPDATE MyCameras SET On_Move_EMAIL='{(this.camera.On_move_email ? 1 : 0)}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                if (this.camera.On_move_email)
+                {
+                    query = $"UPDATE MyCameras SET On_Move_EMAIL=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
+                else
+                {
+                    query = $"UPDATE MyCameras SET On_Move_EMAIL=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 result = cmd.ExecuteNonQuery();
@@ -2226,7 +2240,15 @@ namespace IPCamera
                 cn.Close();
 
                 // On Movement Take Picture
-                query = $"UPDATE MyCameras SET On_Move_Pic='{(this.camera.On_move_pic ? 1 : 0)}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                if (this.camera.On_move_pic)
+                {
+                    query = $"UPDATE MyCameras SET On_Move_Pic=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
+                else
+                {
+                    query = $"UPDATE MyCameras SET On_Move_Pic=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
+                
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 result = cmd.ExecuteNonQuery();
@@ -2237,7 +2259,14 @@ namespace IPCamera
                 cn.Close();
 
                 // On Movement Recording
-                query = $"UPDATE MyCameras SET On_Move_Rec='{(this.camera.On_move_rec ? 1 : 0)}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                if (this.camera.On_move_rec)
+                {
+                    query = $"UPDATE MyCameras SET On_Move_Rec=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
+                else
+                {
+                    query = $"UPDATE MyCameras SET On_Move_Rec=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 result = cmd.ExecuteNonQuery();
@@ -2259,7 +2288,14 @@ namespace IPCamera
                 cn.Close();
 
                 // Net Stream
-                query = $"UPDATE MyCameras SET net_stream='{(this.camera.Net_stream ? 1 : 0)}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                if (this.camera.Net_stream)
+                {
+                    query = $"UPDATE MyCameras SET net_stream=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
+                else
+                {
+                    query = $"UPDATE MyCameras SET net_stream=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
                 result = cmd.ExecuteNonQuery();
@@ -2291,6 +2327,8 @@ namespace IPCamera
                 }
                 cn.Close();
 
+                // Close This Window
+                this.Close();
             }
             catch (MySqlException ex)
             {

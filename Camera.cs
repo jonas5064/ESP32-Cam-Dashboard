@@ -62,7 +62,7 @@ namespace IPCamera
         private String net_stream_port = "";
         private String net_stream_prefix = "";
         private bool net_stream = false;
-        HttpServer server = new HttpServer();
+        HttpServer server;
         public bool camera_oppened = false;
         public int framerate = 0;
 
@@ -187,20 +187,17 @@ namespace IPCamera
             get { return this.net_stream; }
             set { 
                 this.net_stream = value;
-                if (this.net_stream_ip.Length > 0 && this.net_stream_port.Length > 0)
+                /*
+                if (this.Net_stream_ip.Length > 0 && this.Net_stream_port.Length > 0)
                 {
-                    this.server.run = this.net_stream;
-                    Console.WriteLine("Server,Run: " + Convert.ToString(this.net_stream));
-                    if (this.net_stream)
+                    if (this.Net_stream)
                     {
-                        this.server.port = this.net_stream_port;
-                        this.server.ip = this.net_stream_ip;
-                        this.server.prefix = this.net_stream_prefix;
-                        this.server.cam = this;
-                        // Start http this.server
-                        this.server.setup();
+                        server = new HttpServer(this, this.Net_stream_ip, this.Net_stream_port, this.Net_stream_prefix);
+                        this.server.run = this.Net_stream;
+                        Console.WriteLine("Server,Run: " + Convert.ToString(this.Net_stream));
                         var result = this.server.ListenAsync();
-                    } else
+                    }
+                    else
                     {
                         if(this.server.run)
                         {
@@ -208,7 +205,14 @@ namespace IPCamera
                         }
                     }
                 }
+                */
             }
+        }
+
+        public String Net_stream_ip
+        {
+            get { return this.net_stream_ip; }
+            set { this.net_stream_ip = value; }
         }
 
         public String Net_stream_port

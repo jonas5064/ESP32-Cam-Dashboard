@@ -262,6 +262,7 @@ namespace IPCamera
                     {
                         String name = dataReader["Name"].ToString().Trim();
                         String path = dataReader["Path"].ToString().Trim();
+                        Console.WriteLine($"\n FilesDirs: {name}  {path}");
                         if (name == "Pictures")
                         {
                             Camera.pictures_dir = path;
@@ -287,6 +288,7 @@ namespace IPCamera
                         //String webm = dataReader["webm"].ToString().Trim();
                         Camera.avi_format = (dataReader["avi"].ToString().Trim() == "True");
                         Camera.mp4_format = (dataReader["mp4"].ToString().Trim() == "True");
+                        Console.WriteLine($"\nFilesFormats: {Camera.avi_format}  {Camera.mp4_format}");
                     }
                 }
                 connection.Close();
@@ -337,12 +339,18 @@ namespace IPCamera
                         int contrast = (int)dataReader["Contrast"];
                         int darkness = (int)dataReader["Darkness"];
                         int move_sensitivity = (int)dataReader["Move_Sensitivity"];
-
+                        
                         String net_stream_port_l = (String)dataReader["net_stream_port"].ToString().Trim();
                         String net_stream_prefix_l = (String)dataReader["net_stream_prefix"].ToString().Trim();
                         String net_stream_l = (String)dataReader["net_stream"].ToString().Trim();
-
+                        /*
+                        Console.WriteLine($"\n\n\nNetStream:  {net_stream_l}\n\n\n");
+                        Console.WriteLine($"\n\n\nNetStream_Port:  {net_stream_port_l}\n\n\n");
+                        Console.WriteLine($"\n\n\nNetStream_Prefix:  {net_stream_prefix_l}\n\n\n");
+                        */
                         bool isEsp = (dataReader["isEsp32"].ToString().Trim() == "True");
+
+                        Console.WriteLine($"\nMyCameras: {url} {name} {username} {password}");
                         try
                         {
                             bool rec = (recording == "True");
@@ -413,6 +421,7 @@ namespace IPCamera
                     {
                         email_send = dataReader["Email"].ToString().Trim();
                         pass_send = dataReader["Pass"].ToString().Trim();
+                        Console.WriteLine($"\nEmailSender: {email_send}  {pass_send}");
                     }
                 }
                 connection.Close();
@@ -428,6 +437,7 @@ namespace IPCamera
                         twilioAccountSID = dataReader["AccountSID"].ToString().Trim();
                         twilioAccountToken = dataReader["AccountTOKEN"].ToString().Trim();
                         twilioNumber = dataReader["Phone"].ToString().Trim();
+                        Console.WriteLine($"\nSMS  {twilioAccountSID}  {twilioAccountToken}  {twilioNumber}");
                     }
                 }
                 connection.Close();
@@ -442,6 +452,7 @@ namespace IPCamera
                     while (dataReader.Read())
                     {
                         user_email = dataReader["Id"].ToString().Trim();
+                        Console.WriteLine($"\nLogged: {user_email}");
                     }
                 }
                 connection.Close();
