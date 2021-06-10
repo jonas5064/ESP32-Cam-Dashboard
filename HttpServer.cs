@@ -57,7 +57,6 @@ namespace IPCamera
 
         public async Task ListenAsync()
         {
-            
             while (this.run)
             {
                 try

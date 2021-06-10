@@ -2203,14 +2203,14 @@ namespace IPCamera
                 }
                 cn.Close();
 
-                // On Movement SMS
+                // Movement SMS
                 if (this.camera.On_move_sms)
                 {
-                    query = $"UPDATE MyCameras SET On_Move_SMS=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_SMS=1 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 else
                 {
-                    query = $"UPDATE MyCameras SET On_Move_SMS=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_SMS=0 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
@@ -2221,14 +2221,14 @@ namespace IPCamera
                 }
                 cn.Close();
 
-                // On Movement EMAIL
+                // Movement EMAIL
                 if (this.camera.On_move_email)
                 {
-                    query = $"UPDATE MyCameras SET On_Move_EMAIL=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_EMAIL=1 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 else
                 {
-                    query = $"UPDATE MyCameras SET On_Move_EMAIL=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_EMAIL=0 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
@@ -2239,14 +2239,14 @@ namespace IPCamera
                 }
                 cn.Close();
 
-                // On Movement Take Picture
+                // Movement Take Picture
                 if (this.camera.On_move_pic)
                 {
-                    query = $"UPDATE MyCameras SET On_Move_Pic=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_Pic=1 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 else
                 {
-                    query = $"UPDATE MyCameras SET On_Move_Pic=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_Pic=0 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 
                 cmd = new MySqlCommand(query, cn);
@@ -2258,14 +2258,14 @@ namespace IPCamera
                 }
                 cn.Close();
 
-                // On Movement Recording
+                // Movement Recording
                 if (this.camera.On_move_rec)
                 {
-                    query = $"UPDATE MyCameras SET On_Move_Rec=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_Rec=1 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 else
                 {
-                    query = $"UPDATE MyCameras SET On_Move_Rec=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET On_Move_Rec=0 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
@@ -2290,11 +2290,11 @@ namespace IPCamera
                 // Net Stream
                 if (this.camera.Net_stream)
                 {
-                    query = $"UPDATE MyCameras SET net_stream=true WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET net_stream=1 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 else
                 {
-                    query = $"UPDATE MyCameras SET net_stream=false WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
+                    query = $"UPDATE MyCameras SET net_stream=0 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
