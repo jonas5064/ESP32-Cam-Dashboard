@@ -237,6 +237,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Account.xaml.cs">
+      <DependentUpon>Account.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Camera.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Install_Requarements.cs" />
@@ -251,6 +254,10 @@
     <Compile Include="WindowControll.xaml.cs">
       <DependentUpon>WindowControll.xaml</DependentUpon>
     </Compile>
+    <Page Include="Account.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

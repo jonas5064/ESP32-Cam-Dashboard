@@ -78,6 +78,8 @@ namespace IPCamera
         private Settings settings;
         public static bool settings_oppened = false;
         public static bool login_oppened = false;
+        private Account account;
+        public static bool account_oppened = false;
         public static String twilioNumber;
         public static String twilioAccountSID;
         public static String twilioAccountToken;
@@ -530,11 +532,30 @@ namespace IPCamera
                     settings_oppened = true;
                     Console.WriteLine("settings_oppened: " + Convert.ToString(settings_oppened));
                     this.settings = new Settings();
-                    settings.Show();
+                    this.settings.Show();
                 }
                 else
                 {
                     this.settings.Activate();
+                }
+            }
+        }
+
+        // Account Button Clicked
+        private void Account_clicked(object sender, RoutedEventArgs e)
+        {
+            if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user))
+            {
+                if(account_oppened == false)
+                {
+                    account_oppened = true;
+                    Console.WriteLine("account_oppened: " + Convert.ToString(account_oppened));
+                    this.account = new Account(MainWindow.user);
+                    this.account.Show();
+                }
+                else
+                {
+                    this.account.Activate();
                 }
             }
         }
