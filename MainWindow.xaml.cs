@@ -364,8 +364,8 @@ namespace IPCamera
                                 down_req = down,
                                 right_req = right,
                                 left_req = left,
-                                net_stream_port = net_stream_port_l,
-                                net_stream_prefix = net_stream_prefix_l,
+                                Net_stream_port = net_stream_port_l,
+                                Net_stream_prefix = net_stream_prefix_l,
                                 Net_stream = (net_stream_l == "True"),
                                 isEsp32 = isEsp
                             };

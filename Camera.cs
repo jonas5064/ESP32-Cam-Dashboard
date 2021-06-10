@@ -27,23 +27,23 @@ namespace IPCamera
         public String url = "";
         public string name = "";
         public string id = "";
-        public string username = "";
-        public string password = "";
+        private string username = "";
+        private string password = "";
         public bool isEsp32 = false;
         WindowControll win_controll;
         public int row = 0;
         public int coll = 0;
-        public bool detection = false;
-        public bool recognition = false;
-        public bool on_move_sms = false;
-        public bool on_move_email = false;
-        public bool on_move_pic = false;
-        public bool on_move_rec = false;
-        public int on_move_sensitivity = 4;
-        public int brightness = 0;
-        public int contrast = 0;
-        public int darkness = 0;
-        public bool recording = false;
+        private bool detection = false;
+        private bool recognition = false;
+        private bool on_move_sms = false;
+        private bool on_move_email = false;
+        private bool on_move_pic = false;
+        private bool on_move_rec = false;
+        private int on_move_sensitivity = 4;
+        private int brightness = 0;
+        private int contrast = 0;
+        private int darkness = 0;
+        private bool recording = false;
         public bool running = false;
         public VideoCapture video;     
         public static int count = 0;
@@ -58,10 +58,10 @@ namespace IPCamera
         public String down_req = "";
         public String right_req = "";
         public String left_req = "";
-        public String net_stream_ip = "localhost";
-        public String net_stream_port = "";
-        public String net_stream_prefix = "";
-        public bool net_stream = false;
+        private String net_stream_ip = "localhost";
+        private String net_stream_port = "";
+        private String net_stream_prefix = "";
+        private bool net_stream = false;
         HttpServer server = new HttpServer();
         public bool camera_oppened = false;
         public int framerate = 0;
@@ -215,6 +215,12 @@ namespace IPCamera
         {
             get { return this.net_stream_port; }
             set { this.net_stream_port = value; }
+        }
+
+        public String Net_stream_prefix
+        {
+            get { return this.net_stream_prefix; }
+            set { this.net_stream_prefix = value; }
         }
 
         // Setup Contrast Effext

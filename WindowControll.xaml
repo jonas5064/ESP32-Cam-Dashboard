@@ -550,6 +550,8 @@
                     <RowDefinition Height="10px" />
                     <RowDefinition Height="50px"/>
                     <RowDefinition />
+                    <RowDefinition  Height="50px"/>
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -564,6 +566,16 @@
                     <Button Grid.Column="2" x:Name="cameras_enroll_face_button" Content="Enroll Face" Margin="3" Click="ENROLL_FACE_Clicked"></Button>
                     <Button Grid.Column="3" x:Name="cameras_reboot_button" Content="Fuctor" Margin="3" Click="Reboot_Clicked"></Button>
                     <Button Grid.Column="4" x:Name="cameras_hostpot_button" Content="HostPot" Margin="3" Click="Hostpot_Clicked"></Button>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="4" x:Name="cameras_controls_apply" Content="Apply" Margin="3" Click="Apply_Clicked"></Button>
                 </Grid>
             </Grid>
 
