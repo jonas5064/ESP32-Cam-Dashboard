@@ -52,45 +52,54 @@ namespace IPCamera
 
         public async Task ListenAsync()
         {
-            // Start Server
-            if (this.run)
+            try
             {
-                this.listener.Start();
-            }
-            if (this.listener.IsListening)
-            {
-                while (this.run)
+                // Start Server
+                if (this.run)
                 {
-                    try
+                    this.listener.Start();
+                }
+                if (this.listener.IsListening)
+                {
+                    while (this.run)
                     {
-                        var context = await this.listener.GetContextAsync();
-                        HttpListenerRequest request = context.Request;
-                        HttpListenerResponse response = context.Response;
-                        // Get Frame Buffer
-                        System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
-                        MemoryStream outStream = new MemoryStream();
-                        BitmapEncoder enc = new BmpBitmapEncoder();
-                        enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                        enc.Save(outStream);
-                        byte[] frame = outStream.GetBuffer();
-                        // Send Frames
-                        response.StatusCode = 200;
-                        response.ContentLength64 = frame.Length;
-                        response.ContentType = "image/jpeg";
-                        response.KeepAlive = true;
-                        response.Headers.Add("Refresh", "0");
-                        response.OutputStream.Write(frame, 0, frame.Length);
-                        response.OutputStream.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                        try
+                        {
+                            var context = await this.listener.GetContextAsync();
+                            HttpListenerRequest request = context.Request;
+                            HttpListenerResponse response = context.Response;
+                            // Get Frame Buffer
+                            System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
+                            MemoryStream outStream = new MemoryStream();
+                            JpegBitmapEncoder enc = new JpegBitmapEncoder();
+                            enc.QualityLevel = 100;
+                            enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                            enc.Save(outStream);
+                            byte[] frame = outStream.ToArray(); //.GetBuffer();
+                            outStream.Close();
+                            // Send Frames
+                            response.StatusCode = 200;
+                            response.ContentLength64 = frame.Length;
+                            response.ContentType = "image/jpeg";
+                            response.KeepAlive = true;
+                            response.Headers.Add("Refresh", "0");
+                            response.OutputStream.Write(frame, 0, frame.Length);
+                            response.OutputStream.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                        }
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"\n\nServer isn't Started Yet.\n\n");
+                }
             }
-            else
+            catch(System.NullReferenceException ex)
             {
-                Console.WriteLine($"\n\nServer isn't Started Yet.\n\n");
+                Console.WriteLine($"\n\n\n{ex.Message}\n\n\n");
             }
         }
 
