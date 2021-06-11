@@ -569,13 +569,14 @@
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="4" x:Name="cameras_controls_apply" Content="Apply" Margin="3" Click="Apply_Clicked"></Button>
+                    <ProgressBar x:Name="loadingPanel" Grid.Column="3" Width="100" Margin="10, 11, 10, 11" Minimum="0" Maximum="100" Visibility="Hidden"/>
+                    <Button Grid.Column="4" x:Name="cameras_controls_apply" Content="Apply" Margin="3" Click="Apply_Clicked" Width="100"></Button>
                 </Grid>
             </Grid>
 

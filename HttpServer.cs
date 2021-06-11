@@ -42,11 +42,6 @@ namespace IPCamera
                     return;
                 }
                 this.listener.Prefixes.Add(this.url);
-                // Start Server
-                if (this.run)
-                {
-                    this.listener.Start();
-                }
             }
             else
             {
@@ -57,44 +52,57 @@ namespace IPCamera
 
         public async Task ListenAsync()
         {
-            while (this.run)
+            // Start Server
+            if (this.run)
             {
-                try
+                this.listener.Start();
+            }
+            if (this.listener.IsListening)
+            {
+                while (this.run)
                 {
-                    var context = await this.listener.GetContextAsync();
-                    HttpListenerRequest request = context.Request;
-                    HttpListenerResponse response = context.Response;
-                    // Get Frame Buffer
-                    System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
-                    MemoryStream outStream = new MemoryStream();
-                    BitmapEncoder enc = new BmpBitmapEncoder();
-                    enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                    enc.Save(outStream);
-                    byte[] frame = outStream.GetBuffer();
-                    // Send Frames
-                    response.StatusCode = 200;
-                    response.ContentLength64 = frame.Length;
-                    response.ContentType = "image/jpeg";
-                    response.KeepAlive = true;
-                    response.Headers.Add("Refresh", "0");
-                    response.OutputStream.Write(frame, 0, frame.Length);
-                    response.OutputStream.Close();
-                } catch (Exception ex)
-                {
-                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                    try
+                    {
+                        var context = await this.listener.GetContextAsync();
+                        HttpListenerRequest request = context.Request;
+                        HttpListenerResponse response = context.Response;
+                        // Get Frame Buffer
+                        System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
+                        MemoryStream outStream = new MemoryStream();
+                        BitmapEncoder enc = new BmpBitmapEncoder();
+                        enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                        enc.Save(outStream);
+                        byte[] frame = outStream.GetBuffer();
+                        // Send Frames
+                        response.StatusCode = 200;
+                        response.ContentLength64 = frame.Length;
+                        response.ContentType = "image/jpeg";
+                        response.KeepAlive = true;
+                        response.Headers.Add("Refresh", "0");
+                        response.OutputStream.Write(frame, 0, frame.Length);
+                        response.OutputStream.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
+                    }
                 }
             }
-            
+            else
+            {
+                Console.WriteLine($"\n\nServer isn't Started Yet.\n\n");
+            }
         }
 
         public void close()
         {
             this.run = false;
-            //this.listener.Prefixes.Clear();
             Console.WriteLine("Stop Listener.");
             this.listener.Stop();
+            Console.WriteLine("Close Listener.");
             this.listener.Close();
-            this.listener = new HttpListener();
+            //this.listener.Prefixes.Clear();
+            //this.listener = new HttpListener();
         }
 
     }

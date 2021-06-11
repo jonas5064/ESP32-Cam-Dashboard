@@ -343,11 +343,11 @@ namespace IPCamera
                         String net_stream_port_l = (String)dataReader["net_stream_port"].ToString().Trim();
                         String net_stream_prefix_l = (String)dataReader["net_stream_prefix"].ToString().Trim();
                         String net_stream_l = (String)dataReader["net_stream"].ToString().Trim();
-                        /*
+                        
                         Console.WriteLine($"\n\n\nNetStream:  {net_stream_l}\n\n\n");
                         Console.WriteLine($"\n\n\nNetStream_Port:  {net_stream_port_l}\n\n\n");
                         Console.WriteLine($"\n\n\nNetStream_Prefix:  {net_stream_prefix_l}\n\n\n");
-                        */
+                        
                         bool isEsp = (dataReader["isEsp32"].ToString().Trim() == "True");
 
                         Console.WriteLine($"\nMyCameras: {url} {name} {username} {password}");
@@ -361,12 +361,12 @@ namespace IPCamera
                                 Brightness = brightness,
                                 Contrast = contrast,
                                 Darkness = darkness,
-                                Detection = (detection == "True"),
-                                Recognition = (recognition == "True"),
-                                On_move_sms = (on_move_sms == "True"),
-                                On_move_email = (on_move_email == "True"),
-                                On_move_pic = (on_move_pic == "True"),
-                                On_move_rec = (on_move_rec == "True"),
+                                Detection = (detection == "True") ? true : false,
+                                Recognition = (recognition == "True") ? true : false,
+                                On_move_sms = (on_move_sms == "True") ? true : false,
+                                On_move_email = (on_move_email == "True") ? true : false,
+                                On_move_pic = (on_move_pic == "True") ? true : false,
+                                On_move_rec = (on_move_rec == "True") ? true : false,
                                 On_move_sensitivity = move_sensitivity,
                                 up_req = up,
                                 down_req = down,
@@ -374,9 +374,11 @@ namespace IPCamera
                                 left_req = left,
                                 Net_stream_port = net_stream_port_l,
                                 Net_stream_prefix = net_stream_prefix_l,
-                                Net_stream = (net_stream_l == "True"),
+                                Net_stream = (net_stream_l == "True") ? true : false,
                                 isEsp32 = isEsp
                             };
+
+                            Console.WriteLine($"\n\n\nCamera.NetStream_Prefix:  {cam.Net_stream}\n\n\n");
                             MainWindow.cameras.Add(cam);
                         }
                         catch (System.ArgumentException ex)

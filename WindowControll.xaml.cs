@@ -13,6 +13,9 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using MySql.Data.MySqlClient;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+using System.Windows.Controls.Primitives;
 
 namespace IPCamera
 {
@@ -44,7 +47,7 @@ namespace IPCamera
             this.url = this.camera.url;
             // Add Title
             cameras_title.Content = this.camera.name;
-            
+
             // Chech if Face_Recognition, Face Detection  is checked
             Face_det.IsChecked = (this.camera.Detection);
             Face_rec.IsChecked = (this.camera.Recognition);
@@ -2134,7 +2137,14 @@ namespace IPCamera
         private void network_streaming_port_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
-            this.camera.Net_stream_port = (String)n.Text;
+            if (!n.Text.Equals("80"))
+            {
+                this.camera.Net_stream_port = (String)n.Text;
+            }
+            else
+            {
+                MessageBox.Show("Enter different port.");
+            }
         }
 
         // Network Streaming prefix
@@ -2159,49 +2169,72 @@ namespace IPCamera
         // Apply Changes To Database
         private void Apply_Clicked(object sender, RoutedEventArgs e)
         {
+            loadingPanel.Visibility = Visibility.Visible;
+            Update();
+            loadingPanel.Visibility = Visibility.Hidden;
+        }
 
-            
+        // Progress Bar Event Method
+        private delegate void UpdateProgressBarDelegate(DependencyProperty dp, object value);
+
+        private async Task Update()
+        {
             try
             {
+                // ProgressBar Object
+                UpdateProgressBarDelegate updateProgressBaDelegate = new UpdateProgressBarDelegate(loadingPanel.SetValue);
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(0) });
+
                 MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
                 String query;
                 MySqlCommand cmd;
                 int result;
 
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(10) });
+
                 // Cameras Brightness
                 query = $"UPDATE MyCameras SET Brightness='{this.camera.Brightness}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
 
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(20) });
 
                 // Cameras Contrast
                 query = $"UPDATE MyCameras SET Contrast='{this.camera.Contrast}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
 
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(30) });
 
                 // Cameras Darkness
                 query = $"UPDATE MyCameras SET Darkness='{this.camera.Darkness}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
+
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(40) });
 
                 // Movement SMS
                 if (this.camera.On_move_sms)
@@ -2214,12 +2247,15 @@ namespace IPCamera
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
+
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(50) });
 
                 // Movement EMAIL
                 if (this.camera.On_move_email)
@@ -2232,12 +2268,15 @@ namespace IPCamera
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
+
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(60) });
 
                 // Movement Take Picture
                 if (this.camera.On_move_pic)
@@ -2248,15 +2287,18 @@ namespace IPCamera
                 {
                     query = $"UPDATE MyCameras SET On_Move_Pic=0 WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 }
-                
+
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
+
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(70) });
 
                 // Movement Recording
                 if (this.camera.On_move_rec)
@@ -2269,23 +2311,29 @@ namespace IPCamera
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
 
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(80) });
+
                 // Movement Sensor Sensitivity
                 query = $"UPDATE MyCameras SET Move_Sensitivity='{this.camera.On_move_sensitivity}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
+
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(90) });
 
                 // Net Stream
                 if (this.camera.Net_stream)
@@ -2298,29 +2346,35 @@ namespace IPCamera
                 }
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
+
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(100) });
 
                 // Net Stream Port
                 query = $"UPDATE MyCameras SET net_stream_port='{this.camera.Net_stream_port}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
                 cn.Close();
 
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(110) });
+
                 // Net Stream Prefix
                 query = $"UPDATE MyCameras SET net_stream_prefix='{this.camera.Net_stream_prefix}' WHERE urls='{this.camera.url}' AND Name='{this.camera.name}'";
                 cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                 {
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
@@ -2339,8 +2393,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
-
-
 
     }
 

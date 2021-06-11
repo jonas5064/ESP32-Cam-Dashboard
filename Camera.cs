@@ -187,25 +187,29 @@ namespace IPCamera
             get { return this.net_stream; }
             set { 
                 this.net_stream = value;
-                /*
                 if (this.Net_stream_ip.Length > 0 && this.Net_stream_port.Length > 0)
                 {
+                    Console.WriteLine("Server,Run: " + Convert.ToString(this.Net_stream));
                     if (this.Net_stream)
                     {
-                        //server = new HttpServer(this, this.Net_stream_ip, this.Net_stream_port, this.Net_stream_prefix);
-                        //this.server.run = this.Net_stream;
-                        Console.WriteLine("Server,Run: " + Convert.ToString(this.Net_stream));
-                        //var result = this.server.ListenAsync();
+                        server = new HttpServer(this, this.Net_stream_ip, this.Net_stream_port, this.Net_stream_prefix);
+                        this.server.run = this.Net_stream;
+                        var result = this.server.ListenAsync();
                     }
                     else
                     {
-                        if(this.server.run)
+                        if (this.server != null)
                         {
-                            this.server.close();
+                            Console.WriteLine("Try to Stop The Server.");
+                            if (this.server.run)
+                            {
+                                Console.WriteLine("Server is Stoping");
+                                this.server.close();
+                                Console.WriteLine("Server Stoped.");
+                            }
                         }
                     }
                 }
-                */
             }
         }
 
