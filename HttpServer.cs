@@ -24,12 +24,12 @@ namespace IPCamera
         private String url = "";
         private Camera cam;
 
-        public HttpServer(Camera cam, String ip, String port, String prefix)
+        public HttpServer(Camera cam)
         {
             this.cam = cam;
-            this.ip = ip;
-            this.port = port;
-            this.prefix = prefix;
+            this.ip = this.cam.Net_stream_ip;
+            this.port = this.cam.Net_stream_port;
+            this.prefix = this.cam.Net_stream_prefix;
             if (!this.ip.Equals("") && !this.port.Equals("") && !this.prefix.Equals(""))
             {
                 this.url = $"http://{this.ip}:{this.port}/{this.prefix}/";

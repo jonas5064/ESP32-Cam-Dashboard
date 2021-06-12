@@ -192,7 +192,7 @@ namespace IPCamera
                     Console.WriteLine("Server,Run: " + Convert.ToString(this.Net_stream));
                     if (this.Net_stream)
                     {
-                        server = new HttpServer(this, this.Net_stream_ip, this.Net_stream_port, this.Net_stream_prefix);
+                        server = new HttpServer(this);
                         this.server.run = this.Net_stream;
                         var result = this.server.ListenAsync();
                     }
