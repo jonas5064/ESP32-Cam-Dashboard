@@ -2137,13 +2137,13 @@ namespace IPCamera
         private void network_streaming_port_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
-            if (!n.Text.Equals("80"))
+            if (Int32.Parse(n.Text) >= 8000)
             {
                 this.camera.Net_stream_port = (String)n.Text;
             }
             else
             {
-                MessageBox.Show("Enter different port.");
+                MessageBox.Show("Enter a Port Bigger from 8000");
             }
         }
 
