@@ -22,6 +22,7 @@ namespace IPCamera
         public Login login;
         public static bool logged = false;
         public static int video_files_time_size = 3600000; // 1 Hour
+        public static int video_recording_history_length = 1; // 1 Month
 
         public static bool Logged
         {
@@ -276,7 +277,7 @@ namespace IPCamera
                 connection.Close();
 
                 // Get  Files Format Data
-                query = "SELECT avi, mp4 FROM FilesFormats";
+                query = "SELECT * FROM FilesFormats";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -286,8 +287,9 @@ namespace IPCamera
                         // String avi = dataReader["avi"].ToString().Trim();
                         //String mp4 = dataReader["mp4"].ToString().Trim();
                         //String webm = dataReader["webm"].ToString().Trim();
-                        Camera.avi_format = (dataReader["avi"].ToString().Trim() == "True");
-                        Camera.mp4_format = (dataReader["mp4"].ToString().Trim() == "True");
+                        Camera.avi_format = (dataReader["avi"].ToString().Trim() == "True")? true : false;
+                        Camera.mp4_format = (dataReader["mp4"].ToString().Trim() == "True")? true : false;
+                        MainWindow.video_recording_history_length = Int32.Parse(dataReader["history_time"].ToString());
                         Console.WriteLine($"\nFilesFormats: {Camera.avi_format}  {Camera.mp4_format}");
                     }
                 }

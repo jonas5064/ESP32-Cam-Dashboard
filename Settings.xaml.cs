@@ -3,16 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace IPCamera
 {
     public partial class Settings : Window
     {
-
         List<Users> users;
         public List<Users> Users
         {
@@ -43,6 +45,8 @@ namespace IPCamera
             sms_account_phone.Text = MainWindow.twilioNumber;
         }
 
+        // Progress Bar Event Method
+        private delegate void UpdateProgressBarDelegate(DependencyProperty dp, object value);
 
         protected override void OnClosed(EventArgs e)
         {
@@ -87,56 +91,73 @@ namespace IPCamera
             }
         }
 
-
-
-
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
+            progressBarPageOne.Visibility = Visibility.Visible;
+            progressBarTracking.Visibility = Visibility.Visible;
+            this.ApplyFirstPageSettings();
+            progressBarPageOne.Visibility = Visibility.Hidden;
+            progressBarTracking.Visibility = Visibility.Hidden;
+        }
+
+        private async void ApplyFirstPageSettings()
+        {
+            // ProgressBar Object
+            UpdateProgressBarDelegate updateProgressBaDelegate = new UpdateProgressBarDelegate(progressBarPageOne.SetValue);
+            UpdateProgressBarDelegate updateProgressBaDelegateTow = new UpdateProgressBarDelegate(progressBarTracking.SetValue);
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(20) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(20) });
+
+            MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
+            String query;
+            MySqlCommand cmd;
+            int result;
+
             // Save Paths
             if (txtEditor_pictures.Text != "" && txtEditor_videos.Text != "")
             {
                 // Clear DataBase
-                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
-                String query = "DELETE FROM FilesDirs";
-                MySqlCommand cmd = new MySqlCommand(query, cn);
+                query = "DELETE FROM FilesDirs";
+                cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                int result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Save to DataBase Pictures
-                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
+                query = $"INSERT INTO FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
+                cmd = new MySqlCommand(query, cn);
+                cmd.Parameters.AddWithValue("@id", 1);
+                cmd.Parameters.AddWithValue("@name", "Pictures");
+                cmd.Parameters.AddWithValue("@path", txtEditor_pictures.Text);
+                cn.Open();
+                result = await cmd.ExecuteNonQueryAsync();
+                // Check Error
+                if (result < 0)
                 {
-                    query = $"INSERT INTO FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id", 1);
-                        command.Parameters.AddWithValue("@name", "Pictures");
-                        command.Parameters.AddWithValue("@path", txtEditor_pictures.Text);
-                        connection.Open();
-                        result = command.ExecuteNonQuery();
-                        // Check Error
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    }
-                }
-                // Save to DataBase Videos
-                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
-                {
-                    query = $"INSERT INTO FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id", 2);
-                        command.Parameters.AddWithValue("@name", "Videos");
-                        command.Parameters.AddWithValue("@path", txtEditor_videos.Text);
-                        connection.Open();
-                        result = command.ExecuteNonQuery();
-                        // Check Error
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    }
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
                 }
             }
+            cn.Close();
+            query = $"INSERT INTO FilesDirs (id, Name, Path) VALUES (@id,@name,@path)";
+            cmd = new MySqlCommand(query, cn);
+            cmd.Parameters.AddWithValue("@id", 2);
+            cmd.Parameters.AddWithValue("@name", "Videos");
+            cmd.Parameters.AddWithValue("@path", txtEditor_videos.Text);
+            cn.Open();
+            result = await cmd.ExecuteNonQueryAsync();
+            // Check Error
+            if (result < 0)
+            {
+                System.Windows.MessageBox.Show("Error inserting data into Database!");
+            }
+            cn.Close();
+
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(40) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(40) });
+            
             // Save URLS
             List<Cameras> cams = new List<Cameras>(8);
             try
@@ -186,61 +207,68 @@ namespace IPCamera
             {
                 Console.WriteLine($"Source:{ex.Source}\nParamnAME:{ex.ParamName}\n{ex.Message}");
             }
+
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(60) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(60) });
+            
             int urls_num = cams.Count;
             // If urls.Count > 0
             if (urls_num > 0)
             {
                 // Clear Database
-                MySqlConnection con = new MySqlConnection(App.DB_connection_string);
-                MySqlCommand cmd = new MySqlCommand
+                cn = new MySqlConnection(App.DB_connection_string);
+                cmd = new MySqlCommand
                 {
                     CommandText = "DELETE FROM MyCameras ",
-                    Connection = con
+                    Connection = cn
                 };
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                cn.Open();
+                await cmd.ExecuteNonQueryAsync();
+                cn.Close();
                 foreach (Cameras d in cams)
                 {
                     Guid guid = Guid.NewGuid();
                     String my_id = guid.ToString();
                     // Save Data To Database
-                    using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
+                    query = $"INSERT INTO MyCameras (id,urls,name,username,password,isEsp32 ) VALUES (@id,@urls,@name,@username,@password,@isESP)";
+                    cmd = new MySqlCommand(query, cn);
+                    cmd.Parameters.AddWithValue("@id", my_id);
+                    cmd.Parameters.AddWithValue("@urls", d.url);
+                    cmd.Parameters.AddWithValue("@name", d.name);
+                    cmd.Parameters.AddWithValue("@username", d.username);
+                    cmd.Parameters.AddWithValue("@password", d.password);
+                    cmd.Parameters.AddWithValue("@isESP", d.isEsp32);
+                    cn.Open();
+                    result = await cmd.ExecuteNonQueryAsync();
+                    // Check Error
+                    if (result < 0)
                     {
-                        String query = $"INSERT INTO MyCameras (id,urls,name,username,password,isEsp32 ) VALUES (@id,@urls,@name,@username,@password,@isESP)";
-                        using (MySqlCommand command = new MySqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@id", my_id);
-                            command.Parameters.AddWithValue("@urls", d.url);
-                            command.Parameters.AddWithValue("@name", d.name);
-                            command.Parameters.AddWithValue("@username", d.username);
-                            command.Parameters.AddWithValue("@password", d.password);
-                            command.Parameters.AddWithValue("@isESP", d.isEsp32);
-                            connection.Open();
-                            int result = command.ExecuteNonQuery();
-                            // Check Error
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            connection.Close();
-                        }
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
                     }
+                    cn.Close();
                 }
             }
             else
             {
                 // Clear Database
-                MySqlConnection con = new MySqlConnection(App.DB_connection_string);
-                MySqlCommand cmd = new MySqlCommand
+                cn = new MySqlConnection(App.DB_connection_string);
+                cmd = new MySqlCommand
                 {
                     CommandText = "DELETE FROM MyCameras ",
-                    Connection = con
+                    Connection = cn
                 };
-                con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                cn.Open();
+                await cmd.ExecuteNonQueryAsync();
+                cn.Close();
             }
+
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(80) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(80) });
+            
             // Save Email Sender And Password
-            if ( (!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
+            if ((!email_send_textbox.Text.Equals(MainWindow.email_send)) ||
                     (!pass_send_textbox.Password.Equals(MainWindow.pass_send)))
             {
                 Console.WriteLine(pass_send_textbox.Password);
@@ -251,36 +279,34 @@ namespace IPCamera
                     if (addr.Address == email_send_textbox.Text)
                     {
                         // Delete From Table The Last
-                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
-                        String query = $"DELETE FROM EmailSender";
-                        MySqlCommand cmd = new MySqlCommand(query, cn);
+                        cn = new MySqlConnection(App.DB_connection_string);
+                        query = $"DELETE FROM EmailSender";
+                        cmd = new MySqlCommand(query, cn);
                         cn.Open();
-                        int result = cmd.ExecuteNonQuery();
+                        result = await cmd.ExecuteNonQueryAsync();
                         if (result < 0)
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                         cn.Close();
                         // Save Data To Database
-                        using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
+                        query = $"INSERT INTO EmailSender (Email,Pass) VALUES (@email,@pass)";
+                        cmd = new MySqlCommand(query, cn);
+                        cmd.Parameters.AddWithValue("@email", email_send_textbox.Text);
+                        cmd.Parameters.AddWithValue("@pass", pass_send_textbox.Password);
+                        cn.Open();
+                        result = await cmd.ExecuteNonQueryAsync();
+                        // Check Error
+                        if (result < 0)
                         {
-                            query = $"INSERT INTO EmailSender (Email,Pass) VALUES (@email,@pass)";
-                            using (MySqlCommand command = new MySqlCommand(query, connection))
-                            {
-                                command.Parameters.AddWithValue("@email", email_send_textbox.Text);
-                                command.Parameters.AddWithValue("@pass", pass_send_textbox.Password);
-                                connection.Open();
-                                result = command.ExecuteNonQuery();
-                                // Check Error
-                                if (result < 0)
-                                    System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            }
+                            System.Windows.MessageBox.Show("Error inserting data into Database!");
                         }
-                    } else
+                    }
+                    else
                     {
                         if (!email_send_textbox.Text.Equals(""))
                         {
                             System.Windows.MessageBox.Show("Not Valid Email!");
                         }
-                        
+
                     }
                 }
                 catch (Exception ex)
@@ -293,39 +319,61 @@ namespace IPCamera
                     {
                         Console.WriteLine($"Source:{ex.Source}\n\n{ex.Message}");
                     }
-                } 
+                }
             }
+
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(100) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(100) });
+            
             // Save SMS sid, token, phone
             if (!sms_account_ssid.Text.Equals(MainWindow.twilioAccountSID) ||
                 !sms_account_token.Text.Equals(MainWindow.twilioAccountToken) ||
                 !sms_account_phone.Text.Equals(MainWindow.twilioNumber))
             {
                 // Delete From Table The Last
-                MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
-                String query = $"DELETE FROM SMS";
-                MySqlCommand cmd = new MySqlCommand(query, cn);
+                query = $"DELETE FROM SMS";
+                cmd = new MySqlCommand(query, cn);
                 cn.Open();
-                int result = cmd.ExecuteNonQuery();
+                result = await cmd.ExecuteNonQueryAsync();
                 if (result < 0)
                     System.Windows.MessageBox.Show("Error inserting data into Database!");
                 cn.Close();
                 // Save Data To Database
-                using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
+                query = $"INSERT INTO SMS (AccountSID,AccountTOKEN,Phone) VALUES (@sid,@token,@phone)";
+                cmd = new MySqlCommand(query, cn);
+                cmd.Parameters.AddWithValue("@sid", sms_account_ssid.Text);
+                cmd.Parameters.AddWithValue("@token", sms_account_token.Text);
+                cmd.Parameters.AddWithValue("@phone", sms_account_phone.Text);
+                cn.Open();
+                result = await cmd.ExecuteNonQueryAsync();
+                // Check Error
+                if (result < 0)
                 {
-                    query = $"INSERT INTO SMS (AccountSID,AccountTOKEN,Phone) VALUES (@sid,@token,@phone)";
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@sid", sms_account_ssid.Text);
-                        command.Parameters.AddWithValue("@token", sms_account_token.Text);
-                        command.Parameters.AddWithValue("@phone", sms_account_phone.Text);
-                        connection.Open();
-                        result = command.ExecuteNonQuery();
-                        // Check Error
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    }
-                }
+                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                }      
             }
+
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(120) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(120) });
+
+            // Update History Files Length
+            query = $"UPDATE FilesFormats SET history_time='{MainWindow.video_recording_history_length}'";
+            cmd = new MySqlCommand(query, cn);
+            cn.Open();
+            result = await cmd.ExecuteNonQueryAsync();
+            if (result < 0)
+            {
+                System.Windows.MessageBox.Show("Error inserting data into Database!");
+            }
+            cn.Close();
+
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(140) });
+            Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(140) });
+
+
             // Ask to Restart The Application
             MessageBoxResult res = System.Windows.MessageBox.Show("Restart ?", "Question", (MessageBoxButton)MessageBoxButtons.OKCancel);
             if (res.ToString() == "OK")
@@ -340,12 +388,15 @@ namespace IPCamera
 
         private void Update_settings_page()
         {
-            // Feel files paths
+            // Update files paths
             txtEditor_pictures.Text = Camera.pictures_dir;
             txtEditor_videos.Text = Camera.videos_dir;
-            // Saved Files Formats
+            // Update Files Formats
             avi_checkbox.IsChecked = Camera.avi_format;
             mp4_checkbox.IsChecked = Camera.mp4_format;
+            // Update Recording History Time
+            recordingTime_ComboBox.SelectedIndex = MainWindow.video_recording_history_length-1;
+
             // Feel the urls
             if (Camera.count > 0)
             {
@@ -490,6 +541,18 @@ namespace IPCamera
         // Users Apply Button
         private void U_Apply_Click(object sender, RoutedEventArgs e)
         {
+            progressBarPageUsers.Visibility = Visibility.Visible;
+            this.UserApply();
+            progressBarPageUsers.Visibility = Visibility.Hidden;
+        }
+
+        private async void UserApply()
+        {
+            // ProgressBar Object
+            UpdateProgressBarDelegate updateProgressBaDelegate = new UpdateProgressBarDelegate(progressBarPageUsers.SetValue);
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(70) });
+
             // Commit Changes to the List with users
             users_grid.CommitEdit();
             // Chech If Delete a users
@@ -505,7 +568,7 @@ namespace IPCamera
                         String query = $"DELETE FROM Users WHERE Id='{u.Id}'";
                         MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
-                        int result = cmd.ExecuteNonQuery();
+                        int result = await cmd.ExecuteNonQueryAsync();
                         if (result < 0)
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                         cn.Close();
@@ -519,9 +582,9 @@ namespace IPCamera
                 {
                     Users old_user = users[counter];
                     // If A record changeds updated
-                    if ((old_user.Firstname.Equals(u.Firstname)) || 
-                            (old_user.Lastname.Equals(u.Lastname)) || 
-                            (old_user.Email.Equals(u.Email)) || 
+                    if ((old_user.Firstname.Equals(u.Firstname)) ||
+                            (old_user.Lastname.Equals(u.Lastname)) ||
+                            (old_user.Email.Equals(u.Email)) ||
                             (old_user.Phone.Equals(u.Phone)))
                     {
                         Console.WriteLine("UPDATE OK");
@@ -533,7 +596,7 @@ namespace IPCamera
                                                         $"Phone='{u.Phone}' WHERE Id='{u.Id}'";
                         MySqlCommand cmd = new MySqlCommand(query, cn);
                         cn.Open();
-                        int result = cmd.ExecuteNonQuery();
+                        int result = await cmd.ExecuteNonQueryAsync();
                         if (result < 0)
                             System.Windows.MessageBox.Show("Error inserting data into Database!");
                         cn.Close();
@@ -541,6 +604,9 @@ namespace IPCamera
                     }
                 }
             }
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(110) });
+            Thread.Sleep(1000);
             // Refresch Users Table
             this.Close();
             new Settings().Show();
@@ -788,6 +854,75 @@ namespace IPCamera
             }
         }
 
+
+        // ComboBox Selected Recording Time Changed
+        private void ComboBox_Selected_Recording_Time_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                ComboBoxItem typeItem = (ComboBoxItem)recordingTime_ComboBox.SelectedItem;
+                if (typeItem.Content != null)
+                {
+                    string value = typeItem.Content.ToString();
+                    switch (value)
+                    {
+                        case "1 Month":
+                            MainWindow.video_recording_history_length = 1;
+                            Console.WriteLine("1 Month");
+                            break;
+                        case "2 Month":
+                            MainWindow.video_recording_history_length = 2;
+                            Console.WriteLine("2 Month");
+                            break;
+                        case "3 Month":
+                            MainWindow.video_recording_history_length = 3;
+                            Console.WriteLine("3 Month");
+                            break;
+                        case "4 Month":
+                            MainWindow.video_recording_history_length = 4;
+                            Console.WriteLine("4 Month");
+                            break;
+                        case "5 Month":
+                            MainWindow.video_recording_history_length = 5;
+                            Console.WriteLine("5 Month");
+                            break;
+                        case "6 Month":
+                            MainWindow.video_recording_history_length = 6;
+                            Console.WriteLine("6 Month");
+                            break;
+                        case "7 Month":
+                            MainWindow.video_recording_history_length = 7;
+                            Console.WriteLine("7 Month");
+                            break;
+                        case "8 Month":
+                            MainWindow.video_recording_history_length = 8;
+                            Console.WriteLine("8 Month");
+                            break;
+                        case "9 Month":
+                            MainWindow.video_recording_history_length = 9;
+                            Console.WriteLine("9 Month");
+                            break;
+                        case "10 Month":
+                            MainWindow.video_recording_history_length = 10;
+                            Console.WriteLine("10 Month");
+                            break;
+                        case "11 Month":
+                            MainWindow.video_recording_history_length = 11;
+                            Console.WriteLine("11 Month");
+                            break;
+                        case "12 Month":
+                            MainWindow.video_recording_history_length = 12;
+                            Console.WriteLine("12 Month");
+                            break;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"\n\n\nException: {ex.Message}");
+            }
+        }
+
         // When select a tab
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -832,6 +967,18 @@ namespace IPCamera
         // Save the cameras remote controll settings
         private void Apply_get_req_Click(object sender, RoutedEventArgs e)
         {
+            progressBarPageRobotic.Visibility = Visibility.Visible;
+            this.ApplyRobotics();
+            progressBarPageRobotic.Visibility = Visibility.Hidden;
+        }
+
+        private async void ApplyRobotics()
+        {
+            // ProgressBar Object
+            UpdateProgressBarDelegate updateProgressBaDelegate = new UpdateProgressBarDelegate(progressBarPageRobotic.SetValue);
+            // Update ProgressBar
+            Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(50) });
+
             // Save UP, DOWN, RIGHT, LEFT Buttons
             if (CheckURL(up_text.Text) && CheckURL(down_text.Text) &&
                     CheckURL(right_text.Text) && CheckURL(left_text.Text))
@@ -850,7 +997,7 @@ namespace IPCamera
                     cmd.Parameters.AddWithValue("@right", right_text.Text);
                     cmd.Parameters.AddWithValue("@cam_name", cam_name);
                     cn.Open();
-                    int result = cmd.ExecuteNonQuery();
+                    int result = await cmd.ExecuteNonQueryAsync();
                     cn.Close();
                     if (result < 0)
                         System.Windows.MessageBox.Show("Error inserting data into Database!");
@@ -871,6 +1018,8 @@ namespace IPCamera
                 {
                     System.Windows.MessageBox.Show("Select a camera.");
                 }
+                // Update ProgressBar
+                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(110) });
             }
             else
             {
@@ -887,8 +1036,6 @@ namespace IPCamera
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
             return result;
         }
-        
-
 
     }
 

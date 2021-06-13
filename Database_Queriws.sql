@@ -15,7 +15,8 @@ CREATE TABLE FilesDirs
 CREATE TABLE FilesFormats (
     Id   INT NOT NULL AUTO_INCREMENT,
     avi  BOOLEAN DEFAULT ((0)) NOT NULL,
-    mp4  BOOLEAN DEFAULT ((0)) NOT NULL,
+    mp4  BOOLEAN DEFAULT ((1)) NOT NULL,
+    history_time TINYINT DEFAULT 1 NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
 
@@ -86,14 +87,18 @@ VALUES ('admin', 'admin', 'admin@admin.com',
         '', 'Admin', '1234');
 
 
-
+INSERT INTO FilesFormats (avi, mp4, history_time) VALUES (0, 1, 1);
 
 UPDATE MyCameras SET net_stream_prefix='camera1', net_stream_port='80', net_stream='0'
         WHERE urls='http://192.168.1.30:81/stream' AND Name='Camera 1';
 
+
+
+
 SELECT * FROM Users;
 SELECT * FROM MyCameras;
 SELECT * FROM EmailSender;
+SELECT * FROM FilesFormats;
 
 
 DROP TABLE MyCameras;
