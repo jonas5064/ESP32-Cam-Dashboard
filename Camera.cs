@@ -558,32 +558,35 @@ namespace IPCamera
         // When click on camera
         public void CamerasFocused(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Right)
+            if (this.running)
             {
-                if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user)
-                && (MainWindow.user.Licences.Equals("Admin")))
+                if (e.ChangedButton == MouseButton.Right)
                 {
-                    if (this.camera_oppened == false)
+                    if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user)
+                    && (MainWindow.user.Licences.Equals("Admin")))
                     {
-                        this.camera_oppened = true;
-                        this.win_controll = new WindowControll(this);
-                        win_controll.Show();
-                    }
-                    else
-                    {
-                        this.win_controll.Activate();
+                        if (this.camera_oppened == false)
+                        {
+                            this.camera_oppened = true;
+                            this.win_controll = new WindowControll(this);
+                            win_controll.Show();
+                        }
+                        else
+                        {
+                            this.win_controll.Activate();
+                        }
                     }
                 }
-            }
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                // Open A new Window And Show This Camera FullScreen
-                if(!this.fullscreen)
+                if (e.ChangedButton == MouseButton.Left)
                 {
-                    MainWindow.cams_grid.Children.Remove(this.video);
-                    this.fullscreen = true;
-                    VideoFullscreen fullscreen = new VideoFullscreen(this);
-                    fullscreen.Show();
+                    // Open A new Window And Show This Camera FullScreen
+                    if (!this.fullscreen)
+                    {
+                        MainWindow.cams_grid.Children.Remove(this.video);
+                        this.fullscreen = true;
+                        VideoFullscreen fullscreen = new VideoFullscreen(this);
+                        fullscreen.Show();
+                    }
                 }
             }
         }

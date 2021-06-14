@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -182,6 +183,7 @@ namespace IPCamera
                 CreateVideosPage();
 
                 //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
+                date.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
                 System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
@@ -331,7 +333,7 @@ namespace IPCamera
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             // Updating the Label which displays the current time 
-            date.Content = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+            date.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
         }
 
         // Restart Application

@@ -13,7 +13,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" x:Name="Title" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" x:Name="title" Foreground="#FFC9C9C9" FontSize="17" Margin="33,0,0,0"/>
+            <Label Grid.Column="1" x:Name="time" Foreground="#990000" Margin="33,0,0,0"
+                   FontSize="20" FontFamily="Century Gothic" FontStretch="UltraExpanded"/>
+        </Grid>
     </Grid>
 </Window>
