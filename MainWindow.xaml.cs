@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -84,7 +85,7 @@ namespace IPCamera
         public static String twilioNumber;
         public static String twilioAccountSID;
         public static String twilioAccountToken;
-        
+
 
         public MainWindow()
         {
@@ -191,7 +192,7 @@ namespace IPCamera
                 Console.WriteLine($"\n\n[ERROR] MainWindow\n\n");
                 Thread.Sleep(5000);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 Thread.Sleep(5000);
@@ -205,16 +206,41 @@ namespace IPCamera
             {
                 Dispatcher.Invoke((Action)delegate ()
                {
-                    try
-                    {
-                        foreach (Camera cam in MainWindow.cameras)
-                        {
-                            if (cam.Recording)
-                            {
+                   try
+                   {
+                       foreach (Camera cam in MainWindow.cameras)
+                       {
+                           if (cam.Recording)
+                           {
                                cam.StopRecording();
                                cam.StartRecording();
-                            }
-                        }
+                           }
+                       }
+                   }
+                   catch (System.InvalidOperationException ex)
+                   {
+                       Console.WriteLine($"\n\nInvalidOperationException:\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
+                   }
+                   catch (Exception ex)
+                   {
+                       Console.WriteLine($"\n\nException:\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
+                   }
+               });
+            };
+            recording_Cicle.AutoReset = true;
+            recording_Cicle.Enabled = true;
+
+
+            // Delete All Video Records Beforethe  " video_recording_history_length " Start Scheduling
+            System.Timers.Timer deleting_cicle = new System.Timers.Timer();
+            deleting_cicle.Interval = 86400000; // Every 24 Hours
+            deleting_cicle.Elapsed += (Object source, System.Timers.ElapsedEventArgs e) =>
+            {
+                Dispatcher.Invoke((Action)delegate ()
+                {
+                    try
+                    {
+                        this.DeleteOldFiles();
                     }
                     catch (System.InvalidOperationException ex)
                     {
@@ -224,10 +250,81 @@ namespace IPCamera
                     {
                         Console.WriteLine($"\n\nException:\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
                     }
-               });
+                });
             };
-            recording_Cicle.AutoReset = true;
-            recording_Cicle.Enabled = true;
+            deleting_cicle.AutoReset = true;
+            deleting_cicle.Enabled = true;
+
+        }
+
+
+
+
+        // Delete Oldes Videos And Images
+        public void DeleteOldFiles()
+        {
+            // Delete Pictures
+            this.GetDirsSubDirsFiles(Camera.pictures_dir, myPath =>
+            {
+                // Get The Months Folder And If Month is Smaller From MainWindow.video_recording_history_length Delete them
+                FileInfo info = new FileInfo(myPath);
+                String name = info.FullName;
+                String[] dirs = name.Split('\\');
+                String date_string = dirs[dirs.Length - 2].Trim();
+                DateTime date = DateTime.ParseExact(date_string, "dd-MM-yyyy", null);
+                if (date.Month < DateTime.Today.AddMonths(-(MainWindow.video_recording_history_length)).Month)
+                {
+                    int last_dir_index = myPath.LastIndexOf('\\');
+                    String folder = myPath.Substring(0, last_dir_index);
+                    System.IO.DirectoryInfo di = new DirectoryInfo(folder);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    di.Delete(true);
+                }
+            });
+            // Delete Videos
+            this.GetDirsSubDirsFiles(Camera.videos_dir, myPath =>
+            {
+                // Get The Months Folder And If Month is Smaller From MainWindow.video_recording_history_length Delete them
+                FileInfo info = new FileInfo(myPath);
+                String name = info.FullName;
+                String[] dirs = name.Split('\\');
+                String date_string = dirs[dirs.Length - 2].Trim();
+                DateTime date = DateTime.ParseExact(date_string, "dd-MM-yyyy", null);
+                Console.WriteLine($"Folder Month: {date.Month}  Current Month: {DateTime.Today.Month}");
+                if (date.Month < DateTime.Today.AddMonths(-(MainWindow.video_recording_history_length)).Month)
+                {
+                    int last_dir_index = myPath.LastIndexOf('\\');
+                    String folder = myPath.Substring(0, last_dir_index);
+                    System.IO.DirectoryInfo di = new DirectoryInfo(folder);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    di.Delete(true);
+                }
+            });
+        }
+
+
+        // Search All Dirs And Sub Dirs and excecute a Function
+        public delegate void InsideDirsFunction(String path);
+        private void GetDirsSubDirsFiles(String path, InsideDirsFunction func)
+        {
+            if ( File.Exists(path) ) // Is File
+            {
+                func(path);
+            }
+            else if ( Directory.Exists(path) )  // Is Dir
+            {
+                string[] sub_dirss = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                foreach (string f_path in sub_dirss)
+                {
+                    this.GetDirsSubDirsFiles(f_path, func);
+                }
+            }
         }
 
         // Set DateTime

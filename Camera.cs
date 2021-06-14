@@ -19,6 +19,7 @@ using MailKit.Security;
 using MimeKit;
 using System.Windows.Media.Imaging;
 using MimeKit.Utils;
+using System.Globalization;
 
 namespace IPCamera
 {
@@ -444,15 +445,26 @@ namespace IPCamera
         // Take Picture
         public void Take_pic()
         {
-            DateTime now = DateTime.Now;
-            String date = now.ToString("F");
-            date = date.Replace(":", ".");
-            String dir_path = Camera.pictures_dir + "\\" + this.name;
+            // Create Folder With Cameras Name for Name
+            String dir_path = Camera.pictures_dir + this.name;
             if (! Directory.Exists(dir_path))
             {
                 Directory.CreateDirectory(dir_path);
             }
-            String file = dir_path + "\\" + date + ".jpg";
+            // Create SubFolder With The Current Date
+            DateTime now = DateTime.Now;
+            String date = now.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"));
+            date = date.Replace(".","-");
+            dir_path += "\\" + date;
+            if (!Directory.Exists(dir_path))
+            {
+                Directory.CreateDirectory(dir_path);
+            }
+            // Create The JPeg File With the Current Time For Name
+            String houre = now.ToString("T", CultureInfo.CreateSpecificCulture("de-DE"));
+            houre = houre.Replace(":",".");
+            String file = dir_path + "\\" + houre + ".jpg";
+            Console.WriteLine($"\n\nCreate File: {file}\n\n");
             this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 
@@ -469,21 +481,29 @@ namespace IPCamera
                 }
                 // Video mode == capture
                 this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
-                // Setup the right file name
-                DateTime now = DateTime.Now;
-                String date = now.ToString("F");
-                date = date.Replace(":", ".");
+                // Create Dir With Cameras Name
                 String dir_path = Camera.videos_dir + "\\" + this.name;
-                Console.WriteLine($"\nRecording File Path:  {dir_path}\n");
                 if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
                     Directory.CreateDirectory(dir_path);
                 }
-                // Start Recording
+                // Create Dir With Current Date For Name
+                DateTime now = DateTime.Now;
+                String date = now.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"));
+                date = date.Replace(".", "-");
+                dir_path += "\\" + date;
+                Console.WriteLine($"Date Dir: {dir_path}");
+                if (!Directory.Exists(dir_path)) // Directory with the name of the camera
+                {
+                    Directory.CreateDirectory(dir_path);
+                }
+                // Start Recording and Creating The Video Files
+                String houre = now.ToString("T", CultureInfo.CreateSpecificCulture("de-DE"));
+                houre = houre.Replace(":",".");
                 // AVI
                 if (avi_format)
                 {
-                    String file = dir_path + "\\" + date + ".avi";
+                    String file = dir_path + "\\" + houre + ".avi";
                     this.video.Output_Filename = file;
                     VFAVIOutput avi = new VFAVIOutput();
                     this.video.Output_Format = new VFAVIOutput();
@@ -491,7 +511,7 @@ namespace IPCamera
                 // MP4
                 if (mp4_format)
                 {
-                    String file = dir_path + "\\" + date + ".mp4";
+                    String file = dir_path + "\\" + houre + ".mp4";
                     this.video.Output_Filename = file;
                     this.video.Output_Format = new VFMP4v8v10Output();
                 }
