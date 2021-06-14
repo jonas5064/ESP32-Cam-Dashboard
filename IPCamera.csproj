@@ -257,6 +257,9 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Users.cs" />
+    <Compile Include="VideoFullscreen.xaml.cs">
+      <DependentUpon>VideoFullscreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowControll.xaml.cs">
       <DependentUpon>WindowControll.xaml</DependentUpon>
     </Compile>
@@ -282,6 +285,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VideoFullscreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

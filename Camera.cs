@@ -32,6 +32,7 @@ namespace IPCamera
         private string password = "";
         public bool isEsp32 = false;
         WindowControll win_controll;
+        public bool fullscreen = false;
         public int row = 0;
         public int coll = 0;
         private bool detection = false;
@@ -577,7 +578,13 @@ namespace IPCamera
             if (e.ChangedButton == MouseButton.Left)
             {
                 // Open A new Window And Show This Camera FullScreen
-                Console.WriteLine("\n\n\nLeft Button Clicks.\n\n\n");
+                if(!this.fullscreen)
+                {
+                    MainWindow.cams_grid.Children.Remove(this.video);
+                    this.fullscreen = true;
+                    VideoFullscreen fullscreen = new VideoFullscreen(this);
+                    fullscreen.Show();
+                }
             }
         }
 
