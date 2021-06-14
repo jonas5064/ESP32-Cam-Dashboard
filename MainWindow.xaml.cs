@@ -83,6 +83,7 @@ namespace IPCamera
         public static bool login_oppened = false;
         private Account account;
         public static bool account_oppened = false;
+        private Records records;
         public static bool records_oppened = false;
         public static String twilioNumber;
         public static String twilioAccountSID;
@@ -684,11 +685,12 @@ namespace IPCamera
                 {
                     records_oppened = true;
                     Console.WriteLine("records_oppened: " + Convert.ToString(records_oppened));
-                    
+                    this.records = new Records();
+                    this.records.Show();
                 }
                 else
                 {
-                    
+                    this.records.Activate();
                 }
             }
         }
