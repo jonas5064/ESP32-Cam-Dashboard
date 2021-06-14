@@ -83,6 +83,7 @@ namespace IPCamera
         public static bool login_oppened = false;
         private Account account;
         public static bool account_oppened = false;
+        public static bool records_oppened = false;
         public static String twilioNumber;
         public static String twilioAccountSID;
         public static String twilioAccountToken;
@@ -670,6 +671,24 @@ namespace IPCamera
                 else
                 {
                     this.account.Activate();
+                }
+            }
+        }
+
+        // Records Button Clicked
+        private void Records_clicked(object sender, RoutedEventArgs e)
+        {
+            if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user))
+            {
+                if (records_oppened == false)
+                {
+                    records_oppened = true;
+                    Console.WriteLine("records_oppened: " + Convert.ToString(records_oppened));
+                    
+                }
+                else
+                {
+                    
                 }
             }
         }

@@ -42,6 +42,7 @@
                         <Button Content="Stop"     Click="Stop_clicked" />
                         <Button Content="Settings" Click="Settings_clicked" />
                         <Button Content="Account" Click="Account_clicked" />
+                        <Button Content="Records" Click="Records_clicked" />
                     </ToolBar>
                 </ToolBarTray>
             </DockPanel>
