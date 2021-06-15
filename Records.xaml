@@ -7,9 +7,40 @@
         mc:Ignorable="d"
         Title="Records"
         Background="Black"
-        ResizeMode="NoResize"
+        Width="1920"
+        Height="1080"
+        MinWidth="1000"
+        MinHeight="500"
         WindowState="Maximized">
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="800*"/>
+            <ColumnDefinition Width="400*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="33"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="33"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="0" Content="Videos Records:" Foreground="#FFB4B4B4" Margin="7,0,0,0"/>
+        <Label Grid.Column="1" Grid.Row="0" Content="Pictures Records:" Foreground="#FFB4B4B4" Margin="7,0,0,0"/>
+        <!-- Pictures -->
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="images_grid">
+
+                </Grid>
+            </ScrollViewer>
+        </StackPanel>
+        <!-- Videos -->
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="videos_grid">
+
+                </Grid>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
+
 </Window>
