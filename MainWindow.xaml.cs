@@ -706,30 +706,30 @@ namespace IPCamera
         {
             // Dynamic add columns and rows
             int count_rows = 0;
-            int counter = 0;
+            int count_columns = 0;
             foreach (Camera cam in cameras)
             {
                 // New Row
-                if (counter == 3)
+                if (count_columns == 3)
                 {
                     cameras_grid.RowDefinitions.Add(new RowDefinition());
                     count_rows++;
-                    Grid.SetColumn(cam.video, counter);
-                    cam.coll = counter;
+                    Grid.SetColumn(cam.video, count_columns);
+                    cam.coll = count_columns;
                     Grid.SetRow(cam.video, count_rows);
                     cam.row = count_rows;
                     cameras_grid.Children.Add(cam.video);
-                    counter = 0;
+                    count_columns = 0;
                 }
                 else
                 {
-                    Grid.SetColumn(cam.video, counter);
-                    cam.coll = counter;
+                    Grid.SetColumn(cam.video, count_columns);
+                    cam.coll = count_columns;
                     Grid.SetRow(cam.video, count_rows);
                     cam.row = count_rows;
                     cameras_grid.Children.Add(cam.video);
                     cameras_grid.ColumnDefinitions.Add(new ColumnDefinition());
-                    counter++;
+                    count_columns++;
                 }
             }  
         }
