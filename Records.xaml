@@ -1,4 +1,4 @@
-﻿<Window x:Class="IPCamera.Records"
+﻿<Window xmlns:WPF="clr-namespace:VisioForge.Controls.UI.WPF;assembly=VisioForge.Controls.UI"  x:Class="IPCamera.Records"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -37,6 +37,37 @@
         <StackPanel Grid.Column="0" Grid.Row="1">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid x:Name="videos_grid">
+
+
+                    <MediaElement x:Name="Player"/>
+                    <!--
+                    <StackPanel x:Name="ControlPanel" Orientation="Horizontal" Opacity="0.01" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <StackPanel.Resources>
+                            <Storyboard x:Key="MakeVisible">
+                                <DoubleAnimation To="1.0" Duration="0:00:0.5" Storyboard.TargetProperty="(Viewbox.Opacity)"/>
+                            </Storyboard>
+                            <Storyboard x:Key="MakeInvisible">
+                                <DoubleAnimation To="0.01" Duration="0:00:0.5" Storyboard.TargetProperty="(Viewbox.Opacity)"/>
+                            </Storyboard>
+                        </StackPanel.Resources>
+                        <StackPanel.Style>
+                            <Style TargetType="{x:Type StackPanel}">
+                                <Style.Triggers>
+                                    <EventTrigger  RoutedEvent="MouseEnter">
+                                        <BeginStoryboard Storyboard="{StaticResource MakeVisible}"/>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard Storyboard="{StaticResource MakeInvisible}"/>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Button x:Name="RewindButton" Command="Rewind" CommandTarget="{Binding ElementName=Player}">&lt;&lt;</Button>
+                        <Button x:Name="PlayButton" Command="Play" CommandTarget="{Binding ElementName=Player}">Play</Button>
+                        <Button x:Name="PauseButton" Command="Pause" CommandTarget="{Binding ElementName=Player}">Pause</Button>
+                        <Button x:Name="FastForwardButton" Command="FastForward" CommandTarget="{Binding ElementName=Player}">>></Button>
+                    </StackPanel>
+                    -->
 
                 </Grid>
             </ScrollViewer>
