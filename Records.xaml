@@ -27,7 +27,7 @@
         <Label Grid.Column="1" Grid.Row="0" Content="Pictures Records:" Foreground="#FFB4B4B4" Margin="7,0,0,0"/>
         
         <!-- Videos -->
-        <Grid x:Name="videos_grid" Grid.Column="0"  Grid.Row="1">
+        <Grid Grid.Column="0"  Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -46,16 +46,198 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="dates_v" Grid.Column="0"></ComboBox>
-                    <ComboBox x:Name="times_v" Grid.Column="1"></ComboBox>
-                    <ComboBox x:Name="cameras_v" Grid.Column="2"></ComboBox>
-                    <Button Grid.Column="3" Content="Find" Click="Cameras_Videos_Find_Clickes"/>
+                    <ComboBox x:Name="dates_v" Grid.Column="0" SelectionChanged="Videos_SelectionChanged"></ComboBox>
+                    <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged"></ComboBox>
                 </Grid>
             </Grid>
+            
+            <!-- Grid With All Media Players -->
+            <ScrollViewer Grid.Row="1" Margin="11" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="videos_grid">
+                    <!--
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+
+                    <Grid Grid.Column="0" Grid.Row="0" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+                    <Grid Grid.Column="2" Grid.Row="0" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+
+                    <Grid Grid.Column="0" Grid.Row="1" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="1" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+                    <Grid Grid.Column="2" Grid.Row="1" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+
+                    <Grid Grid.Column="0" Grid.Row="2" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="2" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+
+                    <Grid Grid.Column="2" Grid.Row="2" Margin="11" Background="Gray">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="33"/>
+                            <RowDefinition Height="*" MaxHeight="500"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Camera 1"  Foreground="LightGray" />
+                            <Label Grid.Column="1" Content="15-06-2021" Foreground="LightGray"/>
+                            <Label Grid.Column="2" Content="12.39.59"  Foreground="LightGray"/>
+                        </Grid>
+                        <MediaElement Grid.Row="1" Source="C:\Users\Alexp\OneDrive\Υπολογιστής\Video\Camera 1\15-06-2021\12.39.59.mp4"/>
+                    </Grid>
+                -->
+
+                </Grid>
+            </ScrollViewer>
         </Grid>
 
         <!-- Pictures -->
-        <Grid x:Name="images_grid" Grid.Column="1"  Grid.Row="1">
+        <Grid Grid.Column="1"  Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -74,11 +256,14 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="dates_i" Grid.Column="0"></ComboBox>
-                    <ComboBox x:Name="times_i" Grid.Column="1"></ComboBox>
-                    <ComboBox x:Name="cameras_i" Grid.Column="2"></ComboBox>
-                    <Button Grid.Column="3" Content="Find" Click="Cameras_Images_Find_Clickes"/>
+                    <ComboBox x:Name="dates_i" Grid.Column="0" SelectionChanged="Pictures_SelectionChanged"></ComboBox>
+                    <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged"></ComboBox>
                 </Grid>
+            </Grid>
+
+            <!-- Grid With All Pictures -->
+            <Grid x:Name="images_grid" Grid.Row="1" Margin="11">
+
             </Grid>
         </Grid>
 
