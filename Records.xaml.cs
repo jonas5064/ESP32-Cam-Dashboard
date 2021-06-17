@@ -151,28 +151,43 @@ namespace IPCamera
         // Load Videos ComboBoxes
         private void SetComboBoxesVideos()
         {
-            this.cameras_videos_dates.Sort();
-            this.cameras_videos_dates.Reverse();
-            dates_v.ItemsSource = this.cameras_videos_dates;
-            dates_v.SelectedValue = this.cameras_videos_dates[0];
-            this.cameras_videos_times.Sort();
-            this.cameras_videos_times.Reverse();
-            times_v.ItemsSource = this.cameras_videos_times;
-            times_v.SelectedValue = this.cameras_videos_times[0];
-            this.CreateMediaPlayers();
+            try
+            {
+                this.cameras_videos_dates.Sort();
+                this.cameras_videos_dates.Reverse();
+                dates_v.ItemsSource = this.cameras_videos_dates;
+                dates_v.SelectedValue = this.cameras_videos_dates[0];
+                this.cameras_videos_times.Sort();
+                this.cameras_videos_times.Reverse();
+                times_v.ItemsSource = this.cameras_videos_times;
+                times_v.SelectedValue = this.cameras_videos_times[0];
+                this.CreateMediaPlayers();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Exception:  {ex}");
+            }
+            
         }
 
         // Load Images ComboBoxes
         private void SetComboBoxeesImages()
         {
-            this.cameras_pictures_dates.Sort();
-            this.cameras_pictures_dates.Reverse();
-            dates_i.ItemsSource = this.cameras_pictures_dates;
-            dates_i.SelectedValue = this.cameras_pictures_dates[0];
-            this.cameras_pictures_times.Sort();
-            this.cameras_pictures_times.Reverse();
-            times_i.ItemsSource = this.cameras_pictures_times;
-            times_i.SelectedValue = this.cameras_pictures_times[0];
+            try
+            {
+                this.cameras_pictures_dates.Sort();
+                this.cameras_pictures_dates.Reverse();
+                dates_i.ItemsSource = this.cameras_pictures_dates;
+                dates_i.SelectedValue = this.cameras_pictures_dates[0];
+                this.cameras_pictures_times.Sort();
+                this.cameras_pictures_times.Reverse();
+                times_i.ItemsSource = this.cameras_pictures_times;
+                times_i.SelectedValue = this.cameras_pictures_times[0];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception:  {ex}");
+            }
         }
 
         // Get Records
@@ -181,35 +196,55 @@ namespace IPCamera
             // Get All Videos
             this.GetDirsSubDirsFiles(Camera.videos_dir, x =>
             {
-                String[] parts = x.Split('\\');
-                if (!this.cameras_videos_dates.Contains(parts[7]))
+                try
                 {
-                    this.cameras_videos_dates.Add(parts[7]);
+                    String[] parts = x.Split('\\');
+                    String camName = parts[parts.Length-3];
+                    String date = parts[parts.Length - 2];
+                    String time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
+                    if (!this.cameras_videos_dates.Contains(date))
+                    {
+                        this.cameras_videos_dates.Add(date);
+                    }
+                    if(!this.cameras_videos_times.Contains(time))
+                    {
+                        this.cameras_videos_times.Add(time);
+                    }
+                    if (!this.cameras_videos_paths.Contains(x))
+                    {
+                        this.cameras_videos_paths.Add(x);
+                    }
                 }
-                if(!this.cameras_videos_times.Contains(parts[8].Substring(0, parts[8].Length - 4)))
+                catch (Exception ex)
                 {
-                    this.cameras_videos_times.Add(parts[8].Substring(0, parts[8].Length - 4));
-                }
-                if (!this.cameras_videos_paths.Contains(x))
-                {
-                    this.cameras_videos_paths.Add(x);
+                    Console.WriteLine($"Exception:  {ex}");
                 }
             });
             // Get All Images
             this.GetDirsSubDirsFiles(Camera.pictures_dir, x =>
             {
-                String[] parts = x.Split('\\');
-                if (!this.cameras_pictures_dates.Contains(parts[7]))
+                try
                 {
-                    this.cameras_pictures_dates.Add(parts[7]);
+                    String[] parts = x.Split('\\');
+                    String camName = parts[parts.Length - 3];
+                    String date = parts[parts.Length - 2];
+                    String time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
+                    if (!this.cameras_pictures_dates.Contains(date))
+                    {
+                        this.cameras_pictures_dates.Add(date);
+                    }
+                    if (!this.cameras_pictures_times.Contains(time))
+                    {
+                        this.cameras_pictures_times.Add(time);
+                    }
+                    if (!this.cameras_pictures_paths.Contains(x))
+                    {
+                        this.cameras_pictures_paths.Add(x);
+                    }
                 }
-                if (!this.cameras_pictures_times.Contains(parts[8].Substring(0, parts[8].Length - 4)))
+                catch (Exception ex)
                 {
-                    this.cameras_pictures_times.Add(parts[8].Substring(0, parts[8].Length - 4));
-                }
-                if (!this.cameras_pictures_paths.Contains(x))
-                {
-                    this.cameras_pictures_paths.Add(x);
+                    Console.WriteLine($"Exception:  {ex}");
                 }
             });
         }
@@ -256,10 +291,10 @@ namespace IPCamera
         public Video(String path)
         {
             this.Path = path;
-            String[] paths = path.Split('\\');
-            this.CamName = paths[6];
-            this.Date = paths[7];
-            this.Time = paths[8].Substring(0, 8);
+            String[] parts = this.Path.Split('\\');
+            this.CamName = parts[parts.Length - 3];
+            this.Date = parts[parts.Length - 2];
+            this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
         }
     }
 

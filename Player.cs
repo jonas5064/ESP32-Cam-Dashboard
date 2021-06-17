@@ -78,6 +78,7 @@ namespace IPCamera
             titleGrid.Children.Add(date);
             titleGrid.Children.Add(time);
             // Video Player
+            Console.WriteLine($"\n\nVideo {this.video.Path}\n");
             this.player = new MediaElement();
             player.Source = new Uri(this.video.Path);
             player.Margin = new Thickness(7, 7, 7, 0);
