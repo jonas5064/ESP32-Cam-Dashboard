@@ -15,8 +15,8 @@ namespace IPCamera
         public Video video;
         public int column;
         public int row;
-        public int buttonsFontSize = 15;
 
+        public int buttonsFontSize = 17;
 
         Grid vid_Grid;
         Grid titleGrid;
@@ -80,15 +80,12 @@ namespace IPCamera
             // Video Player
             this.player = new MediaElement();
             player.Source = new Uri(this.video.Path);
-            player.Margin = new Thickness(0, 7, 0, 0);
+            player.Margin = new Thickness(7, 7, 7, 0);
             player.UnloadedBehavior = MediaState.Manual;
             Grid.SetRow(player, 1);
             vid_Grid.Children.Add(player);
             // Add New Grid With The Buttons
             this.panel = new StackPanel();
-            panel.Width = 308;
-            panel.Height = 50;
-            panel.Margin = new Thickness(0, 20, 0, 0);
             panel.Orientation = Orientation.Horizontal;
             panel.HorizontalAlignment = HorizontalAlignment.Center;
             panel.VerticalAlignment = VerticalAlignment.Center;
@@ -97,23 +94,27 @@ namespace IPCamera
             Button play = new Button();
             Button stop = new Button();
             Button pause = new Button();
-            Button details = new Button();
+            Button backard = new Button();
+            Button forward = new Button();
+            Button open = new Button();
             play.Content = "Play";
             stop.Content = "Stop";
             pause.Content = "Pause";
-            details.Content = "Details";
+            backard.Content = "Back";
+            forward.Content = "Forw";
+            open.Content = "Open";
             play.FontSize = this.buttonsFontSize;
             stop.FontSize = this.buttonsFontSize;
             pause.FontSize = this.buttonsFontSize;
-            details.FontSize = this.buttonsFontSize;
-            play.Width = 77;
-            stop.Width = 77;
-            pause.Width = 77;
-            details.Width = 77;
-            play.Height = 33;
-            stop.Height = 33;
-            pause.Height = 33;
-            details.Height = 33;
+            backard.FontSize = this.buttonsFontSize;
+            forward.FontSize = this.buttonsFontSize;
+            open.FontSize = this.buttonsFontSize;
+            play.Padding = new Thickness(3,0,3,0);
+            stop.Padding = new Thickness(3, 0, 3, 0);
+            pause.Padding = new Thickness(3, 0, 3, 0);
+            backard.Padding = new Thickness(3, 0, 3, 0);
+            forward.Padding = new Thickness(3, 0, 3, 0);
+            open.Padding = new Thickness(3, 0, 3, 0);
             play.Click += (object obj, RoutedEventArgs e) =>
             {
                 Console.WriteLine("Start.");
@@ -129,14 +130,25 @@ namespace IPCamera
                 Console.WriteLine("Pause.");
                 this.player.Pause();
             };
-            details.Click += (object obj, RoutedEventArgs e) =>
+            backard.Click += (object obj, RoutedEventArgs e) =>
+            {
+                Console.WriteLine("Backard.");
+            };
+            forward.Click += (object obj, RoutedEventArgs e) =>
+            {
+                Console.WriteLine("Forward");
+            };
+            open.Click += (object obj, RoutedEventArgs e) =>
             {
                 Console.WriteLine("Opens This Player Full Screen.");
             };
             panel.Children.Add(play);
             panel.Children.Add(stop);
             panel.Children.Add(pause);
-            panel.Children.Add(details);
+            panel.Children.Add(backard);
+            panel.Children.Add(forward);
+            panel.Children.Add(open);
+            
             // Print To Console
             Console.WriteLine($"Creating Video Grid: {this.video.CamName}  {this.video.Date}  {this.video.Time}");
         }

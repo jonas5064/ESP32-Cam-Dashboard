@@ -50,33 +50,19 @@ namespace IPCamera
             videos_grid.ColumnDefinitions.Clear();
             int columns_pointer_videos = 0;
             int rows_pointer_videos = 0;
-            int size = 377;
-
             // Add First Row
-            RowDefinition row_1 = new RowDefinition();
-            row_1.Height = new GridLength(size);
-            videos_grid.RowDefinitions.Add(row_1);
-
+            videos_grid.RowDefinitions.Add(new RowDefinition());
             // Add 3 Columns
-            ColumnDefinition column = new ColumnDefinition();
-            column.Width = new GridLength(size);
-            videos_grid.ColumnDefinitions.Add(column);
-            column = new ColumnDefinition();
-            column.Width = new GridLength(size);
-            videos_grid.ColumnDefinitions.Add(column);
-            column = new ColumnDefinition();
-            column.Width = new GridLength(size);
-            videos_grid.ColumnDefinitions.Add(column);
+            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
             Player play;
             foreach (Video video in SortedList)
             {
                 // Somthing Rong With Rows
                 if(columns_pointer_videos == 3) // New Row
                 {
-                    Console.WriteLine("New Row.");
-                    RowDefinition row = new RowDefinition();
-                    row.Height = new GridLength(size);
-                    videos_grid.RowDefinitions.Add(row);
+                    videos_grid.RowDefinitions.Add(new RowDefinition());
                     rows_pointer_videos++;
                     play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
                     play.Create();

@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="Records"
         Background="Black"
-        Width="1920"
-        Height="1080"
-        MinWidth="1000"
-        MinHeight="500"
+        Width="1752"
+        Height="1000"
+        MinWidth="1300"
+        MinHeight="700"
         WindowState="Maximized">
 
     <Grid>
@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
         <Label Grid.Column="0" Grid.Row="0" Content="Videos Records:" Foreground="#FFB4B4B4" Margin="7,0,0,0"/>
         <Label Grid.Column="1" Grid.Row="0" Content="Pictures Records:" Foreground="#FFB4B4B4" Margin="7,0,0,0"/>
-        
+
         <!-- Videos -->
         <Grid Grid.Column="0"  Grid.Row="1">
             <Grid.RowDefinitions>
@@ -51,8 +51,8 @@
                 </Grid>
             </Grid>
             <!-- Grid With All Media Players -->
-            <ScrollViewer Grid.Row="1" Margin="11" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="videos_grid" />
+            <ScrollViewer Grid.Row="1" Margin="11" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="videos_grid"/>
             </ScrollViewer>
         </Grid>
 
