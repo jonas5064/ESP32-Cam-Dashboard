@@ -67,7 +67,7 @@ namespace IPCamera
             column = new ColumnDefinition();
             column.Width = new GridLength(size);
             videos_grid.ColumnDefinitions.Add(column);
-
+            Player play;
             foreach (Video video in SortedList)
             {
                 // Somthing Rong With Rows
@@ -78,68 +78,15 @@ namespace IPCamera
                     row.Height = new GridLength(size);
                     videos_grid.RowDefinitions.Add(row);
                     rows_pointer_videos++;
-                    this.CreateVideoGrid(columns_pointer_videos, rows_pointer_videos, video);
+                    play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
+                    play.Create();
                     columns_pointer_videos = 0;
                 }
-                this.CreateVideoGrid(columns_pointer_videos, rows_pointer_videos, video);
+                play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
+                play.Create();
                 columns_pointer_videos++;
             }
             Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
-        }
-
-        // Create Video Grid
-        private void CreateVideoGrid(int column, int row, Video video)
-        {
-            // Create Video Grid And Add it to Video_Grid
-            Grid vid_Grid = new Grid();
-            vid_Grid.Background = System.Windows.Media.Brushes.Gray;
-            vid_Grid.Margin = new Thickness(3);
-            Grid.SetRow(vid_Grid, row);
-            Grid.SetColumn(vid_Grid, column);
-            videos_grid.Children.Add(vid_Grid);
-            // Add 2 Rows
-            RowDefinition row_2 = new RowDefinition();
-            row_2.Height = new GridLength(30);
-            RowDefinition row_3 = new RowDefinition();
-            row_3.Height = new GridLength(0, GridUnitType.Auto);
-            vid_Grid.RowDefinitions.Add(row_2);
-            vid_Grid.RowDefinitions.Add(row_3);
-            // Add New Grid Grid At Row 0 (Title Grid)
-            Grid titleGrid = new Grid();
-            Grid.SetRow(titleGrid, 0);
-            vid_Grid.Children.Add(titleGrid);
-            // Tittle Grid Has 3 Columns
-            titleGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            titleGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            titleGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            // Add 3 Labels
-            Label name = new Label();
-            name.Content = video.CamName;
-            name.Foreground = System.Windows.Media.Brushes.LightGray;
-            Grid.SetColumn(name, 0);
-            Label date = new Label();
-            date.Content = video.Date;
-            date.Foreground = System.Windows.Media.Brushes.LightGray;
-            Grid.SetColumn(date, 1);
-            Label time = new Label();
-            time.Content = video.Time;
-            time.Foreground = System.Windows.Media.Brushes.LightGray;
-            Grid.SetColumn(time, 2);
-            titleGrid.Children.Add(name);
-            titleGrid.Children.Add(date);
-            titleGrid.Children.Add(time);
-            // Add New Grid With The Media Player And Buttons
-                            ////
-            MediaElement player = new MediaElement();
-            player.Source = new Uri(video.Path);
-            player.Margin = new Thickness(0,7,0,0);
-            player.UnloadedBehavior = MediaState.Manual;
-            // Play the video once.
-            player.Play();
-            Grid.SetRow(player, 1);
-            vid_Grid.Children.Add(player);
-            // Print To Console
-            Console.WriteLine($"Creating Video Grid: {video.CamName}  {video.Date}  {video.Time}");
         }
 
         // Create Pictures For Every File
