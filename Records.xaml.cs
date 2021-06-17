@@ -4,15 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-//using System.Windows.Media;
-//using VisioForge.Controls.UI.WPF;
 
 namespace IPCamera
 {
-    /// <summary>
-    /// Interaction logic for Records.xaml
-    /// </summary>
+
     public partial class Records : Window
     {
 
@@ -97,7 +92,7 @@ namespace IPCamera
         {
             // Create Video Grid And Add it to Video_Grid
             Grid vid_Grid = new Grid();
-            vid_Grid.Background = Brushes.Gray;
+            vid_Grid.Background = System.Windows.Media.Brushes.Gray;
             vid_Grid.Margin = new Thickness(3);
             Grid.SetRow(vid_Grid, row);
             Grid.SetColumn(vid_Grid, column);
@@ -120,23 +115,27 @@ namespace IPCamera
             // Add 3 Labels
             Label name = new Label();
             name.Content = video.CamName;
-            name.Foreground = Brushes.LightGray;
+            name.Foreground = System.Windows.Media.Brushes.LightGray;
             Grid.SetColumn(name, 0);
             Label date = new Label();
             date.Content = video.Date;
-            date.Foreground = Brushes.LightGray;
+            date.Foreground = System.Windows.Media.Brushes.LightGray;
             Grid.SetColumn(date, 1);
             Label time = new Label();
             time.Content = video.Time;
-            time.Foreground = Brushes.LightGray;
+            time.Foreground = System.Windows.Media.Brushes.LightGray;
             Grid.SetColumn(time, 2);
             titleGrid.Children.Add(name);
             titleGrid.Children.Add(date);
             titleGrid.Children.Add(time);
-            // Create MediaPlayer
+            // Add New Grid With The Media Player And Buttons
+                            ////
             MediaElement player = new MediaElement();
             player.Source = new Uri(video.Path);
             player.Margin = new Thickness(0,7,0,0);
+            player.UnloadedBehavior = MediaState.Manual;
+            // Play the video once.
+            player.Play();
             Grid.SetRow(player, 1);
             vid_Grid.Children.Add(player);
             // Print To Console
