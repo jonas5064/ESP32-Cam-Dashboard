@@ -115,32 +115,56 @@ namespace IPCamera
             backard.Padding = new Thickness(3, 0, 3, 0);
             forward.Padding = new Thickness(3, 0, 3, 0);
             open.Padding = new Thickness(3, 0, 3, 0);
+            play.IsEnabled = true;
+            stop.IsEnabled = false;
+            pause.IsEnabled = false;
+            backard.IsEnabled = false;
+            forward.IsEnabled = false;
+            open.IsEnabled = true;
             play.Click += (object obj, RoutedEventArgs e) =>
             {
-                Console.WriteLine("Start.");
                 this.player.Play();
+
+                play.IsEnabled = false;
+                stop.IsEnabled = true;
+                pause.IsEnabled = true;
+                backard.IsEnabled = true;
+                forward.IsEnabled = true;
+                open.IsEnabled = true;
             };
             stop.Click += (object obj, RoutedEventArgs e) =>
             {
-                Console.WriteLine("Stop.");
                 this.player.Stop();
+
+                play.IsEnabled = true;
+                stop.IsEnabled = false;
+                pause.IsEnabled = false;
+                backard.IsEnabled = false;
+                forward.IsEnabled = false;
+                open.IsEnabled = true;
             };
             pause.Click += (object obj, RoutedEventArgs e) =>
             {
-                Console.WriteLine("Pause.");
                 this.player.Pause();
+
+                play.IsEnabled = true;
+                stop.IsEnabled = false;
+                pause.IsEnabled = false;
+                backard.IsEnabled = false;
+                forward.IsEnabled = false;
+                open.IsEnabled = true;
             };
             backard.Click += (object obj, RoutedEventArgs e) =>
             {
-                Console.WriteLine("Backard.");
+                this.player.Position = this.player.Position + TimeSpan.FromSeconds(10);
             };
             forward.Click += (object obj, RoutedEventArgs e) =>
             {
-                Console.WriteLine("Forward");
+                this.player.Position = this.player.Position - TimeSpan.FromSeconds(10);
             };
             open.Click += (object obj, RoutedEventArgs e) =>
             {
-                Console.WriteLine("Opens This Player Full Screen.");
+                
             };
             panel.Children.Add(play);
             panel.Children.Add(stop);
