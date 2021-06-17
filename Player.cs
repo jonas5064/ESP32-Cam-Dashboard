@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace IPCamera
 {
@@ -23,6 +24,7 @@ namespace IPCamera
         Label name;
         Label date;
         Label time;
+        Label time_spam;
         MediaElement player;
         StackPanel panel;
 
@@ -32,6 +34,24 @@ namespace IPCamera
             this.video = video;
             this.column = column;
             this.row = row;
+
+            // Threading to Update The Time Spam Label Show The Time Of Video
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += (object sender, EventArgs e) =>
+            {
+                if (this.player.Source != null)
+                {
+                    if (this.player.NaturalDuration.HasTimeSpan)
+                    {
+                        this.time_spam.Content = String.Format("{0} / {1}", 
+                                                    this.player.Position.ToString(@"mm\:ss"), 
+                                                    this.player.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+                    }
+                }
+            };
+            timer.Start();
+
         }
 
         public void Create()
@@ -43,16 +63,19 @@ namespace IPCamera
             Grid.SetRow(vid_Grid, this.row);
             Grid.SetColumn(vid_Grid, this.column);
             parrent.Children.Add(vid_Grid);
-            // Add 2 Rows
+            // Add 4 Rows
             RowDefinition row_2 = new RowDefinition();
             row_2.Height = new GridLength(30);
             RowDefinition row_3 = new RowDefinition();
             row_3.Height = new GridLength(0, GridUnitType.Auto);
             RowDefinition row_4 = new RowDefinition();
-            row_4.Height = new GridLength(40);
+            row_4.Height = new GridLength(30);
+            RowDefinition row_5 = new RowDefinition();
+            row_5.Height = new GridLength(40);
             vid_Grid.RowDefinitions.Add(row_2);
             vid_Grid.RowDefinitions.Add(row_3);
             vid_Grid.RowDefinitions.Add(row_4);
+            vid_Grid.RowDefinitions.Add(row_5);
             // Add New Grid Grid At Row 0 (Title Grid)
             this.titleGrid = new Grid();
             Grid.SetRow(titleGrid, 0);
@@ -80,17 +103,31 @@ namespace IPCamera
             // Video Player
             Console.WriteLine($"\n\nVideo {this.video.Path}\n");
             this.player = new MediaElement();
-            player.Source = new Uri(this.video.Path);
-            player.Margin = new Thickness(7, 7, 7, 0);
-            player.UnloadedBehavior = MediaState.Manual;
+            this.player.Source = new Uri(this.video.Path);
+            this.player.Margin = new Thickness(7, 7, 7, 0);
+            this.player.LoadedBehavior = MediaState.Manual;
+            this.player.ScrubbingEnabled = true;
+            this.player.UnloadedBehavior = MediaState.Close;
+            this.player.MediaOpened += (object sender, RoutedEventArgs e) =>
+            {
+
+            };
+            this.player.Play();
+            this.player.Pause();
+            this.player.Position = TimeSpan.FromSeconds(0);
             Grid.SetRow(player, 1);
             vid_Grid.Children.Add(player);
+            // Add Label Fro Time Spam
+            this.time_spam = new Label();
+            this.time_spam.HorizontalAlignment = HorizontalAlignment.Center;
+            Grid.SetRow(this.time_spam, 2);
+            vid_Grid.Children.Add(this.time_spam);
             // Add New Grid With The Buttons
             this.panel = new StackPanel();
             panel.Orientation = Orientation.Horizontal;
             panel.HorizontalAlignment = HorizontalAlignment.Center;
             panel.VerticalAlignment = VerticalAlignment.Center;
-            Grid.SetRow(panel, 2);
+            Grid.SetRow(panel, 3);
             vid_Grid.Children.Add(panel);
             Button play = new Button();
             Button stop = new Button();
@@ -116,52 +153,40 @@ namespace IPCamera
             backard.Padding = new Thickness(3, 0, 3, 0);
             forward.Padding = new Thickness(3, 0, 3, 0);
             open.Padding = new Thickness(3, 0, 3, 0);
-            play.IsEnabled = true;
-            stop.IsEnabled = false;
-            pause.IsEnabled = false;
-            backard.IsEnabled = false;
-            forward.IsEnabled = false;
-            open.IsEnabled = true;
             play.Click += (object obj, RoutedEventArgs e) =>
             {
-                this.player.Play();
-
-                play.IsEnabled = false;
-                stop.IsEnabled = true;
-                pause.IsEnabled = true;
-                backard.IsEnabled = true;
-                forward.IsEnabled = true;
-                open.IsEnabled = true;
+                if (this.player.Source != null)
+                {
+                    this.player.Play();
+                }
             };
             stop.Click += (object obj, RoutedEventArgs e) =>
             {
-                this.player.Stop();
-
-                play.IsEnabled = true;
-                stop.IsEnabled = false;
-                pause.IsEnabled = false;
-                backard.IsEnabled = false;
-                forward.IsEnabled = false;
-                open.IsEnabled = true;
+                if (this.player.Source != null)
+                {
+                    this.player.Stop();
+                }
             };
             pause.Click += (object obj, RoutedEventArgs e) =>
             {
-                this.player.Pause();
-
-                play.IsEnabled = true;
-                stop.IsEnabled = false;
-                pause.IsEnabled = false;
-                backard.IsEnabled = false;
-                forward.IsEnabled = false;
-                open.IsEnabled = true;
+                if (this.player.Source != null)
+                {
+                    this.player.Pause();
+                }
             };
             backard.Click += (object obj, RoutedEventArgs e) =>
             {
-                this.player.Position = this.player.Position + TimeSpan.FromSeconds(10);
+                if (this.player.Source != null)
+                {
+                    this.player.Position += TimeSpan.FromSeconds(3);
+                }
             };
             forward.Click += (object obj, RoutedEventArgs e) =>
             {
-                this.player.Position = this.player.Position - TimeSpan.FromSeconds(10);
+                if (this.player.Source != null)
+                {
+                    this.player.Position -= TimeSpan.FromSeconds(3);
+                }
             };
             open.Click += (object obj, RoutedEventArgs e) =>
             {
@@ -173,7 +198,6 @@ namespace IPCamera
             panel.Children.Add(backard);
             panel.Children.Add(forward);
             panel.Children.Add(open);
-            
             // Print To Console
             Console.WriteLine($"Creating Video Grid: {this.video.CamName}  {this.video.Date}  {this.video.Time}");
         }
