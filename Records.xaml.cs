@@ -46,37 +46,50 @@ namespace IPCamera
         // Create Media Players For Every File
         private void CreateMediaPlayers()
         {
-            Console.WriteLine($"Create Media.   List.Size:   {this.videos.Count}");
-
             // Order List
             List<Video> SortedList = this.videos.OrderBy(o => o.CamName).ToList();
-
+            Console.WriteLine($"Videos Count:  {SortedList.Count}");
             // Start Creating The Media
             videos_grid.Children.Clear();
             videos_grid.RowDefinitions.Clear();
             videos_grid.ColumnDefinitions.Clear();
             int columns_pointer_videos = 0;
             int rows_pointer_videos = 0;
+            int size = 377;
+
+            // Add First Row
+            RowDefinition row_1 = new RowDefinition();
+            row_1.Height = new GridLength(size);
+            videos_grid.RowDefinitions.Add(row_1);
+
+            // Add 3 Columns
+            ColumnDefinition column = new ColumnDefinition();
+            column.Width = new GridLength(size);
+            videos_grid.ColumnDefinitions.Add(column);
+            column = new ColumnDefinition();
+            column.Width = new GridLength(size);
+            videos_grid.ColumnDefinitions.Add(column);
+            column = new ColumnDefinition();
+            column.Width = new GridLength(size);
+            videos_grid.ColumnDefinitions.Add(column);
+
             foreach (Video video in SortedList)
             {
                 // Somthing Rong With Rows
                 if(columns_pointer_videos == 3) // New Row
                 {
+                    Console.WriteLine("New Row.");
+                    RowDefinition row = new RowDefinition();
+                    row.Height = new GridLength(size);
+                    videos_grid.RowDefinitions.Add(row);
                     rows_pointer_videos++;
+                    this.CreateVideoGrid(columns_pointer_videos, rows_pointer_videos, video);
                     columns_pointer_videos = 0;
-                    RowDefinition r = new RowDefinition();
-                    r.Height = new GridLength(500);
-                    videos_grid.RowDefinitions.Add(r);
-                    this.CreateVideoGrid(columns_pointer_videos, rows_pointer_videos, video);
                 }
-                else                            // New Column
-                {
-                    this.CreateVideoGrid(columns_pointer_videos, rows_pointer_videos, video);
-                    columns_pointer_videos++;
-                    videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-                }
-
+                this.CreateVideoGrid(columns_pointer_videos, rows_pointer_videos, video);
+                columns_pointer_videos++;
             }
+            Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
         }
 
         // Create Video Grid
@@ -85,13 +98,17 @@ namespace IPCamera
             // Create Video Grid And Add it to Video_Grid
             Grid vid_Grid = new Grid();
             vid_Grid.Background = Brushes.Gray;
-            vid_Grid.Margin = new Thickness(11);
-            Grid.SetColumn(vid_Grid, column);
+            vid_Grid.Margin = new Thickness(3);
             Grid.SetRow(vid_Grid, row);
+            Grid.SetColumn(vid_Grid, column);
             videos_grid.Children.Add(vid_Grid);
             // Add 2 Rows
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
+            RowDefinition row_2 = new RowDefinition();
+            row_2.Height = new GridLength(30);
+            RowDefinition row_3 = new RowDefinition();
+            row_3.Height = new GridLength(0, GridUnitType.Auto);
+            vid_Grid.RowDefinitions.Add(row_2);
+            vid_Grid.RowDefinitions.Add(row_3);
             // Add New Grid Grid At Row 0 (Title Grid)
             Grid titleGrid = new Grid();
             Grid.SetRow(titleGrid, 0);
@@ -119,6 +136,7 @@ namespace IPCamera
             // Create MediaPlayer
             MediaElement player = new MediaElement();
             player.Source = new Uri(video.Path);
+            player.Margin = new Thickness(0,7,0,0);
             Grid.SetRow(player, 1);
             vid_Grid.Children.Add(player);
             // Print To Console
