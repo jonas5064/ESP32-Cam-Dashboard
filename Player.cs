@@ -23,6 +23,11 @@ namespace IPCamera
         RecordFullScreen fullscreen_page;
 
         public int buttonsFontSize = 17;
+        public Button play;
+        public Button stop;
+        public Button pause;
+        public RepeatButton backard;
+        public RepeatButton forward;
 
         public Grid vid_Grid;
         Grid titleGrid;
@@ -199,7 +204,7 @@ namespace IPCamera
             {
                 if (! this.fullscreen)
                 {
-                    this.parrent.Children.Remove(this.vid_Grid);
+                    //this.parrent.Children.Remove(this.vid_Grid);
                     this.fullscreen = true;
                     this.fullscreen_page = new RecordFullScreen(this);
                     fullscreen_page.Show();
@@ -219,7 +224,6 @@ namespace IPCamera
             // Print To Console
             Console.WriteLine($"Creating Video Grid: {this.video.CamName}  {this.video.Date}  {this.video.Time}");
         }
-
 
     }
 }

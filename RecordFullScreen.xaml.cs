@@ -1,42 +1,98 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace IPCamera
 {
-    /// <summary>
-    /// Interaction logic for RecordFullScreen.xaml
-    /// </summary>
     public partial class RecordFullScreen : Window
     {
-        Player player;
-        public RecordFullScreen(Player player)
+        Player video;
+        public RecordFullScreen(Player video)
         {
             InitializeComponent();
 
-            this.player = player;
-            main_grid.Children.Add(this.player.vid_Grid);
+            this.video = video;
+
+            media_element.Source = new Uri(this.video.video.Path);
+            media_element.Margin = new Thickness(7, 7, 7, 0);
+            media_element.LoadedBehavior = MediaState.Manual;
+            media_element.ScrubbingEnabled = true;
+            media_element.UnloadedBehavior = MediaState.Close;
+            media_element.MediaOpened += (object sender, RoutedEventArgs e) =>
+            {
+
+            };
+            media_element.Play();
+            media_element.Pause();
+            media_element.Position = TimeSpan.FromSeconds(0);
+
+
+            // Threading to Update The Time Spam Label Show The Time Of Video
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += (object sender, EventArgs e) =>
+            {
+                if (media_element.Source != null)
+                {
+                    if (media_element.NaturalDuration.HasTimeSpan)
+                    {
+                        time_spam.Content = String.Format("{0} / {1}",
+                                                    media_element.Position.ToString(@"mm\:ss"),
+                                                    media_element.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+                    }
+                }
+            };
+            timer.Start();
+
+
         }
 
         // On Close Window
         protected override void OnClosed(EventArgs e)
         {
-            main_grid.Children.Remove(this.player.vid_Grid);
-            //Grid.SetRow(this.player.vid_Grid, this.player.row);
-            //Grid.SetColumn(this.player.vid_Grid, this.player.column);
-            this.player.parrent.Children.Add(this.player.vid_Grid);
-            this.player.fullscreen = false;
+            this.video.fullscreen = false;
             this.Close();
+        }
+
+        private void play_Click(object sender, RoutedEventArgs e)
+        {
+            if (media_element.Source != null)
+            {
+                media_element.Play();
+            }
+        }
+
+        private void stop_Click(object sender, RoutedEventArgs e)
+        {
+            if (media_element.Source != null)
+            {
+                media_element.Stop();
+            }
+        }
+
+        private void pause_Click(object sender, RoutedEventArgs e)
+        {
+            if (media_element.Source != null)
+            {
+                media_element.Pause();
+            }
+        }
+
+        private void packward_Click(object sender, RoutedEventArgs e)
+        {
+            if (media_element.Source != null)
+            {
+                media_element.Position -= TimeSpan.FromMilliseconds(1000);
+            }
+        }
+
+        private void forward_Click(object sender, RoutedEventArgs e)
+        {
+            if (media_element.Source != null)
+            {
+                media_element.Position += TimeSpan.FromMilliseconds(1000);
+            }
         }
     }
 }

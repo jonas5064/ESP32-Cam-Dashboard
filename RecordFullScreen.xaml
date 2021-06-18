@@ -13,9 +13,46 @@
         MinHeight="700"
         WindowState="Maximized">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="main_grid">
-        
+    <Grid x:Name="main_grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="639*" />
+            <ColumnDefinition Width="187*" />
+        </Grid.ColumnDefinitions>
+        <MediaElement x:Name="media_element" Grid.Column="0" Margin="33" Source="C:\IPCameras_Files\Video\Camera 1\17-06-2021\16.45.15.mp4"/>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="145*" />
+                <RowDefinition Height="140*" />
+                <RowDefinition Height="38*" />
+            </Grid.RowDefinitions>
+            <!-- Grid for Imformations Labels -->
+            <Grid Grid.Row="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label x:Name="time_spam" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Orange" FontSize="43" Content="23:23:33"/>
+            </Grid>
+            <!-- Grid For Button Controlls -->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Button x:Name="play" Grid.Row="0"  Content="Play" FontSize="33" Margin="23,7,23,7" Click="play_Click"/>
+                <Button x:Name="stop" Grid.Row="1" Content="Stop" FontSize="33" Margin="23,7,23,7" Click="stop_Click"/>
+                <Button x:Name="pause" Grid.Row="2" Content="Pause" FontSize="33" Margin="23,7,23,7" Click="pause_Click"/>
+                <RepeatButton x:Name="packward" Grid.Column="1" Grid.Row="3" Content="Backward" FontSize="33" Margin="23,7,23,7" Click="packward_Click"/>
+                <RepeatButton x:Name="forward" Grid.Column="1" Grid.Row="4" Content="Forward" FontSize="33" Margin="23,7,23,7" Click="forward_Click"/>
+            </Grid>
         </Grid>
-    </ScrollViewer>
+    </Grid>
+
+
+
 </Window>
