@@ -253,6 +253,9 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Include="Player.cs" />
+    <Compile Include="RecordFullScreen.xaml.cs">
+      <DependentUpon>RecordFullScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Records.xaml.cs">
       <DependentUpon>Records.xaml</DependentUpon>
     </Compile>
@@ -288,6 +291,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RecordFullScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Records.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

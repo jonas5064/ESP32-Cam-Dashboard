@@ -12,17 +12,19 @@ using System.Windows.Threading;
 
 namespace IPCamera
 {
-    class Player
+    public class Player
     {
 
         public Grid parrent;
         public Video video;
         public int column;
         public int row;
+        public Boolean fullscreen = false;
+        RecordFullScreen fullscreen_page;
 
         public int buttonsFontSize = 17;
 
-        Grid vid_Grid;
+        public Grid vid_Grid;
         Grid titleGrid;
         Label name;
         Label date;
@@ -195,6 +197,17 @@ namespace IPCamera
             };
             open.Click += (object obj, RoutedEventArgs e) =>
             {
+                if (! this.fullscreen)
+                {
+                    this.parrent.Children.Remove(this.vid_Grid);
+                    this.fullscreen = true;
+                    this.fullscreen_page = new RecordFullScreen(this);
+                    fullscreen_page.Show();
+                }
+                else
+                {
+                    this.fullscreen_page.Activate();
+                }
                 
             };
             panel.Children.Add(play);
