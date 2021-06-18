@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace IPCamera
@@ -132,8 +135,8 @@ namespace IPCamera
             Button play = new Button();
             Button stop = new Button();
             Button pause = new Button();
-            Button backard = new Button();
-            Button forward = new Button();
+            RepeatButton backard = new RepeatButton();
+            RepeatButton forward = new RepeatButton();
             Button open = new Button();
             play.Content = "Play";
             stop.Content = "Stop";
@@ -141,6 +144,8 @@ namespace IPCamera
             backard.Content = "Back";
             forward.Content = "Forw";
             open.Content = "Open";
+            backard.Interval = 200;
+            forward.Interval = 200;
             play.FontSize = this.buttonsFontSize;
             stop.FontSize = this.buttonsFontSize;
             pause.FontSize = this.buttonsFontSize;
@@ -178,14 +183,14 @@ namespace IPCamera
             {
                 if (this.player.Source != null)
                 {
-                    this.player.Position += TimeSpan.FromSeconds(3);
+                    this.player.Position -= TimeSpan.FromMilliseconds(1000);
                 }
             };
             forward.Click += (object obj, RoutedEventArgs e) =>
             {
                 if (this.player.Source != null)
                 {
-                    this.player.Position -= TimeSpan.FromSeconds(3);
+                    this.player.Position += TimeSpan.FromMilliseconds(1000);
                 }
             };
             open.Click += (object obj, RoutedEventArgs e) =>
@@ -201,5 +206,7 @@ namespace IPCamera
             // Print To Console
             Console.WriteLine($"Creating Video Grid: {this.video.CamName}  {this.video.Date}  {this.video.Time}");
         }
+
+
     }
 }
