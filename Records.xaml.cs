@@ -15,19 +15,39 @@ namespace IPCamera
         public List<Picture> pictures = new List<Picture>();
         public List<Video> selectedVideos = new List<Video>();
         public List<Picture> selectedPictures = new List<Picture>();
+        bool allVideos = false;
+        bool allPictures = false;
 
         public Records()
         {
             InitializeComponent();
 
+            // Setup To Show All Cameres
+            all_v.IsChecked = false;
+            all_i.IsChecked = false;
             // Get Records
             this.GetRecordsPath();
-
             // Load Videos And Images ComboBoxes
             this.SetComboBoxesVideos();
             this.SetComboBoxeesImages();
         }
 
+
+
+
+
+
+        // If CheckBox All Videos Changeded
+        private void Videos_SelectionChanged_all(object sender, RoutedEventArgs e)
+        {
+            this.allVideos = (bool)all_v.IsChecked;
+        }
+
+        // If CheckBox All Pictures Changeded
+        private void Pictures_SelectionChanged_all(object sender, RoutedEventArgs e)
+        {
+            this.allPictures = (bool)all_i.IsChecked;
+        }
 
         // When Select Cameras Name On Videos
         private void Videos_SelectionChanged_cams(object sender, SelectionChangedEventArgs e)
@@ -37,12 +57,15 @@ namespace IPCamera
             String cam = (String)cams_v.SelectedValue;
             if (date != "" && time != "" && cam != "")
             {
-                List<Video> vids = (from video in this.videos where video.Date == date && 
-                                    video.Time == time && video.CamName == cam select video).ToList();
-                Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
-                this.selectedVideos.Clear();
-                this.selectedVideos.AddRange(vids);
-                this.CreateMediaPlayers();
+                if (!this.allVideos)
+                {
+                    List<Video> vids = (from video in this.videos where video.Date == date && 
+                                        video.Time == time && video.CamName == cam select video).ToList();
+                    Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                    this.selectedVideos.Clear();
+                    this.selectedVideos.AddRange(vids);
+                    this.CreateMediaPlayers();
+                }
             }
         }
 
@@ -54,12 +77,15 @@ namespace IPCamera
             String cam = (String)cams_i.SelectedValue;
             if(date != "" && time != "" && cam != "")
             {
-                List<Picture> pics = (from picture in this.pictures where picture.Date == date && 
-                                      picture.Time == time && picture.CamName == cam select picture).ToList();
-                Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
-                this.selectedPictures.Clear();
-                this.selectedPictures.AddRange(pics);
-                this.CreatePictures();
+                if(!this.allPictures)
+                {
+                    List<Picture> pics = (from picture in this.pictures where picture.Date == date && 
+                                          picture.Time == time && picture.CamName == cam select picture).ToList();
+                    Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                    this.selectedPictures.Clear();
+                    this.selectedPictures.AddRange(pics);
+                    this.CreatePictures();
+                }
             }
         }
 
@@ -96,12 +122,23 @@ namespace IPCamera
             {
                 try
                 {
-                    HashSet<String> camerasNames = new HashSet<String>((from video in this.videos where video.Date == date select video.CamName).ToList());
+                    HashSet<String> camerasNames = new HashSet<String>((from video in this.videos where 
+                                                                        video.Date == date select video.CamName).ToList());
                     List<String> camerasNames_l = camerasNames.ToList();
                     camerasNames_l.Sort();
                     camerasNames_l.Reverse();
                     cams_v.ItemsSource = camerasNames_l;
                     cams_v.SelectedValue = camerasNames_l[0];
+                    if (this.allVideos)
+                    {
+                        List<Video> vids = (from video in this.videos where video.Date == date && 
+                                            video.Time == time select video).ToList();
+                        Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                        this.selectedVideos.Clear();
+                        this.selectedVideos.AddRange(vids);
+                        this.CreateMediaPlayers();
+                    }
+                    
                 }
                 catch (System.InvalidOperationException ex)
                 {
@@ -142,12 +179,24 @@ namespace IPCamera
             {
                 try
                 {
-                    HashSet<String> camerasNames = new HashSet<String>((from picture in this.pictures where picture.Date == date select picture.CamName).ToList());
+                    HashSet<String> camerasNames = new HashSet<String>((from picture in this.pictures
+                                                                        where
+                                              picture.Date == date
+                                                                        select picture.CamName).ToList());
                     List<String> camerasNames_l = camerasNames.ToList();
                     camerasNames_l.Sort();
                     camerasNames_l.Reverse();
                     cams_i.ItemsSource = camerasNames_l;
                     cams_i.SelectedValue = camerasNames_l[0];
+                    if (this.allPictures )
+                    {
+                        List<Picture> pics = (from picture in this.pictures where picture.Date == date && 
+                                              picture.Time == time select picture).ToList();
+                        Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                        this.selectedPictures.Clear();
+                        this.selectedPictures.AddRange(pics);
+                        this.CreatePictures();
+                    }
                 }
                 catch (System.InvalidOperationException ex)
                 {
@@ -328,6 +377,7 @@ namespace IPCamera
         {
             // Card Grid
             Grid img_grid = new Grid();
+            img_grid.Margin = new Thickness(3);
             RowDefinition row_1 = new RowDefinition();
             row_1.Height = new GridLength(33);
             RowDefinition row_2 = new RowDefinition();
@@ -410,7 +460,7 @@ namespace IPCamera
             String[] parts = this.Path.Split('\\');
             this.CamName = parts[parts.Length - 3];
             this.Date = parts[parts.Length - 2];
-            this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
+            this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 7);
         }
     }
 
@@ -427,7 +477,7 @@ namespace IPCamera
             String[] parts = path.Split('\\');
             this.CamName = parts[parts.Length - 3];
             this.Date = parts[parts.Length - 2];
-            this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
+            this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 7);
         }
     }
 
