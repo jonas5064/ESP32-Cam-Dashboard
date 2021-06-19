@@ -26,17 +26,28 @@
                 <RowDefinition Height="38*" />
             </Grid.RowDefinitions>
             <!-- Grid for Imformations Labels -->
-            <Grid Grid.Row="0" >
+            <Grid x:Name="picture_imfo_grid" Grid.Row="0" Visibility="Hidden">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label x:Name="time_spam" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Orange" FontSize="43" Content="23:23:33"/>
+                <Label x:Name="name_pic" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Orange" FontSize="43"/>
+                <Label x:Name="date_pic" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Orange" FontSize="43"/>
+                <Label x:Name="time_pic" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Orange" FontSize="43"/>
+            </Grid>
+            <Grid x:Name="time_grid" Grid.Row="0" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label x:Name="time_spam" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Orange" FontSize="43"/>
             </Grid>
             <!-- Grid For Button Controlls -->
-            <Grid Grid.Row="1">
+            <Grid x:Name="buttons_grid" Grid.Row="1" Visibility="Hidden">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />

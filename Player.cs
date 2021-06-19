@@ -55,10 +55,9 @@ namespace IPCamera
                 }
             };
             timer.Start();
-
         }
 
-        public void Create()
+        public void CreateVideo()
         {
             // Create Video Grid And Add it to Video_Grid
             this.vid_Grid = new Grid();
@@ -201,7 +200,6 @@ namespace IPCamera
             {
                 if (! this.fullscreen)
                 {
-                    //this.parrent.Children.Remove(this.vid_Grid);
                     this.fullscreen = true;
                     this.fullscreen_page = new RecordFullScreen(this);
                     fullscreen_page.Show();
@@ -221,6 +219,9 @@ namespace IPCamera
             // Print To Console
             Console.WriteLine($"Creating Video Grid: {this.video.CamName}  {this.video.Date}  {this.video.Time}");
         }
+
+
+
 
     }
 }

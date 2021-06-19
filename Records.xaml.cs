@@ -17,6 +17,8 @@ namespace IPCamera
         public List<Picture> selectedPictures = new List<Picture>();
         bool allVideos = false;
         bool allPictures = false;
+        public bool fullscreen = false;
+        RecordFullScreen fullscreen_page;
 
         public Records()
         {
@@ -252,7 +254,11 @@ namespace IPCamera
             {
                 try
                 {
-                    this.videos.Add(new Video(x));
+                    Video video = new Video(x);
+                    if (!this.videos.Contains(video))
+                    {
+                        this.videos.Add(video);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -264,7 +270,11 @@ namespace IPCamera
             {
                 try
                 {
-                    this.pictures.Add(new Picture(x));
+                    Picture picture = new Picture(x);
+                    if (!this.pictures.Contains(picture))
+                    {
+                        this.pictures.Add(picture);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -327,11 +337,11 @@ namespace IPCamera
                     videos_grid.RowDefinitions.Add(new RowDefinition());
                     rows_pointer_videos++;
                     play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
-                    play.Create();
+                    play.CreateVideo();
                     columns_pointer_videos = 0;
                 }
                 play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
-                play.Create();
+                play.CreateVideo();
                 columns_pointer_videos++;
             }
             //Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
@@ -377,6 +387,7 @@ namespace IPCamera
         {
             // Card Grid
             Grid img_grid = new Grid();
+            img_grid.MaxHeight = 277;
             img_grid.Margin = new Thickness(3);
             RowDefinition row_1 = new RowDefinition();
             row_1.Height = new GridLength(33);
@@ -419,7 +430,17 @@ namespace IPCamera
             open.Padding = new Thickness(7, 0, 7, 0);
             open.Click += (object obj, RoutedEventArgs e) =>
             {
-
+                RecordFullScreen fullscreen_page;
+                if (!this.fullscreen)
+                {
+                    this.fullscreen = true;
+                    this.fullscreen_page = new RecordFullScreen(pic, this);
+                    this.fullscreen_page.Show();
+                }
+                else
+                {
+                    this.fullscreen_page.Activate();
+                }
             };
             panel.Children.Add(open);
             // Create Media Element

@@ -8,11 +8,17 @@ namespace IPCamera
     public partial class RecordFullScreen : Window
     {
         Player video;
+        Picture picture;
+        Records record;
+
         public RecordFullScreen(Player video)
         {
             InitializeComponent();
 
             this.video = video;
+
+            time_grid.Visibility = Visibility.Visible;
+            buttons_grid.Visibility = Visibility.Visible;
 
             media_element.Source = new Uri(this.video.video.Path);
             media_element.Margin = new Thickness(7, 7, 7, 0);
@@ -48,10 +54,29 @@ namespace IPCamera
 
         }
 
+        public RecordFullScreen(Picture picture, Records rec)
+        {
+            InitializeComponent();
+            this.picture = picture;
+            this.record = rec;
+            picture_imfo_grid.Visibility = Visibility.Visible;
+            name_pic.Content = this.picture.CamName;
+            date_pic.Content = this.picture.Date;
+            time_pic.Content = this.picture.Time;
+            media_element.Source = new Uri(this.picture.Path);
+        }
+
         // On Close Window
         protected override void OnClosed(EventArgs e)
         {
-            this.video.fullscreen = false;
+            if(this.video != null)
+            {
+                this.video.fullscreen = false;
+            }
+            if(this.record != null)
+            {
+                this.record.fullscreen = false;
+            }            
             this.Close();
         }
 
