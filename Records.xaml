@@ -48,6 +48,7 @@
                     </Grid.ColumnDefinitions>
                     <ComboBox x:Name="dates_v" Grid.Column="0" SelectionChanged="Videos_SelectionChanged_date"></ComboBox>
                     <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged_time"></ComboBox>
+                    <ComboBox x:Name="cams_v" Grid.Column="2" SelectionChanged="Videos_SelectionChanged_cams"></ComboBox>
                 </Grid>
             </Grid>
             <!-- Grid With All Media Players -->
@@ -78,6 +79,7 @@
                     </Grid.ColumnDefinitions>
                     <ComboBox x:Name="dates_i" Grid.Column="0" SelectionChanged="Pictures_SelectionChanged_date"></ComboBox>
                     <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged_time"></ComboBox>
+                    <ComboBox x:Name="cams_i" Grid.Column="2" SelectionChanged="Pictures_SelectionChanged_cams"></ComboBox>
                 </Grid>
             </Grid>
 

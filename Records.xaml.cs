@@ -28,11 +28,42 @@ namespace IPCamera
         }
 
 
-        
+        // When Select Cameras Name On Videos
+        private void Videos_SelectionChanged_cams(object sender, SelectionChangedEventArgs e)
+        {
+            String date = (String)dates_v.SelectedValue;
+            String time = (String)times_v.SelectedValue;
+            String cam = (String)cams_v.SelectedValue;
+            if (date != "" && time != "" && cam != "")
+            {
+                List<Video> vids = (from video in this.videos where video.Date == date && 
+                                    video.Time == time && video.CamName == cam select video).ToList();
+                Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                this.selectedVideos.Clear();
+                this.selectedVideos.AddRange(vids);
+                this.CreateMediaPlayers();
+            }
+        }
+
+        // When Select Cameras Name On Pictures
+        private void Pictures_SelectionChanged_cams(object sender, SelectionChangedEventArgs e)
+        {
+            String date = (String)dates_i.SelectedValue;
+            String time = (String)times_i.SelectedValue;
+            String cam = (String)cams_i.SelectedValue;
+            if(date != "" && time != "" && cam != "")
+            {
+                List<Picture> pics = (from picture in this.pictures where picture.Date == date && 
+                                      picture.Time == time && picture.CamName == cam select picture).ToList();
+                Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                this.selectedPictures.Clear();
+                this.selectedPictures.AddRange(pics);
+                this.CreatePictures();
+            }
+        }
 
 
-
-        // Find Selected Videos
+        // When Select Date On Videos
         private void Videos_SelectionChanged_date(object sender, SelectionChangedEventArgs e)
         {
             String date = (String)dates_v.SelectedValue;
@@ -55,7 +86,7 @@ namespace IPCamera
             }
         }
 
-        // Find Selected Videos
+        // When Select Time On Videos
         private void Videos_SelectionChanged_time(object sender, SelectionChangedEventArgs e)
         {
             String date = (String)dates_v.SelectedValue;
@@ -64,11 +95,12 @@ namespace IPCamera
             {
                 try
                 {
-                    List<Video> vids = (from video in this.videos where video.Date == date && video.Time == time select video).ToList();
-                    Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
-                    this.selectedVideos.Clear();
-                    this.selectedVideos.AddRange(vids);
-                    this.CreateMediaPlayers();
+                    HashSet<String> camerasNames = new HashSet<String>((from video in this.videos where video.Date == date select video.CamName).ToList());
+                    List<String> camerasNames_l = camerasNames.ToList();
+                    camerasNames_l.Sort();
+                    camerasNames_l.Reverse();
+                    cams_v.ItemsSource = camerasNames_l;
+                    cams_v.SelectedValue = camerasNames_l[0];
                 }
                 catch (System.InvalidOperationException ex)
                 {
@@ -77,7 +109,7 @@ namespace IPCamera
             }
         }
 
-        // Find Selected Images
+        // When Select Date On Pictures
         private void Pictures_SelectionChanged_date(object sender, SelectionChangedEventArgs e)
         {
             String date = (String)dates_i.SelectedValue;
@@ -100,7 +132,7 @@ namespace IPCamera
             }
         }
 
-        // Find Selected Images
+        // When Select Time On Pictures
         private void Pictures_SelectionChanged_time(object sender, SelectionChangedEventArgs e)
         {
             String date = (String)dates_i.SelectedValue;
@@ -109,11 +141,12 @@ namespace IPCamera
             {
                 try
                 {
-                    List<Picture> pics = (from picture in this.pictures where picture.Date == date && picture.Time == time select picture).ToList();
-                    Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
-                    this.selectedPictures.Clear();
-                    this.selectedPictures.AddRange(pics);
-                    this.CreatePictures();
+                    HashSet<String> camerasNames = new HashSet<String>((from picture in this.pictures where picture.Date == date select picture.CamName).ToList());
+                    List<String> camerasNames_l = camerasNames.ToList();
+                    camerasNames_l.Sort();
+                    camerasNames_l.Reverse();
+                    cams_i.ItemsSource = camerasNames_l;
+                    cams_i.SelectedValue = camerasNames_l[0];
                 }
                 catch (System.InvalidOperationException ex)
                 {
@@ -134,15 +167,6 @@ namespace IPCamera
                 dates_l.Reverse();
                 dates_v.ItemsSource = dates_l;
                 dates_v.SelectedValue = dates_l[0];
-                /*
-                // Times
-                HashSet<String> times = new HashSet<String>((from video in this.videos select video.Time).ToList());
-                List<String> times_l = times.ToList();
-                times_l.Sort();
-                times_l.Reverse();
-                times_v.ItemsSource = times_l;
-                times_v.SelectedValue = times_l[0];
-                */
             }
             catch(Exception ex)
             {
@@ -163,15 +187,6 @@ namespace IPCamera
                 dates_l.Reverse();
                 dates_i.ItemsSource = dates_l;
                 dates_i.SelectedValue = dates_l[0];
-                /*
-                // Times
-                HashSet<String> times = new HashSet<String>((from picture in this.pictures select picture.Time).ToList());
-                List<String> times_l = times.ToList();
-                times_l.Sort();
-                times_l.Reverse();
-                times_i.ItemsSource = times_l;
-                times_i.SelectedValue = times_l[0];
-                */
             }
             catch (Exception ex)
             {
