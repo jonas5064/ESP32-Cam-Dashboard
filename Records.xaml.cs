@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace IPCamera
 {
@@ -261,7 +262,9 @@ namespace IPCamera
             int columns_pointer_videos = 0;
             int rows_pointer_videos = 0;
             // Add First Row
-            videos_grid.RowDefinitions.Add(new RowDefinition());
+            RowDefinition row = new RowDefinition();
+            row.MaxHeight = 430;
+            videos_grid.RowDefinitions.Add(row);
             // Add 3 Columns
             videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
             videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -298,15 +301,16 @@ namespace IPCamera
             int columns_pointer_pictures = 0;
             int rows_pointer_pictures = 0;
             // Add First Row
-            images_grid.RowDefinitions.Add(new RowDefinition());
+            RowDefinition row = new RowDefinition();
+            row.MaxHeight = 300;
+            images_grid.RowDefinitions.Add(row);
             // Add 3 Columns
-            images_grid.ColumnDefinitions.Add(new ColumnDefinition());
             images_grid.ColumnDefinitions.Add(new ColumnDefinition());
             images_grid.ColumnDefinitions.Add(new ColumnDefinition());
             foreach (Picture picture in SortedList)
             {
                 // Somthing Rong With Rows
-                if (columns_pointer_pictures == 3) // New Row
+                if (columns_pointer_pictures == 2) // New Row
                 {
                     images_grid.RowDefinitions.Add(new RowDefinition());
                     rows_pointer_pictures++;
@@ -337,25 +341,26 @@ namespace IPCamera
             // Labels StackPanel
             StackPanel panel = new StackPanel();
             Grid.SetRow(panel, 0);
-            panel.Orientation = Orientation.Vertical;
+            panel.Orientation = Orientation.Horizontal;
             panel.HorizontalAlignment = HorizontalAlignment.Center;
             panel.VerticalAlignment = VerticalAlignment.Center;
+            //panel.Background = System.Windows.Media.Brushes.Green;
             img_grid.Children.Add(panel);
             // Labels and Button
             Label label_1 = new Label();
             label_1.Content = pic.CamName;
-            label_1.Foreground = System.Windows.Media.Brushes.LightGray;
-            label_1.FontSize = 17;
+            label_1.Foreground = System.Windows.Media.Brushes.DarkRed;
+            label_1.FontSize = 12;
             panel.Children.Add(label_1);
             Label label_2 = new Label();
             label_2.Content = pic.Date;
-            label_2.Foreground = System.Windows.Media.Brushes.LightGray;
-            label_2.FontSize = 17;
+            label_2.Foreground = System.Windows.Media.Brushes.DarkRed;
+            label_2.FontSize = 12;
             panel.Children.Add(label_2);
             Label label_3 = new Label();
             label_3.Content = pic.Time;
-            label_3.Foreground = System.Windows.Media.Brushes.LightGray;
-            label_3.FontSize = 17;
+            label_3.Foreground = System.Windows.Media.Brushes.DarkRed;
+            label_3.FontSize = 12;
             panel.Children.Add(label_3);
             Button open = new Button();
             open.Content = "Open";
@@ -371,7 +376,8 @@ namespace IPCamera
             MediaElement img = new MediaElement();
             Grid.SetRow(img, 1);
             img.Source = new Uri(pic.Path);
-            img.VerticalAlignment = VerticalAlignment.Top;
+            img.Margin = new Thickness(7);
+            img.VerticalAlignment = VerticalAlignment.Center;
             img_grid.Children.Add(img);
         }
 

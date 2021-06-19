@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace IPCamera
@@ -97,15 +91,18 @@ namespace IPCamera
             // Add 3 Labels
             this.name = new Label();
             name.Content = this.video.CamName;
-            name.Foreground = System.Windows.Media.Brushes.LightGray;
+            name.HorizontalAlignment = HorizontalAlignment.Center;
+            name.Foreground = System.Windows.Media.Brushes.DarkRed;
             Grid.SetColumn(name, 0);
             this.date = new Label();
             date.Content = this.video.Date;
-            date.Foreground = System.Windows.Media.Brushes.LightGray;
+            date.HorizontalAlignment = HorizontalAlignment.Center;
+            date.Foreground = System.Windows.Media.Brushes.DarkRed;
             Grid.SetColumn(date, 1);
             this.time = new Label();
             time.Content = this.video.Time;
-            time.Foreground = System.Windows.Media.Brushes.LightGray;
+            time.HorizontalAlignment = HorizontalAlignment.Center;
+            time.Foreground = System.Windows.Media.Brushes.DarkRed;
             Grid.SetColumn(time, 2);
             titleGrid.Children.Add(name);
             titleGrid.Children.Add(date);
