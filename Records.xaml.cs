@@ -10,18 +10,10 @@ namespace IPCamera
 
     public partial class Records : Window
     {
-
-        public List<String> cameras_videos_dates = new List<String>();
-        public List<String> cameras_videos_times = new List<String>();
-        public List<String> cameras_videos_paths = new List<String>();
         public List<Video> videos = new List<Video>();
-
-        public List<String> cameras_pictures_dates = new List<String>();
-        public List<String> cameras_pictures_times = new List<String>();
-        public List<String> cameras_pictures_paths = new List<String>();
         public List<Picture> pictures = new List<Picture>();
-
-
+        public List<Video> selectedVideos = new List<Video>();
+        public List<Picture> selectedPictures = new List<Picture>();
 
         public Records()
         {
@@ -33,135 +25,124 @@ namespace IPCamera
             // Load Videos And Images ComboBoxes
             this.SetComboBoxesVideos();
             this.SetComboBoxeesImages();
-            this.CreateMediaPlayers();
-            this.CreatePictures();
         }
 
 
-        // Create Media Players For Every File
-        private void CreateMediaPlayers()
-        {
-            // Order List
-            List<Video> SortedList = this.videos.OrderBy(o => o.CamName).ToList();
-            Console.WriteLine($"Videos Count:  {SortedList.Count}");
-            // Start Creating The Media
-            videos_grid.Children.Clear();
-            videos_grid.RowDefinitions.Clear();
-            videos_grid.ColumnDefinitions.Clear();
-            int columns_pointer_videos = 0;
-            int rows_pointer_videos = 0;
-            // Add First Row
-            videos_grid.RowDefinitions.Add(new RowDefinition());
-            // Add 3 Columns
-            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            Player play;
-            foreach (Video video in SortedList)
-            {
-                // Somthing Rong With Rows
-                if(columns_pointer_videos == 3) // New Row
-                {
-                    videos_grid.RowDefinitions.Add(new RowDefinition());
-                    rows_pointer_videos++;
-                    play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
-                    play.Create();
-                    columns_pointer_videos = 0;
-                }
-                play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
-                play.Create();
-                columns_pointer_videos++;
-            }
-            Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
-        }
-
-        // Create Pictures For Every File
-        private void CreatePictures()
-        {
-            Console.WriteLine("Create Picture.");
-
-            // Order List
-            List<Picture> SortedList = this.pictures.OrderBy(o => o.CamName).ToList();
-
-            // Start Creating The Media
-            foreach (Picture pic in SortedList)
-            {
-                Console.WriteLine($"{pic.CamName}  {pic.Date}  {pic.Time}");
-            }
-        }
+        
 
 
 
         // Find Selected Videos
-        private void Videos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Videos_SelectionChanged_date(object sender, SelectionChangedEventArgs e)
         {
-            this.UpdateVideoRecords();
-            this.CreateMediaPlayers();
+            String date = (String)dates_v.SelectedValue;
+            if (date != "")
+            {
+                try
+                {
+                    // Set ComboBox Times
+                    HashSet<String> times = new HashSet<String>((from video in this.videos where video.Date == date select video.Time).ToList());
+                    List<String> times_l = times.ToList();
+                    times_l.Sort();
+                    times_l.Reverse();
+                    times_v.ItemsSource = times_l;
+                    times_v.SelectedValue = times_l[0];
+                }
+                catch(System.InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Exception: {ex}");
+                }
+            }
         }
-        // Find Selected Images
-        private void Pictures_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            this.UpdateImageRecords();
-            this.CreatePictures();
-        }
-        private void UpdateVideoRecords()
+
+        // Find Selected Videos
+        private void Videos_SelectionChanged_time(object sender, SelectionChangedEventArgs e)
         {
             String date = (String)dates_v.SelectedValue;
             String time = (String)times_v.SelectedValue;
-            try
+            if (date != "" && time != "")
             {
-                this.videos.Clear();
-                foreach (String path in this.cameras_videos_paths)
+                try
                 {
-                    if (path.Contains(date) && path.Contains(time))
-                    {
-                        this.videos.Add(new Video(path));
-                    }
+                    List<Video> vids = (from video in this.videos where video.Date == date && video.Time == time select video).ToList();
+                    Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                    this.selectedVideos.Clear();
+                    this.selectedVideos.AddRange(vids);
+                    this.CreateMediaPlayers();
+                }
+                catch (System.InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Exception: {ex}");
                 }
             }
-            catch (System.ArgumentNullException ex)
+        }
+
+        // Find Selected Images
+        private void Pictures_SelectionChanged_date(object sender, SelectionChangedEventArgs e)
+        {
+            String date = (String)dates_i.SelectedValue;
+            if (date != "")
             {
-                Console.WriteLine($"\n\n {ex}\n\n");
+                try
+                {
+                    // Set ComboBox Times
+                    HashSet<String> times = new HashSet<String>((from picture in this.pictures where picture.Date == date select picture.Time).ToList());
+                    List<String> times_l = times.ToList();
+                    times_l.Sort();
+                    times_l.Reverse();
+                    times_i.ItemsSource = times_l;
+                    times_i.SelectedValue = times_l[0];
+                }
+                catch (System.InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Exception: {ex}");
+                }
             }
         }
-        private void UpdateImageRecords()
+
+        // Find Selected Images
+        private void Pictures_SelectionChanged_time(object sender, SelectionChangedEventArgs e)
         {
             String date = (String)dates_i.SelectedValue;
             String time = (String)times_i.SelectedValue;
-            List<String> paths = new List<String>();
-            try
+            if (date != "" && time != "")
             {
-                this.pictures.Clear();
-                foreach (String path in this.cameras_pictures_paths)
+                try
                 {
-                    if (path.Contains(date) && path.Contains(time))
-                    {
-                        this.pictures.Add(new Picture(path));
-                    }
+                    List<Picture> pics = (from picture in this.pictures where picture.Date == date && picture.Time == time select picture).ToList();
+                    Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                    this.selectedPictures.Clear();
+                    this.selectedPictures.AddRange(pics);
+                    this.CreatePictures();
+                }
+                catch (System.InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Exception: {ex}");
                 }
             }
-            catch (System.ArgumentNullException ex)
-            {
-                Console.WriteLine($"\n\n {ex}\n\n");
-            }
         }
-
-
 
         // Load Videos ComboBoxes
         private void SetComboBoxesVideos()
         {
             try
             {
-                this.cameras_videos_dates.Sort();
-                this.cameras_videos_dates.Reverse();
-                dates_v.ItemsSource = this.cameras_videos_dates;
-                dates_v.SelectedValue = this.cameras_videos_dates[0];
-                this.cameras_videos_times.Sort();
-                this.cameras_videos_times.Reverse();
-                times_v.ItemsSource = this.cameras_videos_times;
-                times_v.SelectedValue = this.cameras_videos_times[0];
-                this.CreateMediaPlayers();
+                // Dates
+                HashSet<String> dates = new HashSet<String>((from video in this.videos select video.Date).ToList());
+                List<String> dates_l = dates.ToList();
+                dates_l.Sort();
+                dates_l.Reverse();
+                dates_v.ItemsSource = dates_l;
+                dates_v.SelectedValue = dates_l[0];
+                /*
+                // Times
+                HashSet<String> times = new HashSet<String>((from video in this.videos select video.Time).ToList());
+                List<String> times_l = times.ToList();
+                times_l.Sort();
+                times_l.Reverse();
+                times_v.ItemsSource = times_l;
+                times_v.SelectedValue = times_l[0];
+                */
             }
             catch(Exception ex)
             {
@@ -175,14 +156,22 @@ namespace IPCamera
         {
             try
             {
-                this.cameras_pictures_dates.Sort();
-                this.cameras_pictures_dates.Reverse();
-                dates_i.ItemsSource = this.cameras_pictures_dates;
-                dates_i.SelectedValue = this.cameras_pictures_dates[0];
-                this.cameras_pictures_times.Sort();
-                this.cameras_pictures_times.Reverse();
-                times_i.ItemsSource = this.cameras_pictures_times;
-                times_i.SelectedValue = this.cameras_pictures_times[0];
+                // Dates
+                HashSet<String> dates = new HashSet<String>((from picture in this.pictures select picture.Date).ToList());
+                List<String> dates_l = dates.ToList();
+                dates_l.Sort();
+                dates_l.Reverse();
+                dates_i.ItemsSource = dates_l;
+                dates_i.SelectedValue = dates_l[0];
+                /*
+                // Times
+                HashSet<String> times = new HashSet<String>((from picture in this.pictures select picture.Time).ToList());
+                List<String> times_l = times.ToList();
+                times_l.Sort();
+                times_l.Reverse();
+                times_i.ItemsSource = times_l;
+                times_i.SelectedValue = times_l[0];
+                */
             }
             catch (Exception ex)
             {
@@ -198,22 +187,7 @@ namespace IPCamera
             {
                 try
                 {
-                    String[] parts = x.Split('\\');
-                    String camName = parts[parts.Length-3];
-                    String date = parts[parts.Length - 2];
-                    String time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
-                    if (!this.cameras_videos_dates.Contains(date))
-                    {
-                        this.cameras_videos_dates.Add(date);
-                    }
-                    if(!this.cameras_videos_times.Contains(time))
-                    {
-                        this.cameras_videos_times.Add(time);
-                    }
-                    if (!this.cameras_videos_paths.Contains(x))
-                    {
-                        this.cameras_videos_paths.Add(x);
-                    }
+                    this.videos.Add(new Video(x));
                 }
                 catch (Exception ex)
                 {
@@ -225,22 +199,7 @@ namespace IPCamera
             {
                 try
                 {
-                    String[] parts = x.Split('\\');
-                    String camName = parts[parts.Length - 3];
-                    String date = parts[parts.Length - 2];
-                    String time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
-                    if (!this.cameras_pictures_dates.Contains(date))
-                    {
-                        this.cameras_pictures_dates.Add(date);
-                    }
-                    if (!this.cameras_pictures_times.Contains(time))
-                    {
-                        this.cameras_pictures_times.Add(time);
-                    }
-                    if (!this.cameras_pictures_paths.Contains(x))
-                    {
-                        this.cameras_pictures_paths.Add(x);
-                    }
+                    this.pictures.Add(new Picture(x));
                 }
                 catch (Exception ex)
                 {
@@ -267,7 +226,143 @@ namespace IPCamera
         }
 
 
-        
+
+
+
+
+
+
+
+        // Create Media Players For Every File
+        private void CreateMediaPlayers()
+        {
+            // Order List
+            List<Video> SortedList = this.selectedVideos.OrderBy(o => o.CamName).ToList();
+            Console.WriteLine($"Videos Count:  {SortedList.Count}");
+            // Start Creating The Media
+            videos_grid.Children.Clear();
+            videos_grid.RowDefinitions.Clear();
+            videos_grid.ColumnDefinitions.Clear();
+            int columns_pointer_videos = 0;
+            int rows_pointer_videos = 0;
+            // Add First Row
+            videos_grid.RowDefinitions.Add(new RowDefinition());
+            // Add 3 Columns
+            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            Player play;
+            foreach (Video video in SortedList)
+            {
+                // Somthing Rong With Rows
+                if (columns_pointer_videos == 3) // New Row
+                {
+                    videos_grid.RowDefinitions.Add(new RowDefinition());
+                    rows_pointer_videos++;
+                    play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
+                    play.Create();
+                    columns_pointer_videos = 0;
+                }
+                play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
+                play.Create();
+                columns_pointer_videos++;
+            }
+            //Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
+        }
+
+        // Create Pictures For Every File
+        private void CreatePictures()
+        {
+            // Order List
+            List<Picture> SortedList = this.selectedPictures.OrderBy(o => o.CamName).ToList();
+            Console.WriteLine($"Pictures Count:  {SortedList.Count}");
+            // Start Creating The Media
+            images_grid.Children.Clear();
+            images_grid.RowDefinitions.Clear();
+            images_grid.ColumnDefinitions.Clear();
+            int columns_pointer_pictures = 0;
+            int rows_pointer_pictures = 0;
+            // Add First Row
+            images_grid.RowDefinitions.Add(new RowDefinition());
+            // Add 3 Columns
+            images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+            foreach (Picture picture in SortedList)
+            {
+                // Somthing Rong With Rows
+                if (columns_pointer_pictures == 3) // New Row
+                {
+                    images_grid.RowDefinitions.Add(new RowDefinition());
+                    rows_pointer_pictures++;
+                    this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
+                    columns_pointer_pictures = 0;
+                }
+                this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
+                columns_pointer_pictures++;
+            }
+            Console.WriteLine($"Columns: {images_grid.ColumnDefinitions.Count}    Rows: {images_grid.RowDefinitions.Count}");
+        }
+
+
+        private void CreateImage(int row, int column, Picture pic)
+        {
+            // Card Grid
+            Grid img_grid = new Grid();
+            RowDefinition row_1 = new RowDefinition();
+            row_1.Height = new GridLength(33);
+            RowDefinition row_2 = new RowDefinition();
+            row_2.Height = new GridLength(0, GridUnitType.Auto);
+            img_grid.RowDefinitions.Add(row_1);
+            img_grid.RowDefinitions.Add(row_2);
+            img_grid.Background = System.Windows.Media.Brushes.Gray;
+            Grid.SetRow(img_grid, row);
+            Grid.SetColumn(img_grid, column);
+            images_grid.Children.Add(img_grid);
+            // Labels StackPanel
+            StackPanel panel = new StackPanel();
+            Grid.SetRow(panel, 0);
+            panel.Orientation = Orientation.Vertical;
+            panel.HorizontalAlignment = HorizontalAlignment.Center;
+            panel.VerticalAlignment = VerticalAlignment.Center;
+            img_grid.Children.Add(panel);
+            // Labels and Button
+            Label label_1 = new Label();
+            label_1.Content = pic.CamName;
+            label_1.Foreground = System.Windows.Media.Brushes.LightGray;
+            label_1.FontSize = 17;
+            panel.Children.Add(label_1);
+            Label label_2 = new Label();
+            label_2.Content = pic.Date;
+            label_2.Foreground = System.Windows.Media.Brushes.LightGray;
+            label_2.FontSize = 17;
+            panel.Children.Add(label_2);
+            Label label_3 = new Label();
+            label_3.Content = pic.Time;
+            label_3.Foreground = System.Windows.Media.Brushes.LightGray;
+            label_3.FontSize = 17;
+            panel.Children.Add(label_3);
+            Button open = new Button();
+            open.Content = "Open";
+            open.Margin = new Thickness(7, 0, 7, 0);
+            open.FontSize = 17;
+            open.Padding = new Thickness(7, 0, 7, 0);
+            open.Click += (object obj, RoutedEventArgs e) =>
+            {
+
+            };
+            panel.Children.Add(open);
+            // Create Media Element
+            MediaElement img = new MediaElement();
+            Grid.SetRow(img, 1);
+            img.Source = new Uri(pic.Path);
+            img.VerticalAlignment = VerticalAlignment.Top;
+            img_grid.Children.Add(img);
+        }
+
+
+
+
 
         // On Close Window
         protected override void OnClosed(EventArgs e)
@@ -308,10 +403,10 @@ namespace IPCamera
         public Picture(String path)
         {
             this.Path = path;
-            String[] paths = path.Split('\\');
-            this.CamName = paths[6];
-            this.Date = paths[7];
-            this.Time = paths[8].Substring(0, 8);
+            String[] parts = path.Split('\\');
+            this.CamName = parts[parts.Length - 3];
+            this.Date = parts[parts.Length - 2];
+            this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 4);
         }
     }
 

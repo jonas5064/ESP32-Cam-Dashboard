@@ -46,8 +46,8 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="dates_v" Grid.Column="0" SelectionChanged="Videos_SelectionChanged"></ComboBox>
-                    <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged"></ComboBox>
+                    <ComboBox x:Name="dates_v" Grid.Column="0" SelectionChanged="Videos_SelectionChanged_date"></ComboBox>
+                    <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged_time"></ComboBox>
                 </Grid>
             </Grid>
             <!-- Grid With All Media Players -->
@@ -76,14 +76,28 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="dates_i" Grid.Column="0" SelectionChanged="Pictures_SelectionChanged"></ComboBox>
-                    <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged"></ComboBox>
+                    <ComboBox x:Name="dates_i" Grid.Column="0" SelectionChanged="Pictures_SelectionChanged_date"></ComboBox>
+                    <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged_time"></ComboBox>
                 </Grid>
             </Grid>
 
             <!-- Grid With All Pictures -->
             <Grid x:Name="images_grid" Grid.Row="1" Margin="11">
-
+                <!--
+                <Grid Background="Gray">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="33"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Label Content="Camera 1" Foreground="LightGray" FontSize="17"/>
+                        <Label Content="18-6-2021" Foreground="LightGray" FontSize="17"/>
+                        <Label Content="11.30.33" Foreground="LightGray" FontSize="17"/>
+                        <Button Content="Open" Margin="100,0,0,0" FontSize="17" Padding="7,0,7,0" />
+                    </StackPanel>
+                    <MediaElement Grid.Row="1" Source="C:\IPCameras_Files\Pictures\Camera 1\18-06-2021\13.49.56.jpg" VerticalAlignment="Top"/>
+                </Grid>
+                -->
             </Grid>
         </Grid>
 
