@@ -387,7 +387,7 @@ namespace IPCamera
         {
             // Card Grid
             Grid img_grid = new Grid();
-            img_grid.MaxHeight = 277;
+            img_grid.MaxHeight = 200;
             img_grid.Margin = new Thickness(3);
             RowDefinition row_1 = new RowDefinition();
             row_1.Height = new GridLength(33);
@@ -443,6 +443,19 @@ namespace IPCamera
                 }
             };
             panel.Children.Add(open);
+            Button delete = new Button();
+            delete.Content = "Del";
+            delete.Margin = new Thickness(7, 0, 7, 0);
+            delete.FontSize = 17;
+            delete.Padding = new Thickness(7, 0, 7, 0);
+            delete.Click += (object obj, RoutedEventArgs e) =>
+            {
+                if ( MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    File.Delete(pic.Path);
+                }
+            };
+            panel.Children.Add(delete);
             // Create Media Element
             MediaElement img = new MediaElement();
             Grid.SetRow(img, 1);
@@ -454,6 +467,15 @@ namespace IPCamera
 
 
 
+        private void X_Button_R_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainWindow.logged)
+            {
+                MainWindow.records_oppened = false;
+                Console.WriteLine("records_oppened: " + Convert.ToString(MainWindow.records_oppened));
+                this.Close();
+            }
+        }
 
 
         // On Close Window

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -141,12 +142,14 @@ namespace IPCamera
             RepeatButton backard = new RepeatButton();
             RepeatButton forward = new RepeatButton();
             Button open = new Button();
+            Button delete = new Button();
             play.Content = "Play";
             stop.Content = "Stop";
             pause.Content = "Pause";
             backard.Content = "Back";
             forward.Content = "Forw";
             open.Content = "Open";
+            delete.Content = "Del";
             backard.Interval = 200;
             forward.Interval = 200;
             play.FontSize = this.buttonsFontSize;
@@ -155,12 +158,14 @@ namespace IPCamera
             backard.FontSize = this.buttonsFontSize;
             forward.FontSize = this.buttonsFontSize;
             open.FontSize = this.buttonsFontSize;
+            delete.FontSize = 17;
             play.Padding = new Thickness(3,0,3,0);
             stop.Padding = new Thickness(3, 0, 3, 0);
             pause.Padding = new Thickness(3, 0, 3, 0);
             backard.Padding = new Thickness(3, 0, 3, 0);
             forward.Padding = new Thickness(3, 0, 3, 0);
             open.Padding = new Thickness(3, 0, 3, 0);
+            delete.Padding = new Thickness(3, 0, 3, 0);
             play.Click += (object obj, RoutedEventArgs e) =>
             {
                 if (this.player.Source != null)
@@ -210,12 +215,20 @@ namespace IPCamera
                 }
                 
             };
+            delete.Click += (object obj, RoutedEventArgs e) =>
+            {
+                if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    File.Delete(this.video.Path);
+                }
+            };
             panel.Children.Add(play);
             panel.Children.Add(stop);
             panel.Children.Add(pause);
             panel.Children.Add(backard);
             panel.Children.Add(forward);
             panel.Children.Add(open);
+            panel.Children.Add(delete);
             // Print To Console
             Console.WriteLine($"Creating Video Grid: {this.video.CamName}  {this.video.Date}  {this.video.Time}");
         }
