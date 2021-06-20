@@ -387,7 +387,7 @@ namespace IPCamera
         {
             // Card Grid
             Grid img_grid = new Grid();
-            img_grid.MaxHeight = 200;
+            img_grid.MaxHeight = 270;
             img_grid.Margin = new Thickness(3);
             RowDefinition row_1 = new RowDefinition();
             row_1.Height = new GridLength(33);
@@ -412,6 +412,7 @@ namespace IPCamera
             label_1.Content = pic.CamName;
             label_1.Foreground = System.Windows.Media.Brushes.DarkRed;
             label_1.FontSize = 12;
+            label_1.Margin = new Thickness(3,0,0,0);
             panel.Children.Add(label_1);
             Label label_2 = new Label();
             label_2.Content = pic.Date;
