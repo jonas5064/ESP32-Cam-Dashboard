@@ -258,7 +258,7 @@ namespace IPCamera
             };
             deleting_cicle.AutoReset = true;
             deleting_cicle.Enabled = true;
-
+            
         }
 
 

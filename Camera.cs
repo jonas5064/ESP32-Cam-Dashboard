@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
 using System.Windows.Input;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
-using System.Threading;
-
-//using VisioForge.Controls.UI.WinForms;
 using VisioForge.Controls.UI.WPF;
 using VisioForge.Types;
 using VisioForge.Types.OutputFormat;
 // https://help.visioforge.com/sdks_net/html/T_VisioForge_Controls_UI_WPF_VideoCapture.htm
 using VisioForge.Types.VideoEffects;
-using MailKit;
-using MailKit.Security;
 using MimeKit;
-using System.Windows.Media.Imaging;
 using MimeKit.Utils;
 using System.Globalization;
 
@@ -42,6 +34,7 @@ namespace IPCamera
         private bool on_move_pic = false;
         private bool on_move_rec = false;
         private int on_move_sensitivity = 4;
+        public int on_move_recording_time = 10000;//600000;
         private int brightness = 0;
         private int contrast = 0;
         private int darkness = 0;
@@ -54,7 +47,6 @@ namespace IPCamera
 
         public static bool avi_format = false;
         public static bool mp4_format = false;
-        System.Timers.Timer recordingTimer;
 
         public String up_req = "";
         public String down_req = "";
@@ -493,7 +485,7 @@ namespace IPCamera
                 String date = now.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"));
                 date = date.Replace(".", "-");
                 dir_path += "\\" + date;
-                Console.WriteLine($"Date Dir: {dir_path}");
+                Console.WriteLine($"Camera Start Recording.\nDate Dir: {dir_path}");
                 if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
                     Directory.CreateDirectory(dir_path);
@@ -546,7 +538,6 @@ namespace IPCamera
                 this.video.Start();
             }
         }
-
 
         // On Error EVnt
         private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
