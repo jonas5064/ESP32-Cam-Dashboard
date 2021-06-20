@@ -51,7 +51,7 @@
                    FontWeight="SemiBold"/>
             <Button Grid.Column="3" Grid.Row="0" Content="X"
                         FontSize="17" Click="X_Button_Click" 
-                        Height="29" Width="29" Margin="0 2 2 0"
+                        Height="29" Width="29" Margin="124,2,0,0"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right">
                 <Button.Style>

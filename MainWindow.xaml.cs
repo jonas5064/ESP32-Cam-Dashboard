@@ -409,6 +409,7 @@ namespace IPCamera
                         String name = dataReader["name"].ToString().Trim();
                         String username = dataReader["username"].ToString().Trim();
                         String password = dataReader["password"].ToString().Trim();
+                        int fps = (int)dataReader["fps"];
                         String detection = dataReader["Face_Detection"].ToString().Trim();
                         String recognition = dataReader["Face_Recognition"].ToString().Trim();
                         String recording = dataReader["Recording"].ToString().Trim();
@@ -461,6 +462,7 @@ namespace IPCamera
                             {
                                 Username = username,
                                 Password = password,
+                                Framerate = fps,
                                 Brightness = brightness,
                                 Contrast = contrast,
                                 Darkness = darkness,
@@ -610,20 +612,26 @@ namespace IPCamera
         // When Click Start Button
         private void Start_clicked(object sender, RoutedEventArgs e)
         {
-            foreach (Camera cam in cameras)
+            if(logged)
             {
-                Console.WriteLine("Starting: " + cam.url);
-                cam.Start();
+                foreach (Camera cam in cameras)
+                {
+                    Console.WriteLine("Starting: " + cam.url);
+                    cam.Start();
+                }
             }
         }
 
         // When Clecked Stop Button
         private void Stop_clicked(object sender, RoutedEventArgs e)
         {
-            foreach (Camera cam in cameras)
+            if (logged)
             {
-                Console.WriteLine("Stoping: " + cam.url);
-                cam.Stop();
+                foreach (Camera cam in cameras)
+                {
+                    Console.WriteLine("Stoping: " + cam.url);
+                    cam.Stop();
+                }
             }
         }
 
@@ -698,7 +706,10 @@ namespace IPCamera
         // X Button Click
         private void X_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if(logged)
+            {
+                this.Close();
+            }
         }
 
         // Find How Many Cameras is connected and open the write UI

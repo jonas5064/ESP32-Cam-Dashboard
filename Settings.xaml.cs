@@ -165,42 +165,42 @@ namespace IPCamera
                 if (url_1.Text.Length > 0 && name_1.Text.Length > 0 &&
                     name_1.Text.Length > 0 && password_1.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Password, camera1_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_1.Text, name_1.Text, username_1.Text, password_1.Password, fps_1.Text, camera1_esp32.IsChecked.Value));
                 }
                 if (url_2.Text.Length > 0 && name_2.Text.Length > 0 &&
                     name_2.Text.Length > 0 && password_2.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Password, camera2_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_2.Text, name_2.Text, username_2.Text, password_2.Password, fps_2.Text, camera2_esp32.IsChecked.Value));
                 }
                 if (url_3.Text.Length > 0 && name_3.Text.Length > 0 &&
                     name_3.Text.Length > 0 && password_3.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Password, camera3_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_3.Text, name_3.Text, username_3.Text, password_3.Password, fps_3.Text, camera3_esp32.IsChecked.Value));
                 }
                 if (url_4.Text.Length > 0 && name_4.Text.Length > 0 &&
                     name_4.Text.Length > 0 && password_4.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Password, camera4_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_4.Text, name_4.Text, username_4.Text, password_4.Password, fps_4.Text, camera4_esp32.IsChecked.Value));
                 }
                 if (url_5.Text.Length > 0 && name_5.Text.Length > 0 &&
                     name_5.Text.Length > 0 && password_5.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Password, camera5_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_5.Text, name_5.Text, username_5.Text, password_5.Password, fps_5.Text, camera5_esp32.IsChecked.Value));
                 }
                 if (url_6.Text.Length > 0 && name_6.Text.Length > 0 &&
                     name_6.Text.Length > 0 && password_6.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Password, camera6_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_6.Text, name_6.Text, username_6.Text, password_6.Password, fps_6.Text, camera6_esp32.IsChecked.Value));
                 }
                 if (url_7.Text.Length > 0 && name_7.Text.Length > 0 &&
                     name_7.Text.Length > 0 && password_7.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Password, camera7_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_7.Text, name_7.Text, username_7.Text, password_7.Password, fps_7.Text, camera7_esp32.IsChecked.Value));
                 }
                 if (url_8.Text.Length > 0 && name_8.Text.Length > 0 &&
                     name_8.Text.Length > 0 && password_8.Password.Length > 0)
                 {
-                    cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Password, camera8_esp32.IsChecked.Value));
+                    cams.Add(new Cameras(url_8.Text, name_8.Text, username_8.Text, password_8.Password, fps_8.Text, camera8_esp32.IsChecked.Value));
                 }
             }
             catch (System.ArgumentException ex)
@@ -231,13 +231,14 @@ namespace IPCamera
                     Guid guid = Guid.NewGuid();
                     String my_id = guid.ToString();
                     // Save Data To Database
-                    query = $"INSERT INTO MyCameras (id,urls,name,username,password,isEsp32 ) VALUES (@id,@urls,@name,@username,@password,@isESP)";
+                    query = $"INSERT INTO MyCameras (id,urls,name,username,password,fps,isEsp32 ) VALUES (@id,@urls,@name,@username,@password,@fps,@isESP)";
                     cmd = new MySqlCommand(query, cn);
                     cmd.Parameters.AddWithValue("@id", my_id);
                     cmd.Parameters.AddWithValue("@urls", d.url);
                     cmd.Parameters.AddWithValue("@name", d.name);
                     cmd.Parameters.AddWithValue("@username", d.username);
                     cmd.Parameters.AddWithValue("@password", d.password);
+                    cmd.Parameters.AddWithValue("@fps", d.fps);
                     cmd.Parameters.AddWithValue("@isESP", d.isEsp32);
                     cn.Open();
                     result = await cmd.ExecuteNonQueryAsync();
@@ -406,6 +407,7 @@ namespace IPCamera
                     name_1.Text = MainWindow.cameras[0].name;
                     username_1.Text = MainWindow.cameras[0].Username;
                     password_1.Password = MainWindow.cameras[0].Password;
+                    fps_1.Text = MainWindow.cameras[0].Framerate.ToString();
                     camera1_esp32.IsChecked = MainWindow.cameras[0].isEsp32;
                 }
             }
@@ -417,6 +419,7 @@ namespace IPCamera
                     name_2.Text = MainWindow.cameras[1].name;
                     username_2.Text = MainWindow.cameras[1].Username;
                     password_2.Password = MainWindow.cameras[1].Password;
+                    fps_2.Text = MainWindow.cameras[1].Framerate.ToString();
                     camera2_esp32.IsChecked = MainWindow.cameras[1].isEsp32;
                 }
             }
@@ -428,6 +431,7 @@ namespace IPCamera
                     name_3.Text = MainWindow.cameras[2].name;
                     username_3.Text = MainWindow.cameras[2].Username;
                     password_3.Password = MainWindow.cameras[2].Password;
+                    fps_3.Text = MainWindow.cameras[2].Framerate.ToString();
                     camera3_esp32.IsChecked = MainWindow.cameras[2].isEsp32;
                 }
             }
@@ -439,6 +443,7 @@ namespace IPCamera
                     name_4.Text = MainWindow.cameras[3].name;
                     username_4.Text = MainWindow.cameras[3].Username;
                     password_4.Password = MainWindow.cameras[3].Password;
+                    fps_4.Text = MainWindow.cameras[3].Framerate.ToString();
                     camera4_esp32.IsChecked = MainWindow.cameras[3].isEsp32;
                 }
             }
@@ -450,6 +455,7 @@ namespace IPCamera
                     name_5.Text = MainWindow.cameras[4].name;
                     username_5.Text = MainWindow.cameras[4].Username;
                     password_5.Password = MainWindow.cameras[4].Password;
+                    fps_5.Text = MainWindow.cameras[4].Framerate.ToString();
                     camera5_esp32.IsChecked = MainWindow.cameras[4].isEsp32;
                 }
             }
@@ -461,6 +467,7 @@ namespace IPCamera
                     name_6.Text = MainWindow.cameras[5].name;
                     username_6.Text = MainWindow.cameras[5].Username;
                     password_6.Password = MainWindow.cameras[5].Password;
+                    fps_6.Text = MainWindow.cameras[5].Framerate.ToString();
                     camera6_esp32.IsChecked = MainWindow.cameras[5].isEsp32;
                 }
             }
@@ -472,6 +479,7 @@ namespace IPCamera
                     name_7.Text = MainWindow.cameras[6].name;
                     username_7.Text = MainWindow.cameras[6].Username;
                     password_7.Password = MainWindow.cameras[6].Password;
+                    fps_7.Text = MainWindow.cameras[6].Framerate.ToString();
                     camera7_esp32.IsChecked = MainWindow.cameras[6].isEsp32;
                 }
             }
@@ -483,6 +491,7 @@ namespace IPCamera
                     name_8.Text = MainWindow.cameras[7].name;
                     username_8.Text = MainWindow.cameras[7].Username;
                     password_8.Password = MainWindow.cameras[7].Password;
+                    fps_8.Text = MainWindow.cameras[7].Framerate.ToString();
                     camera8_esp32.IsChecked = MainWindow.cameras[7].isEsp32;
                 }
             }
@@ -1047,13 +1056,15 @@ namespace IPCamera
         public String name;
         public String username;
         public String password;
+        public int fps;
         public bool isEsp32 = false;
-        public Cameras(String u, String n, String un, String p, bool isEsp)
+        public Cameras(String u, String n, String un, String p, String fps, bool isEsp)
         {
             this.url = u;
             this.name = n;
             this.username = un;
             this.password = p;
+            this.fps = Int16.Parse(fps);
             this.isEsp32 = isEsp;
         }
         ~Cameras()

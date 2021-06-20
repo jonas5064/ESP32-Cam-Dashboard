@@ -26,6 +26,7 @@ CREATE TABLE MyCameras (
     name              NCHAR (50)    NOT NULL,
     username          NCHAR (50)    NULL,
     password          NCHAR (50)    NULL,
+    fps               INT           DEFAULT ((16)) NOT NULL,
     net_stream_port   NCHAR (255)   NULL,
     net_stream_prefix NCHAR (255)   NULL,
     net_stream        BOOLEAN           DEFAULT ((0)) NULL,
