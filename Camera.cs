@@ -439,7 +439,7 @@ namespace IPCamera
         public void Take_pic()
         {
             // Create Folder With Cameras Name for Name
-            String dir_path = Camera.pictures_dir + this.name;
+            String dir_path = Camera.pictures_dir + "\\" + this.name;
             if (! Directory.Exists(dir_path))
             {
                 Directory.CreateDirectory(dir_path);

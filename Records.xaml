@@ -9,11 +9,12 @@
         Background="Black"
         Width="2000"
         Height="1655"
-        MinWidth="1800"
-        MinHeight="1100"
-        WindowState="Maximized"
-        ResizeMode="NoResize"
-        WindowStyle="None">
+        MinWidth="1000"
+        MinHeight="800"
+        WindowState="Maximized">
+
+    <!-- ResizeMode="NoResize"
+        WindowStyle="None" -->
 
     <Grid x:Name="main_container" Visibility="Visible">
         <Grid.ColumnDefinitions>
