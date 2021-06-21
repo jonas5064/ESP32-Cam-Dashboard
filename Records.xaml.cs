@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace IPCamera
 {
@@ -23,15 +22,17 @@ namespace IPCamera
         public Records()
         {
             InitializeComponent();
+            //main_container.Visibility = Visibility.Hidden;
 
-            // Setup To Show All Cameres
-            all_v.IsChecked = false;
-            all_i.IsChecked = false;
             // Get Records
             this.GetRecordsPath();
             // Load Videos And Images ComboBoxes
             this.SetComboBoxesVideos();
             this.SetComboBoxeesImages();
+
+            // Setup To Show All Cameres
+            all_v.IsChecked = false;
+            all_i.IsChecked = false;
         }
 
 
@@ -43,12 +44,53 @@ namespace IPCamera
         private void Videos_SelectionChanged_all(object sender, RoutedEventArgs e)
         {
             this.allVideos = (bool)all_v.IsChecked;
+
+
+            String date = (String)dates_v.SelectedValue;
+            String time = (String)times_v.SelectedValue;
+            String cam = (String)cams_v.SelectedValue;
+            List<Video> vids;
+            if (date != "" && time != "" && cam != "")
+            {
+                if (!this.allVideos)
+                {
+                    vids = (from video in this.videos where video.Date == date && video.Time == time && video.CamName == cam select video).ToList();
+                }
+                else
+                {
+                    vids = (from video in this.videos where video.Date == date && video.Time == time select video).ToList();
+                }
+                Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                this.selectedVideos.Clear();
+                this.selectedVideos.AddRange(vids);
+                this.CreateMediaPlayers();
+            }
         }
 
         // If CheckBox All Pictures Changeded
         private void Pictures_SelectionChanged_all(object sender, RoutedEventArgs e)
         {
             this.allPictures = (bool)all_i.IsChecked;
+
+            String date = (String)dates_i.SelectedValue;
+            String time = (String)times_i.SelectedValue;
+            String cam = (String)cams_i.SelectedValue;
+            List<Picture> pics;
+            if (date != "" && time != "" && cam != "")
+            {
+                if (!this.allPictures)
+                {
+                    pics = (from picture in this.pictures where picture.Date == date && picture.Time == time && picture.CamName == cam select picture).ToList();
+                }
+                else
+                {
+                    pics = (from picture in this.pictures where picture.Date == date && picture.Time == time select picture).ToList();
+                }
+                Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                this.selectedPictures.Clear();
+                this.selectedPictures.AddRange(pics);
+                this.CreatePictures();
+            }
         }
 
         // When Select Cameras Name On Videos
@@ -181,10 +223,7 @@ namespace IPCamera
             {
                 try
                 {
-                    HashSet<String> camerasNames = new HashSet<String>((from picture in this.pictures
-                                                                        where
-                                              picture.Date == date
-                                                                        select picture.CamName).ToList());
+                    HashSet<String> camerasNames = new HashSet<String>((from picture in this.pictures where picture.Date == date select picture.CamName).ToList());
                     List<String> camerasNames_l = camerasNames.ToList();
                     camerasNames_l.Sort();
                     camerasNames_l.Reverse();
@@ -311,75 +350,107 @@ namespace IPCamera
         // Create Media Players For Every File
         private void CreateMediaPlayers()
         {
-            // Order List
-            List<Video> SortedList = this.selectedVideos.OrderBy(o => o.CamName).ToList();
-            Console.WriteLine($"Videos Count:  {SortedList.Count}");
-            // Start Creating The Media
-            videos_grid.Children.Clear();
-            videos_grid.RowDefinitions.Clear();
-            videos_grid.ColumnDefinitions.Clear();
-            int columns_pointer_videos = 0;
-            int rows_pointer_videos = 0;
-            // Add First Row
-            RowDefinition row = new RowDefinition();
-            row.MaxHeight = 430;
-            videos_grid.RowDefinitions.Add(row);
-            // Add 3 Columns
-            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            Player play;
-            foreach (Video video in SortedList)
+            try
             {
-                // Somthing Rong With Rows
-                if (columns_pointer_videos == 3) // New Row
+                if (videos_grid != null)
                 {
-                    videos_grid.RowDefinitions.Add(new RowDefinition());
-                    rows_pointer_videos++;
-                    play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
-                    play.CreateVideo();
-                    columns_pointer_videos = 0;
+                    // Order List
+                    List<Video> SortedList = this.selectedVideos.OrderBy(o => o.CamName).ToList();
+                    Console.WriteLine($"Videos Count:  {SortedList.Count}");
+                    // Start Creating The Media
+                    videos_grid.Children.Clear();
+                    videos_grid.RowDefinitions.Clear();
+                    videos_grid.ColumnDefinitions.Clear();
+                    int columns_pointer_videos = 0;
+                    int rows_pointer_videos = 0;
+                    // Add First Row
+                    RowDefinition row = new RowDefinition();
+                    row.MaxHeight = 350;
+                    videos_grid.RowDefinitions.Add(row);
+                    // Add 3 Columns
+                    videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    Player play;
+                    foreach (Video video in SortedList)
+                    {
+                        // Somthing Rong With Rows
+                        if (columns_pointer_videos == 4) // New Row
+                        {
+                            RowDefinition row_2 = new RowDefinition();
+                            row_2.MaxHeight = 350;
+                            videos_grid.RowDefinitions.Add(row_2);
+                            rows_pointer_videos++;
+                            play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
+                            play.CreateVideo();
+                            columns_pointer_videos = 0;
+                        }
+                        play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
+                        play.CreateVideo();
+                        columns_pointer_videos++;
+                    }
+                    //Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
                 }
-                play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
-                play.CreateVideo();
-                columns_pointer_videos++;
             }
-            //Console.WriteLine($"Columns: {videos_grid.ColumnDefinitions.Count}    Rows: {videos_grid.RowDefinitions.Count}");
+            catch (System.NullReferenceException ex)
+            {
+                Console.WriteLine($"Exception: {ex}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex}");
+            }
         }
 
         // Create Pictures For Every File
         private void CreatePictures()
         {
-            // Order List
-            List<Picture> SortedList = this.selectedPictures.OrderBy(o => o.CamName).ToList();
-            Console.WriteLine($"Pictures Count:  {SortedList.Count}");
-            // Start Creating The Media
-            images_grid.Children.Clear();
-            images_grid.RowDefinitions.Clear();
-            images_grid.ColumnDefinitions.Clear();
-            int columns_pointer_pictures = 0;
-            int rows_pointer_pictures = 0;
-            // Add First Row
-            RowDefinition row = new RowDefinition();
-            row.MaxHeight = 300;
-            images_grid.RowDefinitions.Add(row);
-            // Add 3 Columns
-            images_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            images_grid.ColumnDefinitions.Add(new ColumnDefinition());
-            foreach (Picture picture in SortedList)
+            try
             {
-                // Somthing Rong With Rows
-                if (columns_pointer_pictures == 2) // New Row
+                if (images_grid != null)
                 {
-                    images_grid.RowDefinitions.Add(new RowDefinition());
-                    rows_pointer_pictures++;
-                    this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
-                    columns_pointer_pictures = 0;
+                    // Order List
+                    List<Picture> SortedList = this.selectedPictures.OrderBy(o => o.CamName).ToList();
+                    Console.WriteLine($"Pictures Count:  {SortedList.Count}");
+                    // Start Creating The Media
+                    images_grid.Children.Clear();
+                    images_grid.RowDefinitions.Clear();
+                    images_grid.ColumnDefinitions.Clear();
+                    int columns_pointer_pictures = 0;
+                    int rows_pointer_pictures = 0;
+                    // Add First Row
+                    RowDefinition row = new RowDefinition();
+                    row.MaxHeight = 300;
+                    images_grid.RowDefinitions.Add(row);
+                    // Add 3 Columns
+                    images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    foreach (Picture picture in SortedList)
+                    {
+                        // Somthing Rong With Rows
+                        if (columns_pointer_pictures == 3) // New Row
+                        {
+                            images_grid.RowDefinitions.Add(new RowDefinition());
+                            rows_pointer_pictures++;
+                            this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
+                            columns_pointer_pictures = 0;
+                        }
+                        this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
+                        columns_pointer_pictures++;
+                    }
+                    Console.WriteLine($"Columns: {images_grid.ColumnDefinitions.Count}    Rows: {images_grid.RowDefinitions.Count}");
                 }
-                this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
-                columns_pointer_pictures++;
             }
-            Console.WriteLine($"Columns: {images_grid.ColumnDefinitions.Count}    Rows: {images_grid.RowDefinitions.Count}");
+            catch(System.NullReferenceException ex)
+            {
+                Console.WriteLine($"Exception: {ex}");
+            }
+            catch( Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex}");
+            }
         }
 
 
@@ -387,24 +458,29 @@ namespace IPCamera
         {
             // Card Grid
             Grid img_grid = new Grid();
-            img_grid.MaxHeight = 270;
+            img_grid.MaxHeight = 250;
             img_grid.Margin = new Thickness(3);
             RowDefinition row_1 = new RowDefinition();
-            row_1.Height = new GridLength(33);
+            row_1.Height = new GridLength(23);
             RowDefinition row_2 = new RowDefinition();
             row_2.Height = new GridLength(0, GridUnitType.Auto);
+            RowDefinition row_3 = new RowDefinition();
+            row_3.Height = new GridLength(23);
             img_grid.RowDefinitions.Add(row_1);
             img_grid.RowDefinitions.Add(row_2);
+            img_grid.RowDefinitions.Add(row_3);
             img_grid.Background = System.Windows.Media.Brushes.Gray;
             Grid.SetRow(img_grid, row);
             Grid.SetColumn(img_grid, column);
             images_grid.Children.Add(img_grid);
+
             // Labels StackPanel
             StackPanel panel = new StackPanel();
             Grid.SetRow(panel, 0);
             panel.Orientation = Orientation.Horizontal;
             panel.HorizontalAlignment = HorizontalAlignment.Center;
             panel.VerticalAlignment = VerticalAlignment.Center;
+            panel.Margin = new Thickness(5,0,5,0);
             //panel.Background = System.Windows.Media.Brushes.Green;
             img_grid.Children.Add(panel);
             // Labels and Button
@@ -412,7 +488,6 @@ namespace IPCamera
             label_1.Content = pic.CamName;
             label_1.Foreground = System.Windows.Media.Brushes.DarkRed;
             label_1.FontSize = 12;
-            label_1.Margin = new Thickness(3,0,0,0);
             panel.Children.Add(label_1);
             Label label_2 = new Label();
             label_2.Content = pic.Date;
@@ -424,10 +499,28 @@ namespace IPCamera
             label_3.Foreground = System.Windows.Media.Brushes.DarkRed;
             label_3.FontSize = 12;
             panel.Children.Add(label_3);
+
+            // Create Media Element
+            MediaElement image = new MediaElement();
+            Grid.SetRow(image, 1);
+            image.Source = new Uri(pic.Path);
+            image.Margin = new Thickness(1);
+            image.Height = 200;
+            image.VerticalAlignment = VerticalAlignment.Center;
+            img_grid.Children.Add(image);
+
+            // Buttons StackPanel
+            StackPanel panel_b = new StackPanel();
+            Grid.SetRow(panel_b, 2);
+            panel_b.Orientation = Orientation.Horizontal;
+            panel_b.HorizontalAlignment = HorizontalAlignment.Center;
+            panel_b.VerticalAlignment = VerticalAlignment.Center;
+            //panel_b.Margin = new Thickness(7, 0, 7, 0);
+            panel_b.Background = System.Windows.Media.Brushes.Orange;
+            img_grid.Children.Add(panel_b);
             Button open = new Button();
             open.Content = "Open";
-            open.Margin = new Thickness(7, 0, 7, 0);
-            open.FontSize = 17;
+            open.FontSize = 12;
             open.Padding = new Thickness(7, 0, 7, 0);
             open.Click += (object obj, RoutedEventArgs e) =>
             {
@@ -443,27 +536,19 @@ namespace IPCamera
                     this.fullscreen_page.Activate();
                 }
             };
-            panel.Children.Add(open);
+            panel_b.Children.Add(open);
             Button delete = new Button();
-            delete.Content = "Del";
-            delete.Margin = new Thickness(7, 0, 7, 0);
-            delete.FontSize = 17;
+            delete.Content = "Delete";
+            delete.FontSize = 12;
             delete.Padding = new Thickness(7, 0, 7, 0);
             delete.Click += (object obj, RoutedEventArgs e) =>
             {
-                if ( MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     File.Delete(pic.Path);
                 }
             };
-            panel.Children.Add(delete);
-            // Create Media Element
-            MediaElement img = new MediaElement();
-            Grid.SetRow(img, 1);
-            img.Source = new Uri(pic.Path);
-            img.Margin = new Thickness(7);
-            img.VerticalAlignment = VerticalAlignment.Center;
-            img_grid.Children.Add(img);
+            panel_b.Children.Add(delete);
         }
 
 

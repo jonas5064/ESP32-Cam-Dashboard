@@ -17,7 +17,7 @@ namespace IPCamera
         public Boolean fullscreen = false;
         RecordFullScreen fullscreen_page;
 
-        public int buttonsFontSize = 17;
+        public int buttonsFontSize = 12;
         public Button play;
         public Button stop;
         public Button pause;
@@ -111,6 +111,8 @@ namespace IPCamera
             Console.WriteLine($"\n\nVideo {this.video.Path}\n");
             this.player = new MediaElement();
             this.player.Source = new Uri(this.video.Path);
+            //this.player.Width = 333;
+            this.player.Height = 233;
             this.player.Margin = new Thickness(7, 7, 7, 0);
             this.player.LoadedBehavior = MediaState.Manual;
             this.player.ScrubbingEnabled = true;
@@ -158,7 +160,7 @@ namespace IPCamera
             backard.FontSize = this.buttonsFontSize;
             forward.FontSize = this.buttonsFontSize;
             open.FontSize = this.buttonsFontSize;
-            delete.FontSize = 17;
+            delete.FontSize = this.buttonsFontSize;
             play.Padding = new Thickness(3,0,3,0);
             stop.Padding = new Thickness(3, 0, 3, 0);
             pause.Padding = new Thickness(3, 0, 3, 0);
