@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="Records"
         Background="Black"
-        Width="2000"
-        Height="1655"
+        Width="1600"
+        Height="1100"
         MinWidth="1000"
         MinHeight="500"
         WindowState="Maximized">
