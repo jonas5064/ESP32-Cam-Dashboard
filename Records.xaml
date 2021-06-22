@@ -39,9 +39,9 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Margin="5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="255*" />
+                    <ColumnDefinition Width="768*" />
+                    <ColumnDefinition Width="295*" />
                 </Grid.ColumnDefinitions>
                 <!-- Selection Grid -->
                 <Grid Grid.Column="1">
@@ -55,7 +55,7 @@
                     <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged_time"></ComboBox>
                     <ComboBox x:Name="cams_v" Grid.Column="2" SelectionChanged="Videos_SelectionChanged_cams"></ComboBox>
                     <CheckBox x:Name="all_v" Grid.Column="3" IsChecked="True" 
-                              Foreground="LightGray"  Margin="7" Checked="Videos_SelectionChanged_all" Unchecked="Videos_SelectionChanged_all">All Cameras</CheckBox>
+                              Foreground="LightGray"  Margin="7" Checked="Videos_SelectionChanged_all" Unchecked="Videos_SelectionChanged_all">All Cams</CheckBox>
                 </Grid>
             </Grid>
             <!-- Grid With All Media Players -->
@@ -77,7 +77,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!-- Selection Grid -->
-                <Grid Grid.Column="1">
+                <Grid Grid.ColumnSpan="3" Margin="10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
@@ -88,7 +88,7 @@
                     <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged_time"></ComboBox>
                     <ComboBox x:Name="cams_i" Grid.Column="2" SelectionChanged="Pictures_SelectionChanged_cams"></ComboBox>
                     <CheckBox x:Name="all_i" Grid.Column="3" IsChecked="True" Foreground="LightGray" Margin="7" 
-                              Checked="Pictures_SelectionChanged_all" Unchecked="Pictures_SelectionChanged_all">All Cameras</CheckBox>
+                              Checked="Pictures_SelectionChanged_all" Unchecked="Pictures_SelectionChanged_all">All Cams</CheckBox>
                 </Grid>
             </Grid>
 

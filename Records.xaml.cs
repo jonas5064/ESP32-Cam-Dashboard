@@ -365,7 +365,7 @@ namespace IPCamera
                     int rows_pointer_videos = 0;
                     // Add First Row
                     RowDefinition row = new RowDefinition();
-                    row.MaxHeight = 350;
+                    row.MaxHeight = 400;
                     videos_grid.RowDefinitions.Add(row);
                     // Add 3 Columns
                     videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -379,7 +379,7 @@ namespace IPCamera
                         if (columns_pointer_videos == 4) // New Row
                         {
                             RowDefinition row_2 = new RowDefinition();
-                            row_2.MaxHeight = 350;
+                            row_2.MaxHeight = 400;
                             videos_grid.RowDefinitions.Add(row_2);
                             rows_pointer_videos++;
                             play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
@@ -432,7 +432,9 @@ namespace IPCamera
                         // Somthing Rong With Rows
                         if (columns_pointer_pictures == 3) // New Row
                         {
-                            images_grid.RowDefinitions.Add(new RowDefinition());
+                            RowDefinition row_2 = new RowDefinition();
+                            row_2.MaxHeight = 300;
+                            images_grid.RowDefinitions.Add(row_2);
                             rows_pointer_pictures++;
                             this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
                             columns_pointer_pictures = 0;
