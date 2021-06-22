@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace IPCamera
 {
@@ -18,6 +19,8 @@ namespace IPCamera
         bool allPictures = false;
         public bool fullscreen = false;
         RecordFullScreen fullscreen_page;
+        private double window_width;
+        private double window_height;
 
         public Records()
         {
@@ -33,11 +36,28 @@ namespace IPCamera
             // Setup To Show All Cameres
             all_v.IsChecked = false;
             all_i.IsChecked = false;
+
+            // When This Window Resized
+            this.SizeChanged += OnWindowSizeChanged;
         }
 
 
-
-
+        // When This Window Resized
+        protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.window_width = e.NewSize.Width;
+            this.window_height = e.NewSize.Height;
+            double prevWindowWidth = e.PreviousSize.Width;
+            double prevWindowHeight = e.PreviousSize.Height;
+            if( true )
+            {
+                Console.WriteLine($"\nWindow Width: {this.window_width}");
+            }
+            if (true)
+            {
+                Console.WriteLine($"Window Height: {this.window_height}");
+            }
+        }
 
 
         // If CheckBox All Videos Changeded
@@ -371,12 +391,11 @@ namespace IPCamera
                     videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
-                    videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     Player play;
                     foreach (Video video in SortedList)
                     {
                         // Somthing Rong With Rows
-                        if (columns_pointer_videos == 4) // New Row
+                        if (columns_pointer_videos == 3) // New Row
                         {
                             RowDefinition row_2 = new RowDefinition();
                             row_2.MaxHeight = 400;

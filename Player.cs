@@ -10,7 +10,8 @@ namespace IPCamera
     public class Player
     {
 
-        public Grid parrent;
+        public Grid parrent_g;
+        public StackPanel parrent_s;
         public Video video;
         public Picture picture;
         public Records record;
@@ -26,7 +27,7 @@ namespace IPCamera
 
         public Player(Grid parrent, Video video, int column, int row)
         {
-            this.parrent = parrent;
+            this.parrent_g = parrent;
             this.video = video;
             this.column = column;
             this.row = row;
@@ -51,7 +52,7 @@ namespace IPCamera
 
         public Player(Grid parrent, Picture picture, Records record, int column, int row)
         {
-            this.parrent = parrent;
+            this.parrent_g = parrent;
             this.picture = picture;
             this.record = record;
             this.column = column;
@@ -68,7 +69,7 @@ namespace IPCamera
             main_panel.Background = System.Windows.Media.Brushes.Gray;
             Grid.SetColumn(main_panel, this.column);
             Grid.SetRow(main_panel, this.row);
-            this.parrent.Children.Add(main_panel);
+            this.parrent_g.Children.Add(main_panel);
 
             // Add Label
             Label name = new Label();
@@ -167,6 +168,7 @@ namespace IPCamera
             panel_bakc_forw_open_del.Orientation = Orientation.Horizontal;
             panel_bakc_forw_open_del.HorizontalAlignment = HorizontalAlignment.Center;
             panel_bakc_forw_open_del.VerticalAlignment = VerticalAlignment.Center;
+            panel_bakc_forw_open_del.Margin = new Thickness(0,0,0,7);
             main_panel.Children.Add(panel_bakc_forw_open_del);
             // Add Button
             RepeatButton backard = new RepeatButton();
@@ -243,7 +245,7 @@ namespace IPCamera
             main_panel.VerticalAlignment = VerticalAlignment.Center;
             Grid.SetRow(main_panel, this.row);
             Grid.SetColumn(main_panel, this.column);
-            this.parrent.Children.Add(main_panel);
+            this.parrent_g.Children.Add(main_panel);
 
             // Label
             Label label_1 = new Label();

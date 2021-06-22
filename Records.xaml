@@ -10,7 +10,7 @@
         Width="2000"
         Height="1655"
         MinWidth="1000"
-        MinHeight="800"
+        MinHeight="500"
         WindowState="Maximized">
 
     <!-- ResizeMode="NoResize"
@@ -18,8 +18,8 @@
 
     <Grid x:Name="main_container" Visibility="Visible">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="800*"/>
-            <ColumnDefinition Width="400*"/>
+            <ColumnDefinition Width="125*"/>
+            <ColumnDefinition Width="124*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="33"/>
@@ -41,24 +41,18 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Margin="5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="255*" />
-                    <ColumnDefinition Width="768*" />
-                    <ColumnDefinition Width="295*" />
+                    <ColumnDefinition Width="0*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="0*" />
                 </Grid.ColumnDefinitions>
                 <!-- Selection Grid -->
-                <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="dates_v" Grid.Column="0" SelectionChanged="Videos_SelectionChanged_date"></ComboBox>
-                    <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged_time"></ComboBox>
-                    <ComboBox x:Name="cams_v" Grid.Column="2" SelectionChanged="Videos_SelectionChanged_cams"></ComboBox>
-                    <CheckBox x:Name="all_v" Grid.Column="3" IsChecked="True" 
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ComboBox x:Name="dates_v" Grid.Column="0" SelectionChanged="Videos_SelectionChanged_date" VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                    <ComboBox x:Name="times_v" Grid.Column="1" SelectionChanged="Videos_SelectionChanged_time" VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                    <ComboBox x:Name="cams_v" Grid.Column="2" SelectionChanged="Videos_SelectionChanged_cams" VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                    <CheckBox x:Name="all_v" Grid.Column="3" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center"
                               Foreground="LightGray"  Margin="7" Checked="Videos_SelectionChanged_all" Unchecked="Videos_SelectionChanged_all">All Cams</CheckBox>
-                </Grid>
+                </StackPanel>
             </Grid>
             <!-- Grid With All Media Players -->
             <ScrollViewer Grid.Row="1" Margin="11" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
@@ -79,19 +73,13 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!-- Selection Grid -->
-                <Grid Grid.ColumnSpan="3" Margin="10,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="dates_i" Grid.Column="0" SelectionChanged="Pictures_SelectionChanged_date"></ComboBox>
-                    <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged_time"></ComboBox>
-                    <ComboBox x:Name="cams_i" Grid.Column="2" SelectionChanged="Pictures_SelectionChanged_cams"></ComboBox>
-                    <CheckBox x:Name="all_i" Grid.Column="3" IsChecked="True" Foreground="LightGray" Margin="7" 
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ComboBox x:Name="dates_i" Grid.Column="0" SelectionChanged="Pictures_SelectionChanged_date" VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                    <ComboBox x:Name="times_i" Grid.Column="1" SelectionChanged="Pictures_SelectionChanged_time" VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                    <ComboBox x:Name="cams_i" Grid.Column="2" SelectionChanged="Pictures_SelectionChanged_cams" VerticalAlignment="Center" HorizontalAlignment="Center"></ComboBox>
+                    <CheckBox x:Name="all_i" Grid.Column="3" IsChecked="True" Foreground="LightGray" Margin="7" VerticalAlignment="Center" HorizontalAlignment="Center"
                               Checked="Pictures_SelectionChanged_all" Unchecked="Pictures_SelectionChanged_all">All Cams</CheckBox>
-                </Grid>
+                </StackPanel>
             </Grid>
 
             <!-- Grid With All Pictures -->
