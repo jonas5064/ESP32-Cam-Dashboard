@@ -59,6 +59,17 @@ namespace IPCamera
             this.row = row;
         }
 
+        ~Player()
+        {
+            this.parrent_g = null;
+            this.video = null;
+            this.parrent_g = null;
+            this.picture = null;
+            this.record = null;
+            this.column = 0;
+            this.row = 0;
+        }
+
         public void CreateVideo()
         {
             // Main Panel Card

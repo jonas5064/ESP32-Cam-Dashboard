@@ -66,6 +66,13 @@ namespace IPCamera
             media_element.Source = new Uri(this.picture.Path);
         }
 
+        ~RecordFullScreen()
+        {
+            this.video = null;
+            this.picture = null;
+            this.record = null;
+        }
+
         // On Close Window
         protected override void OnClosed(EventArgs e)
         {

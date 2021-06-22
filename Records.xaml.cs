@@ -41,6 +41,16 @@ namespace IPCamera
             this.SizeChanged += OnWindowSizeChanged;
         }
 
+        ~Records()
+        {
+            this.videos.Clear();
+            this.pictures.Clear();
+            this.selectedVideos.Clear();
+            this.selectedPictures.Clear();
+            this.fullscreen_page = null;
+            this.window_width = 0;
+            this.window_height = 0;
+        }
 
         // When This Window Resized
         protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
@@ -80,7 +90,7 @@ namespace IPCamera
                 {
                     vids = (from video in this.videos where video.Date == date && video.Time == time select video).ToList();
                 }
-                Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                //Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
                 this.selectedVideos.Clear();
                 this.selectedVideos.AddRange(vids);
                 this.CreateMediaPlayers();
@@ -106,7 +116,7 @@ namespace IPCamera
                 {
                     pics = (from picture in this.pictures where picture.Date == date && picture.Time == time select picture).ToList();
                 }
-                Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                //Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
                 this.selectedPictures.Clear();
                 this.selectedPictures.AddRange(pics);
                 this.CreatePictures();
@@ -125,7 +135,7 @@ namespace IPCamera
                 {
                     List<Video> vids = (from video in this.videos where video.Date == date && 
                                         video.Time == time && video.CamName == cam select video).ToList();
-                    Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                    //Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
                     this.selectedVideos.Clear();
                     this.selectedVideos.AddRange(vids);
                     this.CreateMediaPlayers();
@@ -145,7 +155,7 @@ namespace IPCamera
                 {
                     List<Picture> pics = (from picture in this.pictures where picture.Date == date && 
                                           picture.Time == time && picture.CamName == cam select picture).ToList();
-                    Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                    //Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
                     this.selectedPictures.Clear();
                     this.selectedPictures.AddRange(pics);
                     this.CreatePictures();
@@ -197,7 +207,7 @@ namespace IPCamera
                     {
                         List<Video> vids = (from video in this.videos where video.Date == date && 
                                             video.Time == time select video).ToList();
-                        Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
+                        //Console.WriteLine($"date: {date}  time: {time}  vids.Count:  {vids.Count}");
                         this.selectedVideos.Clear();
                         this.selectedVideos.AddRange(vids);
                         this.CreateMediaPlayers();
@@ -253,7 +263,7 @@ namespace IPCamera
                     {
                         List<Picture> pics = (from picture in this.pictures where picture.Date == date && 
                                               picture.Time == time select picture).ToList();
-                        Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
+                        //Console.WriteLine($"date: {date}  time: {time}  pics.Count:  {pics.Count}");
                         this.selectedPictures.Clear();
                         this.selectedPictures.AddRange(pics);
                         this.CreatePictures();
@@ -376,7 +386,7 @@ namespace IPCamera
                 {
                     // Order List
                     List<Video> SortedList = this.selectedVideos.OrderBy(o => o.CamName).ToList();
-                    Console.WriteLine($"Videos Count:  {SortedList.Count}");
+                    //Console.WriteLine($"Videos Count:  {SortedList.Count}");
                     // Start Creating The Media
                     videos_grid.Children.Clear();
                     videos_grid.RowDefinitions.Clear();
@@ -431,7 +441,7 @@ namespace IPCamera
                 {
                     // Order List
                     List<Picture> SortedList = this.selectedPictures.OrderBy(o => o.CamName).ToList();
-                    Console.WriteLine($"Pictures Count:  {SortedList.Count}");
+                    //Console.WriteLine($"Pictures Count:  {SortedList.Count}");
                     // Start Creating The Media
                     images_grid.Children.Clear();
                     images_grid.RowDefinitions.Clear();
@@ -464,7 +474,7 @@ namespace IPCamera
                             play.CreatePicture();
                         columns_pointer_pictures++;
                     }
-                    Console.WriteLine($"Columns: {images_grid.ColumnDefinitions.Count}    Rows: {images_grid.RowDefinitions.Count}");
+                    //Console.WriteLine($"Columns: {images_grid.ColumnDefinitions.Count}    Rows: {images_grid.RowDefinitions.Count}");
                 }
             }
             catch(System.NullReferenceException ex)
