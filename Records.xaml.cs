@@ -421,25 +421,28 @@ namespace IPCamera
                     int rows_pointer_pictures = 0;
                     // Add First Row
                     RowDefinition row = new RowDefinition();
-                    row.MaxHeight = 300;
+                    row.MaxHeight = 333;
                     images_grid.RowDefinitions.Add(row);
                     // Add 3 Columns
                     images_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     images_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     images_grid.ColumnDefinitions.Add(new ColumnDefinition());
+                    Player play;
                     foreach (Picture picture in SortedList)
                     {
                         // Somthing Rong With Rows
                         if (columns_pointer_pictures == 3) // New Row
                         {
                             RowDefinition row_2 = new RowDefinition();
-                            row_2.MaxHeight = 300;
+                            row_2.MaxHeight = 333;
                             images_grid.RowDefinitions.Add(row_2);
                             rows_pointer_pictures++;
-                            this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
+                            play = new Player(images_grid, picture, this, columns_pointer_pictures, rows_pointer_pictures);
+                            play.CreatePicture();
                             columns_pointer_pictures = 0;
                         }
-                        this.CreateImage(rows_pointer_pictures, columns_pointer_pictures, picture);
+                        play = new Player(images_grid, picture, this, columns_pointer_pictures, rows_pointer_pictures);
+                            play.CreatePicture();
                         columns_pointer_pictures++;
                     }
                     Console.WriteLine($"Columns: {images_grid.ColumnDefinitions.Count}    Rows: {images_grid.RowDefinitions.Count}");
@@ -454,114 +457,6 @@ namespace IPCamera
                 Console.WriteLine($"Exception: {ex}");
             }
         }
-
-
-        private void CreateImage(int row, int column, Picture pic)
-        {
-            // Main Panel Card
-            StackPanel main_panel = new StackPanel();
-            main_panel.Background = System.Windows.Media.Brushes.Gray;
-            main_panel.MaxHeight = 300;
-            main_panel.Margin = new Thickness(3);
-            main_panel.Orientation = Orientation.Vertical;
-            main_panel.HorizontalAlignment = HorizontalAlignment.Center;
-            main_panel.VerticalAlignment = VerticalAlignment.Center;
-            Grid.SetRow(main_panel, row);
-            Grid.SetColumn(main_panel, column);
-            images_grid.Children.Add(main_panel);
-
-            // Labels StackPanel
-            StackPanel panel = new StackPanel();
-            panel.Orientation = Orientation.Horizontal;
-            panel.HorizontalAlignment = HorizontalAlignment.Center;
-            panel.VerticalAlignment = VerticalAlignment.Center;
-            panel.Margin = new Thickness(5,0,5,0);
-            main_panel.Children.Add(panel);
-            // Label
-            Label label_1 = new Label();
-            label_1.Content = pic.CamName;
-            label_1.Foreground = System.Windows.Media.Brushes.DarkRed;
-            label_1.FontSize = 12;
-            panel.Children.Add(label_1);
-
-            // Labels StackPanel
-            StackPanel panel_2 = new StackPanel();
-            panel_2.Orientation = Orientation.Horizontal;
-            panel_2.HorizontalAlignment = HorizontalAlignment.Center;
-            panel_2.VerticalAlignment = VerticalAlignment.Center;
-            panel_2.Margin = new Thickness(5, 0, 5, 0);
-            main_panel.Children.Add(panel_2);
-            // Label
-            Label label_2 = new Label();
-            label_2.Content = pic.Date;
-            label_2.Foreground = System.Windows.Media.Brushes.DarkRed;
-            label_2.FontSize = 12;
-            panel_2.Children.Add(label_2);
-
-            // Labels StackPanel
-            StackPanel panel_3 = new StackPanel();
-            panel_3.Orientation = Orientation.Horizontal;
-            panel_3.HorizontalAlignment = HorizontalAlignment.Center;
-            panel_3.VerticalAlignment = VerticalAlignment.Center;
-            panel_3.Margin = new Thickness(5, 0, 5, 0);
-            main_panel.Children.Add(panel_3);
-            // Label
-            Label label_3 = new Label();
-            label_3.Content = pic.Time;
-            label_3.Foreground = System.Windows.Media.Brushes.DarkRed;
-            label_3.FontSize = 12;
-            panel_3.Children.Add(label_3);
-
-            // Create Media Element
-            MediaElement image = new MediaElement();
-            image.Source = new Uri(pic.Path);
-            image.Margin = new Thickness(1);
-            image.Height = 200;
-            image.VerticalAlignment = VerticalAlignment.Center;
-            main_panel.Children.Add(image);
-
-            // Buttons StackPanel
-            StackPanel panel_b = new StackPanel();
-            panel_b.Orientation = Orientation.Horizontal;
-            panel_b.HorizontalAlignment = HorizontalAlignment.Center;
-            panel_b.VerticalAlignment = VerticalAlignment.Center;
-            panel_b.Background = System.Windows.Media.Brushes.Orange;
-            main_panel.Children.Add(panel_b);
-            // Add Button
-            Button open = new Button();
-            open.Content = "Open";
-            open.FontSize = 12;
-            open.Padding = new Thickness(7, 0, 7, 0);
-            open.Click += (object obj, RoutedEventArgs e) =>
-            {
-                RecordFullScreen fullscreen_page;
-                if (!this.fullscreen)
-                {
-                    this.fullscreen = true;
-                    this.fullscreen_page = new RecordFullScreen(pic, this);
-                    this.fullscreen_page.Show();
-                }
-                else
-                {
-                    this.fullscreen_page.Activate();
-                }
-            };
-            panel_b.Children.Add(open);
-            // Add Button
-            Button delete = new Button();
-            delete.Content = "Delete";
-            delete.FontSize = 12;
-            delete.Padding = new Thickness(7, 0, 7, 0);
-            delete.Click += (object obj, RoutedEventArgs e) =>
-            {
-                if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    File.Delete(pic.Path);
-                }
-            };
-            panel_b.Children.Add(delete);
-        }
-
 
 
         private void X_Button_R_Click(object sender, RoutedEventArgs e)

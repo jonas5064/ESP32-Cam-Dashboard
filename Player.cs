@@ -12,6 +12,8 @@ namespace IPCamera
 
         public Grid parrent;
         public Video video;
+        public Picture picture;
+        public Records record;
         public int column;
         public int row;
         public Boolean fullscreen = false;
@@ -20,6 +22,7 @@ namespace IPCamera
         public int buttonsFontSize = 12;
         Label time_spam;
         MediaElement player;
+        
 
         public Player(Grid parrent, Video video, int column, int row)
         {
@@ -44,6 +47,15 @@ namespace IPCamera
                 }
             };
             timer.Start();
+        }
+
+        public Player(Grid parrent, Picture picture, Records record, int column, int row)
+        {
+            this.parrent = parrent;
+            this.picture = picture;
+            this.record = record;
+            this.column = column;
+            this.row = row;
         }
 
         public void CreateVideo()
@@ -220,6 +232,97 @@ namespace IPCamera
         }
 
 
+        public void CreatePicture()
+        {
+            // Main Panel Card
+            StackPanel main_panel = new StackPanel();
+            main_panel.Background = System.Windows.Media.Brushes.Gray;
+            main_panel.Margin = new Thickness(3);
+            main_panel.Orientation = Orientation.Vertical;
+            main_panel.HorizontalAlignment = HorizontalAlignment.Center;
+            main_panel.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetRow(main_panel, this.row);
+            Grid.SetColumn(main_panel, this.column);
+            this.parrent.Children.Add(main_panel);
+
+            // Label
+            Label label_1 = new Label();
+            label_1.Margin = new Thickness(0,11,0,0);
+            label_1.HorizontalAlignment = HorizontalAlignment.Center;
+            label_1.VerticalAlignment = VerticalAlignment.Center;
+            label_1.Content = this.picture.CamName;
+            label_1.Foreground = System.Windows.Media.Brushes.DarkRed;
+            label_1.FontSize = 12;
+            main_panel.Children.Add(label_1);
+
+            // Label
+            Label label_2 = new Label();
+            label_2.HorizontalAlignment = HorizontalAlignment.Center;
+            label_2.VerticalAlignment = VerticalAlignment.Center;
+            label_2.Content = this.picture.Date;
+            label_2.Foreground = System.Windows.Media.Brushes.DarkRed;
+            label_2.FontSize = 12;
+            main_panel.Children.Add(label_2);
+
+            // Label
+            Label label_3 = new Label();
+            label_3.HorizontalAlignment = HorizontalAlignment.Center;
+            label_2.VerticalAlignment = VerticalAlignment.Center;
+            label_3.Content = this.picture.Time;
+            label_3.Foreground = System.Windows.Media.Brushes.DarkRed;
+            label_3.FontSize = 12;
+            main_panel.Children.Add(label_3);
+
+            // Create Media Element
+            MediaElement image = new MediaElement();
+            image.Source = new Uri(this.picture.Path);
+            image.Margin = new Thickness(1);
+            image.Height = 200;
+            image.VerticalAlignment = VerticalAlignment.Center;
+            main_panel.Children.Add(image);
+
+            // Buttons StackPanel
+            StackPanel panel_b = new StackPanel();
+            panel_b.Orientation = Orientation.Horizontal;
+            panel_b.HorizontalAlignment = HorizontalAlignment.Center;
+            panel_b.VerticalAlignment = VerticalAlignment.Center;
+            panel_b.Background = System.Windows.Media.Brushes.Orange;
+            panel_b.Margin = new Thickness(0,0,0,11);
+            main_panel.Children.Add(panel_b);
+            // Add Button
+            Button open = new Button();
+            open.Content = "Open";
+            open.FontSize = 12;
+            open.Padding = new Thickness(7, 0, 7, 0);
+            open.Click += (object obj, RoutedEventArgs e) =>
+            {
+                RecordFullScreen fullscreen_page;
+                if (!this.fullscreen)
+                {
+                    this.fullscreen = true;
+                    this.fullscreen_page = new RecordFullScreen(this.picture, this.record);
+                    this.fullscreen_page.Show();
+                }
+                else
+                {
+                    this.fullscreen_page.Activate();
+                }
+            };
+            panel_b.Children.Add(open);
+            // Add Button
+            Button delete = new Button();
+            delete.Content = "Delete";
+            delete.FontSize = 12;
+            delete.Padding = new Thickness(7, 0, 7, 0);
+            delete.Click += (object obj, RoutedEventArgs e) =>
+            {
+                if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    File.Delete(this.picture.Path);
+                }
+            };
+            panel_b.Children.Add(delete);
+        }
 
 
     }
