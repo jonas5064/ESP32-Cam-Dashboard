@@ -48,45 +48,34 @@ namespace IPCamera
 
         public void CreateVideo()
         {
-            // Create Video Grid And Add it to Video_Grid
-            Grid vid_Grid = new Grid();
-            vid_Grid.Background = System.Windows.Media.Brushes.Gray;
-            vid_Grid.Margin = new Thickness(3);
-            Grid.SetRow(vid_Grid, this.row);
-            Grid.SetColumn(vid_Grid, this.column);
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            vid_Grid.RowDefinitions.Add(new RowDefinition());
-            parrent.Children.Add(vid_Grid);
+            // Main Panel Card
+            StackPanel main_panel = new StackPanel();
+            main_panel.Orientation = Orientation.Vertical;
+            main_panel.Margin = new Thickness(3);
+            main_panel.HorizontalAlignment = HorizontalAlignment.Center;
+            main_panel.Background = System.Windows.Media.Brushes.Gray;
+            Grid.SetColumn(main_panel, this.column);
+            Grid.SetRow(main_panel, this.row);
+            this.parrent.Children.Add(main_panel);
 
-            // Add Title Panel
-            StackPanel panel_title = new StackPanel();
-            panel_title.Orientation = Orientation.Vertical;
-            panel_title.HorizontalAlignment = HorizontalAlignment.Center;
-            Grid.SetRow(panel_title, 0);
-            vid_Grid.Children.Add(panel_title);
             // Add Label
             Label name = new Label();
             name.Content = this.video.CamName;
             name.HorizontalAlignment = HorizontalAlignment.Center;
             name.Foreground = System.Windows.Media.Brushes.DarkRed;
-            panel_title.Children.Add(name);
+            main_panel.Children.Add(name);
             // Add Label
             Label date = new Label();
             date.Content = this.video.Date;
             date.HorizontalAlignment = HorizontalAlignment.Center;
             date.Foreground = System.Windows.Media.Brushes.DarkRed;
-            panel_title.Children.Add(date);
+            main_panel.Children.Add(date);
             // Add Label
             Label time = new Label();
             time.Content = this.video.Time;
             time.HorizontalAlignment = HorizontalAlignment.Center;
             time.Foreground = System.Windows.Media.Brushes.DarkRed;
-            panel_title.Children.Add(time);
+            main_panel.Children.Add(time);
 
             // Video Player
             Console.WriteLine($"\n\nVideo {this.video.Path}\n");
@@ -105,23 +94,19 @@ namespace IPCamera
             this.player.Play();
             this.player.Pause();
             this.player.Position = TimeSpan.FromSeconds(0);
-            Grid.SetRow(player, 1);
-            vid_Grid.Children.Add(player);
+            main_panel.Children.Add(player);
 
             // Add Label Fro Time Spam
             this.time_spam = new Label();
             this.time_spam.HorizontalAlignment = HorizontalAlignment.Center;
-            Grid.SetRow(this.time_spam, 2);
-            vid_Grid.Children.Add(this.time_spam);
+            main_panel.Children.Add(this.time_spam);
 
-            
             // Add Panel Play Stop Pause
             StackPanel panel_Play_Stop_Pause = new StackPanel();
             panel_Play_Stop_Pause.Orientation = Orientation.Horizontal;
             panel_Play_Stop_Pause.HorizontalAlignment = HorizontalAlignment.Center;
             panel_Play_Stop_Pause.VerticalAlignment = VerticalAlignment.Center;
-            Grid.SetRow(panel_Play_Stop_Pause, 3);
-            vid_Grid.Children.Add(panel_Play_Stop_Pause);
+            main_panel.Children.Add(panel_Play_Stop_Pause);
             // Add Button
             Button play = new Button();
             play.Content = "Play";
@@ -170,8 +155,7 @@ namespace IPCamera
             panel_bakc_forw_open_del.Orientation = Orientation.Horizontal;
             panel_bakc_forw_open_del.HorizontalAlignment = HorizontalAlignment.Center;
             panel_bakc_forw_open_del.VerticalAlignment = VerticalAlignment.Center;
-            Grid.SetRow(panel_bakc_forw_open_del, 4);
-            vid_Grid.Children.Add(panel_bakc_forw_open_del);
+            main_panel.Children.Add(panel_bakc_forw_open_del);
             // Add Button
             RepeatButton backard = new RepeatButton();
             backard.Content = "Back";
