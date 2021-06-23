@@ -1,17 +1,20 @@
+/* Create Database and Select this Database */
+CREATE DATABASE IPCameras;
+USE IPCameras;
+
+/* Create Tables */
 CREATE TABLE EmailSender (
     Id    INT           AUTO_INCREMENT NOT NULL,
     Email NCHAR (255)   NULL,
     Pass  NVARCHAR (50) NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
-
 CREATE TABLE FilesDirs
 (
 	Id INT NOT NULL PRIMARY KEY,
     Name NCHAR(250) NOT NULL,
     Path NCHAR(250) NOT NULL
 );
-
 CREATE TABLE FilesFormats (
     Id   INT NOT NULL AUTO_INCREMENT,
     avi  BOOLEAN DEFAULT ((0)) NOT NULL,
@@ -19,7 +22,6 @@ CREATE TABLE FilesFormats (
     history_time TINYINT DEFAULT 1 NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
-
 CREATE TABLE MyCameras (
     Id               NVARCHAR (50) NOT NULL,
     urls              NCHAR (255)   NOT NULL,
@@ -48,7 +50,6 @@ CREATE TABLE MyCameras (
     isEsp32  BOOLEAN NOT NULL DEFAULT ((0)),
     PRIMARY KEY CLUSTERED (Id ASC)
 );
-
 CREATE TABLE SMS
 (
 	Id    INT AUTO_INCREMENT NOT NULL,
@@ -57,7 +58,6 @@ CREATE TABLE SMS
     Phone NCHAR(55) NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
-
 CREATE TABLE Users (
     Id        INT  AUTO_INCREMENT NOT NULL,
     FirstName NCHAR (255) NOT NULL,
@@ -68,32 +68,33 @@ CREATE TABLE Users (
     Licences  NCHAR (100) NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
-
 CREATE TABLE Logged (
     Id   NCHAR (255) NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
 
-
-
-
-
-
+/* Insert Some Base Data */
 INSERT INTO Users (FirstName, LastName, Email, Phone, Licences, Password)
-VALUES ('Alexandros', 'Platanios', 'alexandrosplatanios15@gmail.com',
+    VALUES ('Alexandros', 'Platanios', 'alexandrosplatanios15@gmail.com',
         '6949277783', 'Admin', 'Platanios719791');
-
 INSERT INTO Users (FirstName, LastName, Email, Phone, Licences, Password)
-VALUES ('admin', 'admin', 'admin@admin.com',
+    VALUES ('admin', 'admin', 'admin@admin.com',
         '', 'Admin', '1234');
-
-
 INSERT INTO FilesFormats (avi, mp4, history_time) VALUES (0, 1, 1);
+INSERT INTO FilesDirs (id, Name, Path) VALUES (1,'Videos','C:\\IPCameras_Files\\Video');
+INSERT INTO FilesDirs (id, Name, Path) VALUES (2,'Pictures','C:\\IPCameras_Files\\Pictures');
+INSERT INTO MyCameras (id,urls,name,username,password,fps,isEsp32 ) VALUES
+    (1,'http://192.168.1.30:81/stream','Camera 1','manos','manolis','16','1');
+INSERT INTO MyCameras (id,urls,name,username,password,fps,isEsp32 ) VALUES
+    (2,'http://192.168.1.31:81/stream','Camera 2','manos','manolis','16','1');
 
+
+
+
+
+/*
 UPDATE MyCameras SET net_stream_prefix='camera1', net_stream_port='80', net_stream='0'
         WHERE urls='http://192.168.1.30:81/stream' AND Name='Camera 1';
-
-
 
 
 SELECT * FROM Users;
@@ -102,6 +103,8 @@ SELECT * FROM EmailSender;
 SELECT * FROM FilesFormats;
 
 
+DROP DATABASE IPCameras;
 DROP TABLE MyCameras;
 DROP TABLE FilesDirs;
 DROP TABLE FilesFormats;
+*/
