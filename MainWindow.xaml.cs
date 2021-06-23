@@ -101,6 +101,9 @@ namespace IPCamera
                     Console.WriteLine("Inside First Time Run.");
                     try
                     {
+                        // Open a Window And Set DataBase Imfos
+                                ///
+
                         // Install Requarements
                         Install_Requarements.Install_Req();
                         // Create an Admin User
