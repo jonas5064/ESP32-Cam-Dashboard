@@ -81,12 +81,12 @@ namespace IPCamera
             }
             get { return MainWindow._logged; }
         }
-        private Settings Settings { get; set; }
+        private Settings _settings;
         public static bool Settings_oppened { get; set; }
         public static bool Login_oppened { get; set; }
-        private Account Account { get; set; }
+        private Account _account;
         public static bool Account_oppened { get; set; }
-        private Records Records { get; set; }
+        private Records _records;
         public static bool Records_oppened { get; set; }
         public static String TwilioNumber { get; set; }
         public static String TwilioAccountSID { get; set; }
@@ -673,12 +673,12 @@ namespace IPCamera
                 {
                     Settings_oppened = true;
                     Console.WriteLine("Settings_oppened: " + Convert.ToString(Settings_oppened));
-                    this.Settings = new Settings();
-                    this.Settings.Show();
+                    this._settings = new Settings();
+                    this._settings.Show();
                 }
                 else
                 {
-                    this.Settings.Activate();
+                    this._settings.Activate();
                 }
             }
         }
@@ -692,12 +692,12 @@ namespace IPCamera
                 {
                     Account_oppened = true;
                     Console.WriteLine("Account_oppened: " + Convert.ToString(Account_oppened));
-                    this.Account = new Account(MainWindow.User);
-                    this.Account.Show();
+                    this._account = new Account(MainWindow.User);
+                    this._account.Show();
                 }
                 else
                 {
-                    this.Account.Activate();
+                    this._account.Activate();
                 }
             }
         }
@@ -711,12 +711,12 @@ namespace IPCamera
                 {
                     Records_oppened = true;
                     Console.WriteLine("Records_oppened: " + Convert.ToString(Records_oppened));
-                    this.Records = new Records();
-                    this.Records.Show();
+                    this._records = new Records();
+                    this._records.Show();
                 }
                 else
                 {
-                    this.Records.Activate();
+                    this._records.Activate();
                 }
             }
         }
