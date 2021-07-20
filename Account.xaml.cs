@@ -19,16 +19,7 @@ namespace IPCamera
     public partial class Account : Window
     {
 
-        public Users user;
-        public Users User
-        {
-            get { return this.user; }
-            set
-            {
-                this.user = value;
-            }
-        }
-
+        public Users User { get; set; }
 
         public Account(Users user)
         {
@@ -42,8 +33,8 @@ namespace IPCamera
         // When Close The Window
         protected override void OnClosed(EventArgs e)
         {
-            MainWindow.account_oppened = false;
-            Console.WriteLine("account_oppened: " + Convert.ToString(MainWindow.account_oppened));
+            MainWindow.Account_oppened = false;
+            Console.WriteLine("account_oppened: " + Convert.ToString(MainWindow.Account_oppened));
             this.Close();
         }
 
@@ -51,26 +42,30 @@ namespace IPCamera
         public void Apply_Click(object sender, RoutedEventArgs e)
         {
             // Save to DataBase
-            MySqlConnection connection = new MySqlConnection(App.DB_connection_string);
-            String query = $"UPDATE Users SET FirstName='{this.User.Firstname}', LastName='{this.User.Lastname}', " +
-                            $"Email='{this.User.Email}', Phone='{this.User.Phone}', Password='{this.User.Password}' " +
-                            $"WHERE Email='{this.User.Email}'";
-            MySqlCommand command = new MySqlCommand(query, connection);
-            connection.Open();
-            var result = command.ExecuteNonQuery();
-            // Check Error
-            if (result < 0)
-                System.Windows.MessageBox.Show("Error inserting data into Database!");
-            connection.Close();
+            using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
+            {
+                String query = $"UPDATE Users SET FirstName='{this.User.Firstname}', LastName='{this.User.Lastname}', " +
+                                $"Email='{this.User.Email}', Phone='{this.User.Phone}', Password='{this.User.Password}' " +
+                                $"WHERE Email='{this.User.Email}'";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    // Check Error
+                    if (result < 0)
+                        System.Windows.MessageBox.Show("Error inserting data into Database!");
+                    connection.Close();
+                }  
+            }
             // Save in RAM
-            MainWindow.user = this.User;
+            MainWindow.User = this.User;
             int counter = 0;
             Boolean checker = false;
-            foreach(Users user in MainWindow.myUsers)
+            foreach(Users user in MainWindow.MyUsers)
             {
                 if (user.Email.Equals(this.User.Email))
                 {
-                    MainWindow.myUsers[counter] = this.User;
+                    MainWindow.MyUsers[counter] = this.User;
                     checker = true;
                     break;
                 }

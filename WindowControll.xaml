@@ -193,7 +193,7 @@
                                      Height="23"
                                      HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                      PreviewTextInput="NumberValidationTextBox" 
-                                     LostFocus="network_streaming_port_LostFocus"/>
+                                     LostFocus="Network_streaming_port_LostFocus"/>
                     </Grid>
 
                     <Grid Grid.Row="2">
@@ -208,7 +208,7 @@
                         <TextBox Grid.Column="1" x:Name="network_streaming_prefix"
                                      Height="23"
                                      HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                     LostFocus="network_streaming_prefix_LostFocus"/>
+                                     LostFocus="Network_streaming_prefix_LostFocus"/>
                     </Grid>
                 </Grid>
             </Grid>

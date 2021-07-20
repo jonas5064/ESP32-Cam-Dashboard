@@ -18,7 +18,6 @@ namespace IPCamera
         bool allVideos = false;
         bool allPictures = false;
         public bool fullscreen = false;
-        RecordFullScreen fullscreen_page;
         private double window_width;
         private double window_height;
 
@@ -47,7 +46,6 @@ namespace IPCamera
             this.pictures.Clear();
             this.selectedVideos.Clear();
             this.selectedPictures.Clear();
-            this.fullscreen_page = null;
             this.window_width = 0;
             this.window_height = 0;
         }
@@ -57,9 +55,9 @@ namespace IPCamera
         {
             this.window_width = e.NewSize.Width;
             this.window_height = e.NewSize.Height;
-            double prevWindowWidth = e.PreviousSize.Width;
-            double prevWindowHeight = e.PreviousSize.Height;
-            if( true )
+            _ = e.PreviousSize.Width;
+            _ = e.PreviousSize.Height;
+            if ( true )
             {
                 Console.WriteLine($"\nWindow Width: {this.window_width}");
             }
@@ -319,7 +317,7 @@ namespace IPCamera
         private void GetRecordsPath()
         {
             // Get All Videos
-            this.GetDirsSubDirsFiles(Camera.videos_dir, x =>
+            this.GetDirsSubDirsFiles(Camera.Videos_dir, x =>
             {
                 try
                 {
@@ -335,7 +333,7 @@ namespace IPCamera
                 }
             });
             // Get All Images
-            this.GetDirsSubDirsFiles(Camera.pictures_dir, x =>
+            this.GetDirsSubDirsFiles(Camera.Pictures_dir, x =>
             {
                 try
                 {
@@ -394,8 +392,10 @@ namespace IPCamera
                     int columns_pointer_videos = 0;
                     int rows_pointer_videos = 0;
                     // Add First Row
-                    RowDefinition row = new RowDefinition();
-                    row.MaxHeight = 400;
+                    RowDefinition row = new RowDefinition
+                    {
+                        MaxHeight = 400
+                    };
                     videos_grid.RowDefinitions.Add(row);
                     // Add 3 Columns
                     videos_grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -407,8 +407,10 @@ namespace IPCamera
                         // Somthing Rong With Rows
                         if (columns_pointer_videos == 3) // New Row
                         {
-                            RowDefinition row_2 = new RowDefinition();
-                            row_2.MaxHeight = 400;
+                            RowDefinition row_2 = new RowDefinition
+                            {
+                                MaxHeight = 400
+                            };
                             videos_grid.RowDefinitions.Add(row_2);
                             rows_pointer_videos++;
                             play = new Player(videos_grid, video, columns_pointer_videos, rows_pointer_videos);
@@ -449,8 +451,10 @@ namespace IPCamera
                     int columns_pointer_pictures = 0;
                     int rows_pointer_pictures = 0;
                     // Add First Row
-                    RowDefinition row = new RowDefinition();
-                    row.MaxHeight = 333;
+                    RowDefinition row = new RowDefinition
+                    {
+                        MaxHeight = 333
+                    };
                     images_grid.RowDefinitions.Add(row);
                     // Add 3 Columns
                     images_grid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -462,8 +466,10 @@ namespace IPCamera
                         // Somthing Rong With Rows
                         if (columns_pointer_pictures == 3) // New Row
                         {
-                            RowDefinition row_2 = new RowDefinition();
-                            row_2.MaxHeight = 333;
+                            RowDefinition row_2 = new RowDefinition
+                            {
+                                MaxHeight = 333
+                            };
                             images_grid.RowDefinitions.Add(row_2);
                             rows_pointer_pictures++;
                             play = new Player(images_grid, picture, this, columns_pointer_pictures, rows_pointer_pictures);
@@ -490,10 +496,10 @@ namespace IPCamera
 
         private void X_Button_R_Click(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.logged)
+            if (MainWindow.Logged)
             {
-                MainWindow.records_oppened = false;
-                Console.WriteLine("records_oppened: " + Convert.ToString(MainWindow.records_oppened));
+                MainWindow.Records_oppened = false;
+                Console.WriteLine("Records_oppened: " + Convert.ToString(MainWindow.Records_oppened));
                 this.Close();
             }
         }
@@ -502,8 +508,8 @@ namespace IPCamera
         // On Close Window
         protected override void OnClosed(EventArgs e)
         {
-            MainWindow.records_oppened = false;
-            Console.WriteLine("records_oppened: " + Convert.ToString(MainWindow.records_oppened));
+            MainWindow.Records_oppened = false;
+            Console.WriteLine("Records_oppened: " + Convert.ToString(MainWindow.Records_oppened));
             this.Close();
         }
 

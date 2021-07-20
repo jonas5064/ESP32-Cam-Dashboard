@@ -55,11 +55,11 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Button x:Name="play" Grid.Row="0"  Content="Play" FontSize="33" Margin="23,7,23,7" Click="play_Click"/>
-                <Button x:Name="stop" Grid.Row="1" Content="Stop" FontSize="33" Margin="23,7,23,7" Click="stop_Click"/>
-                <Button x:Name="pause" Grid.Row="2" Content="Pause" FontSize="33" Margin="23,7,23,7" Click="pause_Click"/>
-                <RepeatButton x:Name="packward" Grid.Column="1" Grid.Row="3" Content="Backward" FontSize="33" Margin="23,7,23,7" Click="packward_Click"/>
-                <RepeatButton x:Name="forward" Grid.Column="1" Grid.Row="4" Content="Forward" FontSize="33" Margin="23,7,23,7" Click="forward_Click"/>
+                <Button x:Name="play" Grid.Row="0"  Content="Play" FontSize="33" Margin="23,7,23,7" Click="Play_Click"/>
+                <Button x:Name="stop" Grid.Row="1" Content="Stop" FontSize="33" Margin="23,7,23,7" Click="Stop_Click"/>
+                <Button x:Name="pause" Grid.Row="2" Content="Pause" FontSize="33" Margin="23,7,23,7" Click="Pause_Click"/>
+                <RepeatButton x:Name="packward" Grid.Column="1" Grid.Row="3" Content="Backward" FontSize="33" Margin="23,7,23,7" Click="Packward_Click"/>
+                <RepeatButton x:Name="forward" Grid.Column="1" Grid.Row="4" Content="Forward" FontSize="33" Margin="23,7,23,7" Click="Forward_Click"/>
             </Grid>
         </Grid>
     </Grid>

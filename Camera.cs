@@ -17,188 +17,104 @@ namespace IPCamera
 {
     public class Camera
     {
-        public String url = "";
-        public string name = "";
-        public string id = "";
-        private string username = "";
-        private string password = "";
-        public bool isEsp32 = false;
-        WindowControll win_controll;
-        public bool fullscreen = false;
-        public int row = 0;
-        public int coll = 0;
-        private bool detection = false;
-        private bool recognition = false;
-        private bool on_move_sms = false;
-        private bool on_move_email = false;
-        private bool on_move_pic = false;
-        private bool on_move_rec = false;
-        private int on_move_sensitivity = 4;
-        public int on_move_recording_time = 10000;//600000;
-        private int brightness = 0;
-        private int contrast = 0;
-        private int darkness = 0;
-        private bool recording = false;
-        public bool running = false;
-        public VideoCapture video;     
-        public static int count = 0;
-        public static String pictures_dir;
-        public static String videos_dir;
-
-        public static bool avi_format = false;
-        public static bool mp4_format = false;
-
-        public String up_req = "";
-        public String down_req = "";
-        public String right_req = "";
-        public String left_req = "";
-        private String net_stream_ip = "localhost";
-        private String net_stream_port = "";
-        private String net_stream_prefix = "";
-        private bool net_stream = false;
-        HttpServer server;
-        public bool camera_oppened = false;
-        public int framerate = 0;
-
-        public Camera(String url, String name, String id, bool rec)
-        {
-            this.url = url;
-            this.name = name;
-            this.id = id;
-
-            // Create an VideoCapture
-            if (!this.isEsp32)
-            {
-                this.video = new VideoCapture
-                {
-                    IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
-                    {
-                        URL = this.url,
-                        Login = this.Username,
-                        Password = this.Password
-                    }
-                };
-            } else
-            {
-                this.video = new VideoCapture
-                {
-                    IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
-                    {
-                        URL = this.url/*,
-                        Type = VisioForge.Types.VFIPSource.Auto_LAV*/
-                    }
-                };
-            }
-            this.video.OnError += OnError;
-            this.video.MouseUp += CamerasFocused;
-            this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
-            this.video.Video_Effects_Enabled = true;
-            this.video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
-            // Motion Detection Setup
-            this.video.Motion_Detection = new MotionDetectionSettings
-            {
-                Enabled = true,
-                Highlight_Enabled = false
-            };
-            this.video.OnMotion += this.OnMotion;
-            //this.video.Video_Still_Frames_Grabber_Enabled = true;
-            this.Framerate = 33;
-            this.video.Video_FrameRate = this.framerate;
-            // Set Recording Variable
-            this.Recording = rec;
-            count++;
-        }
-
-
-        ~Camera()
-        {
-            count--;
-        }
-
-        // Return this video capture
-        public VideoCapture Get()
-        {
-            return this.video;
-        }
-
+        public String Url { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public bool IsEsp32 { get; set; }
+        public String Username { get; set; }
+        public String Password { get; set; }
+        WindowControll Win_controll { get; set; }
+        public bool Fullscreen { get; set; }
+        public int Row { get; set; }
+        public int Coll { get; set; }
+        public int On_move_recording_time { get; set; }
+        public String Net_stream_ip { get; set; }
+        public String Net_stream_port { get; set; }
+        public String Net_stream_prefix { get; set; }
+        public bool Running { get; set; }
+        public VideoCapture Video { get; set; }    
+        public static int Count { get; set; }
+        public static String Pictures_dir { get; set; }
+        public static String Videos_dir { get; set; }
+        public static bool Avi_format { get; set; }
+        public static bool Mp4_format { get; set; }
+        public String Up_req { get; set; }
+        public String Down_req { get; set; }
+        public String Right_req { get; set; }
+        public String Left_req { get; set; }
+        HttpServer Server { get; set; }
+        public bool Camera_oppened { get; set; }
+        public bool Recognition { get; set; }
+        public bool On_move_sms { get; set; }
+        public bool On_move_email { get; set; }
+        public bool On_move_pic { get; set; }
+        public bool On_move_rec { get; set; }
+        public int On_move_sensitivity { get; set; }
         // Set Frame Rates
+        private int _framerate = 0;
         public int Framerate
         {
             get
             {
-                return this.framerate;
+                return this._framerate;
             }
             set
             {
-                this.framerate = value;
-                this.video.Video_FrameRate = this.framerate;
+                this._framerate = value;
+                this.Video.Video_FrameRate = this._framerate;
             }
         }
-
-
-        // Setup Username
-        public String Username
-        {
-            get { return this.username; }
-            set { this.username = value; }
-        }
-
-        // Setup Password
-        public String Password
-        {
-            get { return this.password; }
-            set { this.password = value; }
-        }
-
         // Setup Brightness Effext
+        private int _brightness = 0;
         public int Brightness
         {
-            get { return this.brightness; }
+            get { return this._brightness; }
             set
             {
-                this.brightness = value;
+                this._brightness = value;
                 // Add the efect
                 IVFVideoEffectLightness lightness;
-                var effect_l = this.video.Video_Effects_Get("Lightness");
+                var effect_l = this.Video.Video_Effects_Get("Lightness");
                 if (effect_l == null)
                 {
-                    lightness = new VFVideoEffectLightness(true, this.brightness, 0, "Lightness");
-                    this.video.Video_Effects_Add(lightness);
+                    lightness = new VFVideoEffectLightness(true, this._brightness, 0, "Lightness");
+                    this.Video.Video_Effects_Add(lightness);
                 }
                 else
                 {
                     lightness = effect_l as IVFVideoEffectLightness;
                     if (lightness != null)
                     {
-                        lightness.Value = this.brightness;
+                        lightness.Value = this._brightness;
                     }
                 }
             }
         }
-
+        // Setup The Net Stream
+        private bool _net_stream = false;
         public bool Net_stream
         {
-            get { return this.net_stream; }
+            get { return this._net_stream; }
             set { 
-                this.net_stream = value;
+                this._net_stream = value;
                 if (this.Net_stream_ip.Length > 0 && this.Net_stream_port.Length > 0)
                 {
                     Console.WriteLine("Server,Run: " + Convert.ToString(this.Net_stream));
                     if (this.Net_stream)
                     {
-                        server = new HttpServer(this);
-                        this.server.run = this.Net_stream;
-                        var result = this.server.ListenAsync();
+                        Server = new HttpServer(this);
+                        this.Server.Run = this.Net_stream;
+                        _ = this.Server.ListenAsync();
                     }
                     else
                     {
-                        if (this.server != null)
+                        if (this.Server != null)
                         {
                             Console.WriteLine("Try to Stop The Server.");
-                            if (this.server.run)
+                            if (this.Server.Run)
                             {
                                 Console.WriteLine("Server is Stoping");
-                                this.server.close();
+                                this.Server.Close();
                                 Console.WriteLine("Server Stoped.");
                             }
                         }
@@ -206,85 +122,67 @@ namespace IPCamera
                 }
             }
         }
-
-        public String Net_stream_ip
-        {
-            get { return this.net_stream_ip; }
-            set { this.net_stream_ip = value; }
-        }
-
-        public String Net_stream_port
-        {
-            get { return this.net_stream_port; }
-            set { this.net_stream_port = value; }
-        }
-
-        public String Net_stream_prefix
-        {
-            get { return this.net_stream_prefix; }
-            set { this.net_stream_prefix = value; }
-        }
-
         // Setup Contrast Effext
+        private int _contrast = 0;
         public int Contrast
         {
-            get { return this.contrast; }
+            get { return this._contrast; }
             set
             {
-                this.contrast = value;
+                this._contrast = value;
                 // Add the efect
                 IVFVideoEffectContrast contrast;
-                var effect_c = this.video.Video_Effects_Get("Contrast");
+                var effect_c = this.Video.Video_Effects_Get("Contrast");
                 if (effect_c == null)
                 {
-                    contrast = new VFVideoEffectContrast(true, this.contrast, 0, "Contrast");
-                    this.video.Video_Effects_Add(contrast);
+                    contrast = new VFVideoEffectContrast(true, this._contrast, 0, "Contrast");
+                    this.Video.Video_Effects_Add(contrast);
                 }
                 else
                 {
                     contrast = effect_c as IVFVideoEffectContrast;
                     if (contrast != null)
                     {
-                        contrast.Value = this.contrast;
+                        contrast.Value = this._contrast;
                     }
                 }
             }
         }
-
         // Setup Drkness Effext
+        private int _darkness = 0;
         public int Darkness
         {
-            get { return this.darkness; }
+            get { return this._darkness; }
             set
             {
-                this.darkness = value;
+                this._darkness = value;
                 // Add the efect
                 IVFVideoEffectDarkness darkness;
-                var effect_d = this.video.Video_Effects_Get("Darkness");
+                var effect_d = this.Video.Video_Effects_Get("Darkness");
                 if (effect_d == null)
                 {
-                    darkness = new VFVideoEffectDarkness(true, this.darkness, 0, "Darkness");
-                    this.video.Video_Effects_Add(darkness);
+                    darkness = new VFVideoEffectDarkness(true, this._darkness, 0, "Darkness");
+                    this.Video.Video_Effects_Add(darkness);
                 }
                 else
                 {
                     darkness = effect_d as IVFVideoEffectDarkness;
                     if (darkness != null)
                     {
-                        darkness.Value = this.darkness;
+                        darkness.Value = this._darkness;
                     }
                 }
             }
         }
-
         // When Change Detection
+        private bool _detection = false;
         public bool Detection
         {
-            get { return this.detection; }
+            get { return this._detection; }
             set
             {
-                this.detection = value;
-                if (this.detection)
+                this._detection = value;
+                if (this._detection)
                 {
                     /*
                     this.video.Face_Tracking = new FaceTrackingSettings
@@ -297,16 +195,16 @@ namespace IPCamera
                         SearchMode = ObjectDetectorSearchMode.Single
                     };
                     */
-                    this.video.Face_Tracking = new FaceTrackingSettings()
+                    this.Video.Face_Tracking = new FaceTrackingSettings()
                     {
                         Highlight = true
                     };
-                    this.video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) =>
+                    this.Video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) =>
                     {
                         foreach (Rectangle faceRectangle in e.FaceRectangles)
                         {
                             // If Recognition is enable
-                            if (this.recognition)
+                            if (this.Recognition)
                             {
 
                             }
@@ -321,26 +219,19 @@ namespace IPCamera
                 }
                 else
                 {
-                    this.video.Face_Tracking = new FaceTrackingSettings();
-                    this.video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) => { };
+                    this.Video.Face_Tracking = new FaceTrackingSettings();
+                    this.Video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) => { };
                 }
             }
         }
-
-        // When Change recognition
-        public bool Recognition
-        {
-            get { return this.recognition; }
-            set { this.recognition = value; }
-        }
-
         // Start / Stop Recording
+        private bool _recording = false;
         public bool Recording
         {
-            get { return this.recording; }
+            get { return this._recording; }
             set { 
-                this.recording = value;
-                if (this.recording)
+                this._recording = value;
+                if (this._recording)
                 {
                     Console.WriteLine("Start Recording.");
                     this.StartRecording();
@@ -353,51 +244,86 @@ namespace IPCamera
             }
         }
 
-        // On Move SmS
-        public bool On_move_sms
+        public Camera(String url, String name, String id, bool rec)
         {
-            get { return this.on_move_sms; }
-            set { this.on_move_sms = value; }
+            this.Url = url;
+            this.Name = name;
+            this.Id = id;
+            this.Net_stream_ip = "localhost";
+            this.Recognition = false;
+            this.On_move_sms = false;
+            this.On_move_email = false;
+            this.On_move_pic = false;
+            this.On_move_rec = false;
+            this.On_move_sensitivity = 4;
+            this.IsEsp32 = false;
+            this.Fullscreen = false;
+            this.On_move_recording_time = 10000;
+            this.Running = false;
+            Avi_format = false;
+            Mp4_format = false;
+            this.Camera_oppened = false;
+
+            // Create an VideoCapture
+            if (!this.IsEsp32)
+            {
+                this.Video = new VideoCapture
+                {
+                    IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
+                    {
+                        URL = this.Url,
+                        Login = this.Username,
+                        Password = this.Password
+                    }
+                };
+            }
+            else
+            {
+                this.Video = new VideoCapture
+                {
+                    IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
+                    {
+                        URL = this.Url/*,
+                        Type = VisioForge.Types.VFIPSource.Auto_LAV*/
+                    }
+                };
+            }
+            this.Video.OnError += OnError;
+            this.Video.MouseUp += CamerasFocused;
+            this.Video.Audio_PlayAudio = this.Video.Audio_RecordAudio = false;
+            this.Video.Video_Effects_Enabled = true;
+            this.Video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
+            // Motion Detection Setup
+            this.Video.Motion_Detection = new MotionDetectionSettings
+            {
+                Enabled = true,
+                Highlight_Enabled = false
+            };
+            this.Video.OnMotion += this.OnMotion;
+            //this.video.Video_Still_Frames_Grabber_Enabled = true;
+            this.Framerate = 33;
+            this.Video.Video_FrameRate = this.Framerate;
+            // Set Recording Variable
+            this.Recording = rec;
+            Count++;
         }
 
-        // On Move Email
-        public bool On_move_email
-        {
-            get { return this.on_move_email; }
-            set { this.on_move_email = value; }
-        }
 
-        // On Move Pic
-        public bool On_move_pic
+        ~Camera()
         {
-            get { return this.on_move_pic; }
-            set { this.on_move_pic = value; }
-        }
-        
-        // On Move Rec
-        public bool On_move_rec
-        {
-            get { return this.on_move_rec; }
-            set { this.on_move_rec = value; }
-        }
-
-        // Setup On Move Sensitivity
-        public int On_move_sensitivity
-        {
-            get { return this.on_move_sensitivity; }
-            set { this.on_move_sensitivity = value; }
+            Count--;
         }
 
         // Start the Camera
         public void Start()
         {
-            if (this.video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
+            if (this.Video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 try
                 {
                     Console.WriteLine($"Camera Start.");
-                    this.video.Start();
-                    this.running = true;
+                    this.Video.Start();
+                    this.Running = true;
                     //this.video.StartAsync();
                 }
                 catch (System.AccessViolationException ex)
@@ -414,13 +340,13 @@ namespace IPCamera
         // Stop The Camera
         public void Stop()
         {
-            if (this.video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
+            if (this.Video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 try
                 {
                     Console.WriteLine($"Camera Stop.");
-                    this.video.Stop();
-                    this.running = false;
+                    this.Video.Stop();
+                    this.Running = false;
                     //this.video.StopAsync();
                 }
                 catch (System.AccessViolationException ex)
@@ -439,15 +365,15 @@ namespace IPCamera
         public void Take_pic()
         {
             // Create Folder With Cameras Name for Name
-            String dir_path = Camera.pictures_dir + "\\" + this.name;
+            String dir_path = Camera.Pictures_dir + "\\" + this.Name;
             if (! Directory.Exists(dir_path))
             {
                 Directory.CreateDirectory(dir_path);
             }
-            // Create SubFolder With The Current Date
             DateTime now = DateTime.Now;
+            // Create SubFolder With The Current Date
             String date = now.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"));
-            date = date.Replace(".","-");
+            date = date.Replace(".", "-");
             dir_path += "\\" + date;
             if (!Directory.Exists(dir_path))
             {
@@ -455,10 +381,10 @@ namespace IPCamera
             }
             // Create The JPeg File With the Current Time For Name
             String houre = now.ToString("T", CultureInfo.CreateSpecificCulture("de-DE"));
-            houre = houre.Replace(":",".");
+            houre = houre.Replace(":", ".");
             String file = dir_path + "\\" + houre + ".jpg";
             Console.WriteLine($"\n\nCreate File: {file}\n\n");
-            this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
+            this.Video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
 
 
@@ -467,15 +393,15 @@ namespace IPCamera
         {
             try
             {
-                bool was_running = this.running ? true : false;
-                if (this.running)
+                bool was_running = this.Running;
+                if (this.Running)
                 {
-                    this.video.Stop();
+                    this.Video.Stop();
                 }
                 // Video mode == capture
-                this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
+                this.Video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
                 // Create Dir With Cameras Name
-                String dir_path = Camera.videos_dir + "\\" + this.name;
+                String dir_path = Camera.Videos_dir + "\\" + this.Name;
                 if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
                     Directory.CreateDirectory(dir_path);
@@ -494,23 +420,23 @@ namespace IPCamera
                 String houre = now.ToString("T", CultureInfo.CreateSpecificCulture("de-DE"));
                 houre = houre.Replace(":",".");
                 // AVI
-                if (avi_format)
+                if (Avi_format)
                 {
                     String file = dir_path + "\\" + houre + ".avi";
-                    this.video.Output_Filename = file;
+                    this.Video.Output_Filename = file;
                     VFAVIOutput avi = new VFAVIOutput();
-                    this.video.Output_Format = new VFAVIOutput();
+                    this.Video.Output_Format = new VFAVIOutput();
                 }
                 // MP4
-                if (mp4_format)
+                if (Mp4_format)
                 {
                     String file = dir_path + "\\" + houre + ".mp4";
-                    this.video.Output_Filename = file;
-                    this.video.Output_Format = new VFMP4v8v10Output();
+                    this.Video.Output_Filename = file;
+                    this.Video.Output_Format = new VFMP4v8v10Output();
                 }
-                if (this.running && was_running)
+                if (this.Running && was_running)
                 {
-                    this.video.Start();
+                    this.Video.Start();
                 }
             }
             catch (System.Reflection.TargetInvocationException ex)
@@ -526,16 +452,16 @@ namespace IPCamera
         // Stop Recording
         public void StopRecording()
         {
-            bool was_running = this.running ? true : false;
-            if (this.running)
+            bool was_running = this.Running;
+            if (this.Running)
             {
-                this.video.Stop();
+                this.Video.Stop();
             }
-            this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+            this.Video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             Console.WriteLine($"Camera Stop Recording");
-            if (this.running && was_running)
+            if (this.Running && was_running)
             {
-                this.video.Start();
+                this.Video.Start();
             }
         }
 
@@ -549,32 +475,31 @@ namespace IPCamera
         // When click on camera
         public void CamerasFocused(object sender, MouseButtonEventArgs e)
         {
-            if (this.running)
+            if (this.Running)
             {
                 if (e.ChangedButton == MouseButton.Right)
                 {
-                    if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user)
-                    && (MainWindow.user.Licences.Equals("Admin")))
+                    if ( MainWindow.Logged && MainWindow.MyUsers.Contains(MainWindow.User) && (MainWindow.User.Licences.Equals("Admin")) )
                     {
-                        if (this.camera_oppened == false)
+                        if (this.Camera_oppened == false)
                         {
-                            this.camera_oppened = true;
-                            this.win_controll = new WindowControll(this);
-                            win_controll.Show();
+                            this.Camera_oppened = true;
+                            this.Win_controll = new WindowControll(this);
+                            Win_controll.Show();
                         }
                         else
                         {
-                            this.win_controll.Activate();
+                            this.Win_controll.Activate();
                         }
                     }
                 }
                 if (e.ChangedButton == MouseButton.Left)
                 {
                     // Open A new Window And Show This Camera FullScreen
-                    if (!this.fullscreen)
+                    if (!this.Fullscreen)
                     {
-                        MainWindow.cams_grid.Children.Remove(this.video);
-                        this.fullscreen = true;
+                        MainWindow.cams_grid.Children.Remove(this.Video);
+                        this.Fullscreen = true;
                         VideoFullscreen fullscreen = new VideoFullscreen(this);
                         fullscreen.Show();
                     }
@@ -602,9 +527,9 @@ namespace IPCamera
                         // Return to Sending Email
                         String host = "";
                         int port = 587;
-                        String fromEmail = MainWindow.email_send;
-                        String fromPassword = MainWindow.pass_send;
-                        String subject = this.name;
+                        String fromEmail = MainWindow.Email_send;
+                        String fromPassword = MainWindow.Pass_send;
+                        String subject = this.Name;
 
                         if (fromEmail.Contains("gmail"))
                         {
@@ -621,12 +546,13 @@ namespace IPCamera
 
                         // Create a File with a pic
                         String img_name = "email_pic.jpeg";
-                        this.video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
+                        this.Video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
 
                         // Add All Recievers
-                        foreach (Users u in MainWindow.myUsers)
+                        foreach (Users u in MainWindow.MyUsers)
                         {
-                            /// Create HTML Body
+
+                            // Create HTML Body
                             var builder = new BodyBuilder();
                             var pathImage = Path.Combine(Directory.GetCurrentDirectory(), img_name);
                             var image = builder.LinkedResources.Add(pathImage);
@@ -635,7 +561,7 @@ namespace IPCamera
                                                                    "<head>" +
                                                                    "</head" +
                                                                    "<body>" +
-                                                                       "<h1>" + $"[{this.name}]" + "</h1>" +
+                                                                       "<h1>" + $"[{this.Name}]" + "</h1>" +
                                                                        "<h3>" + "Detect Motion at:" + "</h3>" +
                                                                        "<h2>" + $"[{DateTime.Now}]" + "</h2>" +
                                                                        @"<img src=""cid:{0}"">" +
@@ -682,13 +608,13 @@ namespace IPCamera
                     {
                         last_email_date_onmove = DateTime.Now;
                         // Find your Account Sid and Token at https://account.apifonica.com/
-                        Console.WriteLine($"Before Send SMS.   ssid: {MainWindow.twilioAccountSID}   token: {MainWindow.twilioAccountToken}");
-                        TwilioClient.Init(MainWindow.twilioAccountSID, MainWindow.twilioAccountToken);
-                        foreach (Users u in MainWindow.myUsers)
+                        Console.WriteLine($"Before Send SMS.   ssid: {MainWindow.TwilioAccountSID}   token: {MainWindow.TwilioAccountToken}");
+                        TwilioClient.Init(MainWindow.TwilioAccountSID, MainWindow.TwilioAccountToken);
+                        foreach (Users u in MainWindow.MyUsers)
                         {
                             var message = MessageResource.Create(
-                                body: $"[{this.name}]  Detect Motion at  [{DateTime.Now}]",
-                                from: new Twilio.Types.PhoneNumber(MainWindow.twilioNumber),
+                                body: $"[{this.Name}]  Detect Motion at  [{DateTime.Now}]",
+                                from: new Twilio.Types.PhoneNumber(MainWindow.TwilioNumber),
                                 to: new Twilio.Types.PhoneNumber(u.Phone)
                             );
                             Console.WriteLine($"Send SMS To: {message.Sid}.");

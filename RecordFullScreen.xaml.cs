@@ -35,8 +35,10 @@ namespace IPCamera
 
 
             // Threading to Update The Time Spam Label Show The Time Of Video
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
+            DispatcherTimer timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
             timer.Tick += (object sender, EventArgs e) =>
             {
                 if (media_element.Source != null)
@@ -87,7 +89,7 @@ namespace IPCamera
             this.Close();
         }
 
-        private void play_Click(object sender, RoutedEventArgs e)
+        private void Play_Click(object sender, RoutedEventArgs e)
         {
             if (media_element.Source != null)
             {
@@ -95,7 +97,7 @@ namespace IPCamera
             }
         }
 
-        private void stop_Click(object sender, RoutedEventArgs e)
+        private void Stop_Click(object sender, RoutedEventArgs e)
         {
             if (media_element.Source != null)
             {
@@ -103,7 +105,7 @@ namespace IPCamera
             }
         }
 
-        private void pause_Click(object sender, RoutedEventArgs e)
+        private void Pause_Click(object sender, RoutedEventArgs e)
         {
             if (media_element.Source != null)
             {
@@ -111,7 +113,7 @@ namespace IPCamera
             }
         }
 
-        private void packward_Click(object sender, RoutedEventArgs e)
+        private void Packward_Click(object sender, RoutedEventArgs e)
         {
             if (media_element.Source != null)
             {
@@ -119,7 +121,7 @@ namespace IPCamera
             }
         }
 
-        private void forward_Click(object sender, RoutedEventArgs e)
+        private void Forward_Click(object sender, RoutedEventArgs e)
         {
             if (media_element.Source != null)
             {

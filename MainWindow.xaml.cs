@@ -14,25 +14,25 @@ namespace IPCamera
     public partial class MainWindow : Window
     {
 
-        public static MainWindow main_window;
-        public static List<Camera> cameras = new List<Camera>();
-        public static List<Users> myUsers = new List<Users>();
-        public static Users user;
+        public static MainWindow Main_window { get; set; }
+        public static List<Camera> Cameras = new List<Camera>();
+        public static List<Users> MyUsers = new List<Users>();
+        public static Users User { get; set; }
         public static Grid cams_grid;
-        public static String email_send;
-        public static String pass_send;
-        public Login login;
-        public static bool logged = false;
-        public static int video_files_time_size = 3600000; // 1 Hour
-        public static int video_recording_history_length = 1; // 1 Month
+        public static String Email_send { get; set; }
+        public static String Pass_send { get; set; }
+        public Login Login { get; set; }
+        private static bool _logged = false;
+        public static int Video_files_time_size = 3600000; // 1 Hour
+        public static int Video_recording_history_length = 1; // 1 Month
 
         public static bool Logged
         {
             set
             {
-                MainWindow.logged = value;
+                MainWindow._logged = value;
                 // Save the logged User
-                if (MainWindow.logged)
+                if (MainWindow._logged)
                 {
                     try
                     {
@@ -41,7 +41,7 @@ namespace IPCamera
                             String query = $"INSERT INTO Logged (Id) VALUES (@user)";
                             using (MySqlCommand command = new MySqlCommand(query, connection))
                             {
-                                command.Parameters.AddWithValue("@user", MainWindow.user.Email);
+                                command.Parameters.AddWithValue("@user", MainWindow.User.Email);
                                 connection.Open();
                                 int result = command.ExecuteNonQuery();
                                 // Check Error
@@ -61,37 +61,48 @@ namespace IPCamera
                     // Clear DataBase
                     try
                     {
-                        MySqlConnection cn = new MySqlConnection(App.DB_connection_string);
-                        String query = "DELETE FROM Logged";
-                        MySqlCommand cmd = new MySqlCommand(query, cn);
-                        cn.Open();
-                        int result = cmd.ExecuteNonQuery();
-                        if (result < 0)
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        cn.Close();
-                    }
+                        using (MySqlConnection cn = new MySqlConnection(App.DB_connection_string))
+                        {
+                            String query = "DELETE FROM Logged";
+                            using (MySqlCommand cmd = new MySqlCommand(query, cn))
+                            {
+                                cn.Open();
+                                int result = cmd.ExecuteNonQuery();
+                                if (result < 0)
+                                    System.Windows.MessageBox.Show("Error inserting data into Database!");
+                                cn.Close();
+                            }
+                        }                    }
                     catch (MySqlException ex)
                     {
                         Console.WriteLine($"Source: {ex.Message}");
                     }
                 }
             }
-            get { return MainWindow.logged; }
+            get { return MainWindow._logged; }
         }
-        private Settings settings;
-        public static bool settings_oppened = false;
-        public static bool login_oppened = false;
-        private Account account;
-        public static bool account_oppened = false;
-        private Records records;
-        public static bool records_oppened = false;
-        public static String twilioNumber;
-        public static String twilioAccountSID;
-        public static String twilioAccountToken;
+        private Settings Settings { get; set; }
+        public static bool Settings_oppened { get; set; }
+        public static bool Login_oppened { get; set; }
+        private Account Account { get; set; }
+        public static bool Account_oppened { get; set; }
+        private Records Records { get; set; }
+        public static bool Records_oppened { get; set; }
+        public static String TwilioNumber { get; set; }
+        public static String TwilioAccountSID { get; set; }
+        public static String TwilioAccountToken { get; set; }
 
 
         public MainWindow()
         {
+            Video_files_time_size = 3600000; // 1 Hore
+            Video_recording_history_length = 1; // 1 Month
+            Settings_oppened = false;
+            Login_oppened = false;
+            Account_oppened = false;
+            Records_oppened = false;
+            //Logged = false;
+
             try
             {
                 Console.WriteLine("Staring Main...");
@@ -102,7 +113,7 @@ namespace IPCamera
                     try
                     {
                         // Open a Window And Set DataBase Imfos
-                                ///
+                                ////
 
                         // Install Requarements
                         Install_Requarements.Install_Req();
@@ -174,8 +185,8 @@ namespace IPCamera
 
 
                 // Set a Hundeler for this main window
-                main_window = this;
-                // Setup login logout button for start
+                Main_window = this;
+                // Setup Login logout button for start
                 login_logout_b.Click += (object sender, RoutedEventArgs e) =>
                 {
                     this.Loggin_clicked();
@@ -190,11 +201,11 @@ namespace IPCamera
                 //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
                 date.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
                 System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
                 dispatcherTimer.Start();
             }
-            catch (System.IO.FileLoadException ex)
+            catch (System.IO.FileLoadException)
             {
                 Console.WriteLine($"\n\n[ERROR] MainWindow\n\n");
                 Thread.Sleep(5000);
@@ -207,15 +218,17 @@ namespace IPCamera
 
 
             // If Cameras Recording Start Scheduling
-            System.Timers.Timer recording_Cicle = new System.Timers.Timer();
-            recording_Cicle.Interval = video_files_time_size;
+            System.Timers.Timer recording_Cicle = new System.Timers.Timer
+            {
+                Interval = Video_files_time_size
+            };
             recording_Cicle.Elapsed += (Object source, System.Timers.ElapsedEventArgs e) =>
             {
                 Dispatcher.Invoke((Action)delegate ()
                {
                    try
                    {
-                       foreach (Camera cam in MainWindow.cameras)
+                       foreach (Camera cam in MainWindow.Cameras)
                        {
                            if (cam.Recording)
                            {
@@ -238,9 +251,11 @@ namespace IPCamera
             recording_Cicle.Enabled = true;
 
 
-            // Delete All Video Records Beforethe  " video_recording_history_length " Start Scheduling
-            System.Timers.Timer deleting_cicle = new System.Timers.Timer();
-            deleting_cicle.Interval = 86400000; // Every 24 Hours
+            // Delete All Video Records Beforethe  " Video_recording_history_length " Start Scheduling
+            System.Timers.Timer deleting_cicle = new System.Timers.Timer
+            {
+                Interval = 86400000 // Every 24 Hours
+            };
             deleting_cicle.Elapsed += (Object source, System.Timers.ElapsedEventArgs e) =>
             {
                 Dispatcher.Invoke((Action)delegate ()
@@ -271,15 +286,15 @@ namespace IPCamera
         public void DeleteOldFiles()
         {
             // Delete Pictures
-            this.GetDirsSubDirsFiles(Camera.pictures_dir, myPath =>
+            this.GetDirsSubDirsFiles(Camera.Pictures_dir, myPath =>
             {
-                // Get The Months Folder And If Month is Smaller From MainWindow.video_recording_history_length Delete them
+                // Get The Months Folder And If Month is Smaller From MainWindow.Video_recording_history_length Delete them
                 FileInfo info = new FileInfo(myPath);
                 String name = info.FullName;
                 String[] dirs = name.Split('\\');
                 String date_string = dirs[dirs.Length - 2].Trim();
                 DateTime date = DateTime.ParseExact(date_string, "dd-MM-yyyy", null);
-                if (date.Month < DateTime.Today.AddMonths(-(MainWindow.video_recording_history_length)).Month)
+                if (date.Month < DateTime.Today.AddMonths(-(MainWindow.Video_recording_history_length)).Month)
                 {
                     int last_dir_index = myPath.LastIndexOf('\\');
                     String folder = myPath.Substring(0, last_dir_index);
@@ -292,16 +307,16 @@ namespace IPCamera
                 }
             });
             // Delete Videos
-            this.GetDirsSubDirsFiles(Camera.videos_dir, myPath =>
+            this.GetDirsSubDirsFiles(Camera.Videos_dir, myPath =>
             {
-                // Get The Months Folder And If Month is Smaller From MainWindow.video_recording_history_length Delete them
+                // Get The Months Folder And If Month is Smaller From MainWindow.Video_recording_history_length Delete them
                 FileInfo info = new FileInfo(myPath);
                 String name = info.FullName;
                 String[] dirs = name.Split('\\');
                 String date_string = dirs[dirs.Length - 2].Trim();
                 DateTime date = DateTime.ParseExact(date_string, "dd-MM-yyyy", null);
                 Console.WriteLine($"Folder Month: {date.Month}  Current Month: {DateTime.Today.Month}");
-                if (date.Month < DateTime.Today.AddMonths(-(MainWindow.video_recording_history_length)).Month)
+                if (date.Month < DateTime.Today.AddMonths(-(MainWindow.Video_recording_history_length)).Month)
                 {
                     int last_dir_index = myPath.LastIndexOf('\\');
                     String folder = myPath.Substring(0, last_dir_index);
@@ -335,7 +350,7 @@ namespace IPCamera
         }
 
         // Set DateTime
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             // Updating the Label which displays the current time 
             date.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
@@ -344,7 +359,7 @@ namespace IPCamera
         // Restart Application
         public static void RestartApp()
         {
-            MainWindow old_win = main_window;
+            MainWindow old_win = Main_window;
             System.Windows.Forms.Application.Restart();
             old_win.Close();
         }
@@ -353,7 +368,7 @@ namespace IPCamera
         // Get The saved Cameras From Database
         public void UpdatesFromDB()
         {
-            cameras.Clear();
+            Cameras.Clear();
             // Get Data From DB
             using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
             {
@@ -370,11 +385,11 @@ namespace IPCamera
                         Console.WriteLine($"\n FilesDirs: {name}  {path}");
                         if (name == "Pictures")
                         {
-                            Camera.pictures_dir = path;
+                            Camera.Pictures_dir = path;
                         }
                         if (name == "Videos")
                         {
-                            Camera.videos_dir = path;
+                            Camera.Videos_dir = path;
                         }
                     }
                 }
@@ -391,10 +406,10 @@ namespace IPCamera
                         // String avi = dataReader["avi"].ToString().Trim();
                         //String mp4 = dataReader["mp4"].ToString().Trim();
                         //String webm = dataReader["webm"].ToString().Trim();
-                        Camera.avi_format = (dataReader["avi"].ToString().Trim() == "True")? true : false;
-                        Camera.mp4_format = (dataReader["mp4"].ToString().Trim() == "True")? true : false;
-                        MainWindow.video_recording_history_length = Int32.Parse(dataReader["history_time"].ToString());
-                        Console.WriteLine($"\nFilesFormats: {Camera.avi_format}  {Camera.mp4_format}");
+                        Camera.Avi_format = (dataReader["avi"].ToString().Trim() == "True");
+                        Camera.Mp4_format = (dataReader["mp4"].ToString().Trim() == "True");
+                        MainWindow.Video_recording_history_length = Int32.Parse(dataReader["history_time"].ToString());
+                        Console.WriteLine($"\nFilesFormats: {Camera.Avi_format}  {Camera.Mp4_format}");
                     }
                 }
                 connection.Close();
@@ -469,25 +484,25 @@ namespace IPCamera
                                 Brightness = brightness,
                                 Contrast = contrast,
                                 Darkness = darkness,
-                                Detection = (detection == "True") ? true : false,
-                                Recognition = (recognition == "True") ? true : false,
-                                On_move_sms = (on_move_sms == "True") ? true : false,
-                                On_move_email = (on_move_email == "True") ? true : false,
-                                On_move_pic = (on_move_pic == "True") ? true : false,
-                                On_move_rec = (on_move_rec == "True") ? true : false,
+                                Detection = (detection == "True"),
+                                Recognition = (recognition == "True"),
+                                On_move_sms = (on_move_sms == "True"),
+                                On_move_email = (on_move_email == "True"),
+                                On_move_pic = (on_move_pic == "True"),
+                                On_move_rec = (on_move_rec == "True"),
                                 On_move_sensitivity = move_sensitivity,
-                                up_req = up,
-                                down_req = down,
-                                right_req = right,
-                                left_req = left,
+                                Up_req = up,
+                                Down_req = down,
+                                Right_req = right,
+                                Left_req = left,
                                 Net_stream_port = net_stream_port_l,
                                 Net_stream_prefix = net_stream_prefix_l,
-                                Net_stream = (net_stream_l == "True") ? true : false,
-                                isEsp32 = isEsp
+                                Net_stream = (net_stream_l == "True"),
+                                IsEsp32 = isEsp
                             };
 
                             Console.WriteLine($"\n\n\nCamera.NetStream_Prefix:  {cam.Net_stream}\n\n\n");
-                            MainWindow.cameras.Add(cam);
+                            MainWindow.Cameras.Add(cam);
                         }
                         catch (System.ArgumentException ex)
                         {
@@ -498,7 +513,7 @@ namespace IPCamera
                 connection.Close();
 
                 // Get Users Data
-                myUsers.Clear();
+                MyUsers.Clear();
                 query = "SELECT Id, FirstName, LastName, Email, Phone, Licences, Password FROM Users";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -515,7 +530,7 @@ namespace IPCamera
                         String pass = dataReader["Password"].ToString().Trim();
                         // Create The Usres Objects
                         Users user = new Users(id, fname, lname, email, phone, licences, pass);
-                        MainWindow.myUsers.Add(user);
+                        MainWindow.MyUsers.Add(user);
                         Console.WriteLine($"\nUser: {id} {fname} {lname} {email} {phone} {licences} {pass}");
                     }
                 }
@@ -529,9 +544,9 @@ namespace IPCamera
                     MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
-                        email_send = dataReader["Email"].ToString().Trim();
-                        pass_send = dataReader["Pass"].ToString().Trim();
-                        Console.WriteLine($"\nEmailSender: {email_send}  {pass_send}");
+                        Email_send = dataReader["Email"].ToString().Trim();
+                        Pass_send = dataReader["Pass"].ToString().Trim();
+                        Console.WriteLine($"\nEmailSender: {Email_send}  {Pass_send}");
                     }
                 }
                 connection.Close();
@@ -544,10 +559,10 @@ namespace IPCamera
                     MySqlDataReader dataReader = command.ExecuteReader();
                     while (dataReader.Read())
                     {
-                        twilioAccountSID = dataReader["AccountSID"].ToString().Trim();
-                        twilioAccountToken = dataReader["AccountTOKEN"].ToString().Trim();
-                        twilioNumber = dataReader["Phone"].ToString().Trim();
-                        Console.WriteLine($"\nSMS  {twilioAccountSID}  {twilioAccountToken}  {twilioNumber}");
+                        TwilioAccountSID = dataReader["AccountSID"].ToString().Trim();
+                        TwilioAccountToken = dataReader["AccountTOKEN"].ToString().Trim();
+                        TwilioNumber = dataReader["Phone"].ToString().Trim();
+                        Console.WriteLine($"\nSMS  {TwilioAccountSID}  {TwilioAccountToken}  {TwilioNumber}");
                     }
                 }
                 connection.Close();
@@ -568,13 +583,13 @@ namespace IPCamera
                 connection.Close();
                 try
                 {
-                    var u = from user in MainWindow.myUsers where user.Email.Equals(user_email) select user;
-                    MainWindow.user = u.Single();
-                    MainWindow.logged = true;
-                    MainWindow.main_window.login_logout_b.Content = "Logout";
-                    MainWindow.main_window.login_logout_b.Click += (object send, RoutedEventArgs ev) =>
+                    var u = from user in MainWindow.MyUsers where user.Email.Equals(user_email) select user;
+                    MainWindow.User = u.Single();
+                    MainWindow._logged = true;
+                    MainWindow.Main_window.login_logout_b.Content = "Logout";
+                    MainWindow.Main_window.login_logout_b.Click += (object send, RoutedEventArgs ev) =>
                     {
-                        MainWindow.main_window.Loggout_clicked();
+                        MainWindow.Main_window.Loggout_clicked();
                     };
                 }
                 catch(Exception ex)
@@ -588,24 +603,24 @@ namespace IPCamera
         // Loggin Button Click
         public void Loggin_clicked()
         {
-            if (login_oppened == false)
+            if (Login_oppened == false)
             {
-                login_oppened = true;
-                this.login = new Login();
-                this.login.Show();
+                Login_oppened = true;
+                this.Login = new Login();
+                this.Login.Show();
             }
             else
             {
-                this.login.Activate();
+                this.Login.Activate();
             }
         }
 
         // Loggout Button Click
         public void Loggout_clicked()
         {
-            MainWindow.user = null;
+            MainWindow.User = null;
             MainWindow.Logged = false;
-            MainWindow.main_window.login_logout_b.Content = "Login";
+            MainWindow.Main_window.login_logout_b.Content = "Login";
             login_logout_b.Click += (object sender, RoutedEventArgs e) =>
             {
                 this.Loggin_clicked();
@@ -615,11 +630,11 @@ namespace IPCamera
         // When Click Start Button
         private void Start_clicked(object sender, RoutedEventArgs e)
         {
-            if(logged)
+            if(Logged)
             {
-                foreach (Camera cam in cameras)
+                foreach (Camera cam in Cameras)
                 {
-                    Console.WriteLine("Starting: " + cam.url);
+                    Console.WriteLine("Starting: " + cam.Url);
                     cam.Start();
                 }
             }
@@ -628,11 +643,11 @@ namespace IPCamera
         // When Clecked Stop Button
         private void Stop_clicked(object sender, RoutedEventArgs e)
         {
-            if (logged)
+            if (Logged)
             {
-                foreach (Camera cam in cameras)
+                foreach (Camera cam in Cameras)
                 {
-                    Console.WriteLine("Stoping: " + cam.url);
+                    Console.WriteLine("Stoping: " + cam.Url);
                     cam.Stop();
                 }
             }
@@ -641,7 +656,7 @@ namespace IPCamera
         // On Close Button
         protected override void OnClosed(EventArgs e)
         {
-            foreach (Camera cam in cameras)
+            foreach (Camera cam in Cameras)
             {
                 cam.Stop();
             }
@@ -651,19 +666,19 @@ namespace IPCamera
         // When Click Settings Button
         private void Settings_clicked(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user)
-                && (MainWindow.user.Licences.Equals("Admin")) )
+            if (MainWindow.Logged && MainWindow.MyUsers.Contains(MainWindow.User)
+                && (MainWindow.User.Licences.Equals("Admin")) )
             {
-                if (settings_oppened == false)
+                if (Settings_oppened == false)
                 {
-                    settings_oppened = true;
-                    Console.WriteLine("settings_oppened: " + Convert.ToString(settings_oppened));
-                    this.settings = new Settings();
-                    this.settings.Show();
+                    Settings_oppened = true;
+                    Console.WriteLine("Settings_oppened: " + Convert.ToString(Settings_oppened));
+                    this.Settings = new Settings();
+                    this.Settings.Show();
                 }
                 else
                 {
-                    this.settings.Activate();
+                    this.Settings.Activate();
                 }
             }
         }
@@ -671,18 +686,18 @@ namespace IPCamera
         // Account Button Clicked
         private void Account_clicked(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user))
+            if (MainWindow.Logged && MainWindow.MyUsers.Contains(MainWindow.User))
             {
-                if(account_oppened == false)
+                if(Account_oppened == false)
                 {
-                    account_oppened = true;
-                    Console.WriteLine("account_oppened: " + Convert.ToString(account_oppened));
-                    this.account = new Account(MainWindow.user);
-                    this.account.Show();
+                    Account_oppened = true;
+                    Console.WriteLine("Account_oppened: " + Convert.ToString(Account_oppened));
+                    this.Account = new Account(MainWindow.User);
+                    this.Account.Show();
                 }
                 else
                 {
-                    this.account.Activate();
+                    this.Account.Activate();
                 }
             }
         }
@@ -690,18 +705,18 @@ namespace IPCamera
         // Records Button Clicked
         private void Records_clicked(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Logged && MainWindow.myUsers.Contains(MainWindow.user))
+            if (MainWindow.Logged && MainWindow.MyUsers.Contains(MainWindow.User))
             {
-                if (records_oppened == false)
+                if (Records_oppened == false)
                 {
-                    records_oppened = true;
-                    Console.WriteLine("records_oppened: " + Convert.ToString(records_oppened));
-                    this.records = new Records();
-                    this.records.Show();
+                    Records_oppened = true;
+                    Console.WriteLine("Records_oppened: " + Convert.ToString(Records_oppened));
+                    this.Records = new Records();
+                    this.Records.Show();
                 }
                 else
                 {
-                    this.records.Activate();
+                    this.Records.Activate();
                 }
             }
         }
@@ -709,7 +724,7 @@ namespace IPCamera
         // X Button Click
         private void X_Button_Click(object sender, RoutedEventArgs e)
         {
-            if(logged)
+            if(Logged)
             {
                 this.Close();
             }
@@ -721,27 +736,27 @@ namespace IPCamera
             // Dynamic add columns and rows
             int count_rows = 0;
             int count_columns = 0;
-            foreach (Camera cam in cameras)
+            foreach (Camera cam in Cameras)
             {
                 // New Row
                 if (count_columns == 3)
                 {
                     cameras_grid.RowDefinitions.Add(new RowDefinition());
                     count_rows++;
-                    Grid.SetColumn(cam.video, count_columns);
-                    cam.coll = count_columns;
-                    Grid.SetRow(cam.video, count_rows);
-                    cam.row = count_rows;
-                    cameras_grid.Children.Add(cam.video);
+                    Grid.SetColumn(cam.Video, count_columns);
+                    cam.Coll = count_columns;
+                    Grid.SetRow(cam.Video, count_rows);
+                    cam.Row = count_rows;
+                    cameras_grid.Children.Add(cam.Video);
                     count_columns = 0;
                 }
                 else
                 {
-                    Grid.SetColumn(cam.video, count_columns);
-                    cam.coll = count_columns;
-                    Grid.SetRow(cam.video, count_rows);
-                    cam.row = count_rows;
-                    cameras_grid.Children.Add(cam.video);
+                    Grid.SetColumn(cam.Video, count_columns);
+                    cam.Coll = count_columns;
+                    Grid.SetRow(cam.Video, count_rows);
+                    cam.Row = count_rows;
+                    cameras_grid.Children.Add(cam.Video);
                     cameras_grid.ColumnDefinitions.Add(new ColumnDefinition());
                     count_columns++;
                 }

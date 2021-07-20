@@ -20,7 +20,7 @@ namespace IPCamera
     /// </summary>
     public partial class VideoFullscreen : Window
     {
-        Camera cam;
+        Camera Cam { get; set; }
 
         public VideoFullscreen()
         {
@@ -31,32 +31,32 @@ namespace IPCamera
         {
             InitializeComponent();
 
-            this.cam = cam;
-            title.Content = this.cam.name;
-            Grid.SetRow(this.cam.video, 1);
-            main_grid.Children.Add(this.cam.video);
+            this.Cam = cam;
+            title.Content = this.Cam.Name;
+            Grid.SetRow(this.Cam.Video, 1);
+            main_grid.Children.Add(this.Cam.Video);
 
             // Update Current Time
             time.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
             //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            main_grid.Children.Remove(this.cam.video);
-            this.cam.fullscreen = false;
-            Grid.SetColumn(this.cam.video, this.cam.coll);
-            Grid.SetRow(this.cam.video, this.cam.row);
-            MainWindow.cams_grid.Children.Add(this.cam.video);
+            main_grid.Children.Remove(this.Cam.Video);
+            this.Cam.Fullscreen = false;
+            Grid.SetColumn(this.Cam.Video, this.Cam.Coll);
+            Grid.SetRow(this.Cam.Video, this.Cam.Row);
+            MainWindow.cams_grid.Children.Add(this.Cam.Video);
             this.Close();
         }
 
         // Set DateTime
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             // Updating the Label which displays the current time 
             time.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));

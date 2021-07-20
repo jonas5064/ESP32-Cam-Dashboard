@@ -16,32 +16,32 @@ namespace IPCamera
 
     public class HttpServer
     {
-        private HttpListener listener;
-        public bool run;
-        private String ip = "";
-        private String port = "";
-        private String prefix = "";
-        private String url = "";
-        private Camera cam;
+        private HttpListener Listener { get; set; }
+        public bool Run { get; set; }
+        private String Ip { get; set; }
+        private String Port { get; set; }
+        private String Prefix { get; set; }
+        private String Url { get; set; }
+        private Camera Cam { get; set; }
 
         public HttpServer(Camera cam)
         {
-            this.cam = cam;
-            this.ip = this.cam.Net_stream_ip;
-            this.port = this.cam.Net_stream_port;
-            this.prefix = this.cam.Net_stream_prefix;
-            if (!this.ip.Equals("") && !this.port.Equals("") && !this.prefix.Equals(""))
+            this.Cam = cam;
+            this.Ip = this.Cam.Net_stream_ip;
+            this.Port = this.Cam.Net_stream_port;
+            this.Prefix = this.Cam.Net_stream_prefix;
+            if (!this.Ip.Equals("") && !this.Port.Equals("") && !this.Prefix.Equals(""))
             {
-                this.url = $"http://{this.ip}:{this.port}/{this.prefix}/";
+                this.Url = $"http://{this.Ip}:{this.Port}/{this.Prefix}/";
                 // Create a listener.
-                this.listener = new HttpListener();
+                this.Listener = new HttpListener();
                 // Add Url
                 if (!HttpListener.IsSupported)
                 {
                     Console.WriteLine("Windows XP SP2 or Server 2003 is required to use the HttpListener class.");
                     return;
                 }
-                this.listener.Prefixes.Add(this.url);
+                this.Listener.Prefixes.Add(this.Url);
             }
             else
             {
@@ -55,24 +55,26 @@ namespace IPCamera
             try
             {
                 // Start Server
-                if (this.run)
+                if (this.Run)
                 {
-                    this.listener.Start();
+                    this.Listener.Start();
                 }
-                if (this.listener.IsListening)
+                if (this.Listener.IsListening)
                 {
-                    while (this.run)
+                    while (this.Run)
                     {
                         try
                         {
-                            var context = await this.listener.GetContextAsync();
+                            var context = await this.Listener.GetContextAsync();
                             HttpListenerRequest request = context.Request;
                             HttpListenerResponse response = context.Response;
                             // Get Frame Buffer
-                            System.Windows.Media.Imaging.BitmapSource bitmapsource = this.cam.video.Frame_GetCurrent();
+                            System.Windows.Media.Imaging.BitmapSource bitmapsource = this.Cam.Video.Frame_GetCurrent();
                             MemoryStream outStream = new MemoryStream();
-                            JpegBitmapEncoder enc = new JpegBitmapEncoder();
-                            enc.QualityLevel = 100;
+                            JpegBitmapEncoder enc = new JpegBitmapEncoder
+                            {
+                                QualityLevel = 100
+                            };
                             enc.Frames.Add(BitmapFrame.Create(bitmapsource));
                             enc.Save(outStream);
                             byte[] frame = outStream.ToArray(); //.GetBuffer();
@@ -103,13 +105,13 @@ namespace IPCamera
             }
         }
 
-        public void close()
+        public void Close()
         {
-            this.run = false;
+            this.Run = false;
             Console.WriteLine("Stop Listener.");
-            this.listener.Stop();
+            this.Listener.Stop();
             Console.WriteLine("Close Listener.");
-            this.listener.Close();
+            this.Listener.Close();
             //this.listener.Prefixes.Clear();
             //this.listener = new HttpListener();
         }

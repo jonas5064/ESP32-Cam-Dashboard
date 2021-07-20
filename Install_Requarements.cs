@@ -41,7 +41,7 @@ namespace IPCamera
                         first_time_runs = true;
                         return first_time_runs;
                     }
-                } catch (System.IO.FileLoadException ex)
+                } catch (System.IO.FileLoadException)
                 {
                     Console.WriteLine($"\n\nFirst Run Can't Loaded...\n\n");
                     Thread.Sleep(5000);
@@ -53,7 +53,6 @@ namespace IPCamera
                     Thread.Sleep(5000);
                     return false;
                 }
-                return first_time_runs;
             }
             set
             {
