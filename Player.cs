@@ -81,7 +81,8 @@ namespace IPCamera
                 Orientation = Orientation.Vertical,
                 Margin = new Thickness(3),
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Background = System.Windows.Media.Brushes.Gray
+                Background = System.Windows.Media.Brushes.Gray,
+                MinWidth = 500
             };
             Grid.SetColumn(main_panel, this.Column);
             Grid.SetRow(main_panel, this.Row);
@@ -287,7 +288,8 @@ namespace IPCamera
                 Margin = new Thickness(3),
                 Orientation = Orientation.Vertical,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                MinWidth = 400
             };
             Grid.SetRow(main_panel, this.Row);
             Grid.SetColumn(main_panel, this.Column);
