@@ -1,17 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace IPCamera
 {
@@ -42,12 +32,12 @@ namespace IPCamera
         public void Apply_Click(object sender, RoutedEventArgs e)
         {
             // Save to DataBase
-            using (MySqlConnection connection = new MySqlConnection(App.DB_connection_string))
+            using (SqlConnection connection = new SqlConnection(App.DB_connection_string))
             {
                 String query = $"UPDATE Users SET FirstName='{this.User.Firstname}', LastName='{this.User.Lastname}', " +
                                 $"Email='{this.User.Email}', Phone='{this.User.Phone}', Password='{this.User.Password}' " +
                                 $"WHERE Email='{this.User.Email}'";
-                using (MySqlCommand command = new MySqlCommand(query, connection))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     connection.Open();
                     var result = command.ExecuteNonQuery();
