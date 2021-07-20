@@ -7,20 +7,20 @@ namespace IPCamera
 {
     public partial class RecordFullScreen : Window
     {
-        Player video;
-        Picture picture;
-        Records record;
+        Player _video;
+        Picture _picture;
+        Records _record;
 
         public RecordFullScreen(Player video)
         {
             InitializeComponent();
 
-            this.video = video;
+            this._video = video;
 
             time_grid.Visibility = Visibility.Visible;
             buttons_grid.Visibility = Visibility.Visible;
 
-            media_element.Source = new Uri(this.video.video.Path);
+            media_element.Source = new Uri(this._video.Video.Path);
             media_element.Margin = new Thickness(7, 7, 7, 0);
             media_element.LoadedBehavior = MediaState.Manual;
             media_element.ScrubbingEnabled = true;
@@ -59,32 +59,32 @@ namespace IPCamera
         public RecordFullScreen(Picture picture, Records rec)
         {
             InitializeComponent();
-            this.picture = picture;
-            this.record = rec;
+            this._picture = picture;
+            this._record = rec;
             picture_imfo_grid.Visibility = Visibility.Visible;
-            name_pic.Content = this.picture.CamName;
-            date_pic.Content = this.picture.Date;
-            time_pic.Content = this.picture.Time;
-            media_element.Source = new Uri(this.picture.Path);
+            name_pic.Content = this._picture.CamName;
+            date_pic.Content = this._picture.Date;
+            time_pic.Content = this._picture.Time;
+            media_element.Source = new Uri(this._picture.Path);
         }
 
         ~RecordFullScreen()
         {
-            this.video = null;
-            this.picture = null;
-            this.record = null;
+            this._video = null;
+            this._picture = null;
+            this._record = null;
         }
 
         // On Close Window
         protected override void OnClosed(EventArgs e)
         {
-            if(this.video != null)
+            if(this._video != null)
             {
-                this.video.fullscreen = false;
+                this._video.Fullscreen = false;
             }
-            if(this.record != null)
+            if(this._record != null)
             {
-                this.record.fullscreen = false;
+                this._record.Fullscreen = false;
             }            
             this.Close();
         }

@@ -1,63 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IPCamera
 {
     public class Users
     {
-        private int id;
-        private String firstname = "";
-        private String lastname = "";
-        private String email = "";
-        private String phone = "";
-        public static int Count = 0;
-        private String licences;
-        private String password;
+        public static int Count;
 
-        public int Id
-        {
-            get { return this.id; }
-            set { this.id = value; }
-        }
+        public int Id { get; set; }
 
-        public String Firstname
-        {
-            get { return this.firstname; }
-            set { this.firstname = value; }
-        }
+        public String Firstname { get; set; }
 
-        public String Lastname
-        {
-            get { return this.lastname; }
-            set { this.lastname = value; }
-        }
+        public String Lastname { get; set; }
 
-        public String Email
-        {
-            get { return this.email; }
-            set { this.email = value; }
-        }
+        public String Email { get; set; }
 
-        public String Phone
-        {
-            get { return this.phone; }
-            set { this.phone = value; }
-        }
+        public String Phone { get; set; }
 
-        public String Password
-        {
-            get { return this.password; }
-            set { this.password = value; }
-        }
+        public String Password { get; set; }
 
-        public String Licences
-        {
-            get { return this.licences; }
-            set { this.licences = value; }
-        }
+        public String Licences { get; set; }
 
         // Constructor
         public Users(int id, String fname, String lname, String email, String phone, String licences, String password)

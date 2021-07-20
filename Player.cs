@@ -10,27 +10,28 @@ namespace IPCamera
     public class Player
     {
 
-        public Grid parrent_g;
-        public StackPanel parrent_s;
-        public Video video;
-        public Picture picture;
-        public Records record;
-        public int column;
-        public int row;
-        public Boolean fullscreen = false;
-        RecordFullScreen fullscreen_page;
+        public Grid Parrent_g { get; set; }
+        public Video Video { get; set; }
+        public Picture Picture { get; set; }
+        public Records Record { get; set; }
+        public int Column { get; set; }
+        public int Row { get; set; }
+        public Boolean Fullscreen { get; set; }
+        RecordFullScreen Fullscreen_page { get; set; }
 
-        public int buttonsFontSize = 12;
-        Label time_spam;
-        MediaElement player;
+        public int ButtonsFontSize { get; set; }
+        Label Time_spam { get; set; }
+        MediaElement MyPlayer { get; set; }
         
 
         public Player(Grid parrent, Video video, int column, int row)
         {
-            this.parrent_g = parrent;
-            this.video = video;
-            this.column = column;
-            this.row = row;
+            this.Parrent_g = parrent;
+            this.Video = video;
+            this.Column = column;
+            this.Row = row;
+            this.Fullscreen = false;
+            this.ButtonsFontSize = 12;
 
             // Threading to Update The Time Spam Label Show The Time Of Video
             DispatcherTimer timer = new DispatcherTimer
@@ -39,13 +40,13 @@ namespace IPCamera
             };
             timer.Tick += (object sender, EventArgs e) =>
             {
-                if (this.player.Source != null)
+                if (this.MyPlayer.Source != null)
                 {
-                    if (this.player.NaturalDuration.HasTimeSpan)
+                    if (this.MyPlayer.NaturalDuration.HasTimeSpan)
                     {
-                        this.time_spam.Content = String.Format("{0} / {1}", 
-                                                    this.player.Position.ToString(@"mm\:ss"), 
-                                                    this.player.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+                        this.Time_spam.Content = String.Format("{0} / {1}", 
+                                                    this.MyPlayer.Position.ToString(@"mm\:ss"), 
+                                                    this.MyPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
                     }
                 }
             };
@@ -54,22 +55,22 @@ namespace IPCamera
 
         public Player(Grid parrent, Picture picture, Records record, int column, int row)
         {
-            this.parrent_g = parrent;
-            this.picture = picture;
-            this.record = record;
-            this.column = column;
-            this.row = row;
+            this.Parrent_g = parrent;
+            this.Picture = picture;
+            this.Record = record;
+            this.Column = column;
+            this.Row = row;
         }
 
         ~Player()
         {
-            this.parrent_g = null;
-            this.video = null;
-            this.parrent_g = null;
-            this.picture = null;
-            this.record = null;
-            this.column = 0;
-            this.row = 0;
+            this.Parrent_g = null;
+            this.Video = null;
+            this.Parrent_g = null;
+            this.Picture = null;
+            this.Record = null;
+            this.Column = 0;
+            this.Row = 0;
         }
 
         public void CreateVideo()
@@ -82,14 +83,14 @@ namespace IPCamera
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Background = System.Windows.Media.Brushes.Gray
             };
-            Grid.SetColumn(main_panel, this.column);
-            Grid.SetRow(main_panel, this.row);
-            this.parrent_g.Children.Add(main_panel);
+            Grid.SetColumn(main_panel, this.Column);
+            Grid.SetRow(main_panel, this.Row);
+            this.Parrent_g.Children.Add(main_panel);
 
             // Add Label
             Label name = new Label
             {
-                Content = this.video.CamName,
+                Content = this.Video.CamName,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Foreground = System.Windows.Media.Brushes.DarkRed
             };
@@ -97,7 +98,7 @@ namespace IPCamera
             // Add Label
             Label date = new Label
             {
-                Content = this.video.Date,
+                Content = this.Video.Date,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Foreground = System.Windows.Media.Brushes.DarkRed
             };
@@ -105,17 +106,17 @@ namespace IPCamera
             // Add Label
             Label time = new Label
             {
-                Content = this.video.Time,
+                Content = this.Video.Time,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Foreground = System.Windows.Media.Brushes.DarkRed
             };
             main_panel.Children.Add(time);
 
             // Video Player
-            Console.WriteLine($"\n\nVideo {this.video.Path}\n");
-            this.player = new MediaElement
+            Console.WriteLine($"\n\nVideo {this.Video.Path}\n");
+            this.MyPlayer = new MediaElement
             {
-                Source = new Uri(this.video.Path),
+                Source = new Uri(this.Video.Path),
                 Height = 233,
                 Margin = new Thickness(7, 7, 7, 0),
                 LoadedBehavior = MediaState.Manual,
@@ -123,21 +124,21 @@ namespace IPCamera
                 UnloadedBehavior = MediaState.Close,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            this.player.MediaOpened += (object sender, RoutedEventArgs e) =>
+            this.MyPlayer.MediaOpened += (object sender, RoutedEventArgs e) =>
             {
 
             };
-            this.player.Play();
-            this.player.Pause();
-            this.player.Position = TimeSpan.FromSeconds(0);
-            main_panel.Children.Add(player);
+            this.MyPlayer.Play();
+            this.MyPlayer.Pause();
+            this.MyPlayer.Position = TimeSpan.FromSeconds(0);
+            main_panel.Children.Add(this.MyPlayer);
 
             // Add Label Fro Time Spam
-            this.time_spam = new Label
+            this.Time_spam = new Label
             {
                 HorizontalAlignment = HorizontalAlignment.Center
             };
-            main_panel.Children.Add(this.time_spam);
+            main_panel.Children.Add(this.Time_spam);
 
             // Add Panel Play Stop Pause
             StackPanel panel_Play_Stop_Pause = new StackPanel
@@ -152,14 +153,14 @@ namespace IPCamera
             {
                 Content = "Play",
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             play.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (this.player.Source != null)
+                if (this.MyPlayer.Source != null)
                 {
-                    this.player.Play();
+                    this.MyPlayer.Play();
                 }
             };
             panel_Play_Stop_Pause.Children.Add(play);
@@ -168,14 +169,14 @@ namespace IPCamera
             {
                 Content = "Stop",
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             stop.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (this.player.Source != null)
+                if (this.MyPlayer.Source != null)
                 {
-                    this.player.Stop();
+                    this.MyPlayer.Stop();
                 }
             };
             panel_Play_Stop_Pause.Children.Add(stop);
@@ -184,14 +185,14 @@ namespace IPCamera
             {
                 Content = "Pause",
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             pause.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (this.player.Source != null)
+                if (this.MyPlayer.Source != null)
                 {
-                    this.player.Pause();
+                    this.MyPlayer.Pause();
                 }
             };
             panel_Play_Stop_Pause.Children.Add(pause);
@@ -210,14 +211,14 @@ namespace IPCamera
             {
                 Content = "Back",
                 Interval = 200,
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             backard.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (this.player.Source != null)
+                if (this.MyPlayer.Source != null)
                 {
-                    this.player.Position -= TimeSpan.FromMilliseconds(1000);
+                    this.MyPlayer.Position -= TimeSpan.FromMilliseconds(1000);
                 }
             };
             panel_bakc_forw_open_del.Children.Add(backard);
@@ -226,14 +227,14 @@ namespace IPCamera
             {
                 Content = "Forw",
                 Interval = 200,
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             forward.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (this.player.Source != null)
+                if (this.MyPlayer.Source != null)
                 {
-                    this.player.Position += TimeSpan.FromMilliseconds(1000);
+                    this.MyPlayer.Position += TimeSpan.FromMilliseconds(1000);
                 }
             };
             panel_bakc_forw_open_del.Children.Add(forward);
@@ -241,20 +242,20 @@ namespace IPCamera
             Button open = new Button
             {
                 Content = "Open",
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             open.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (!this.fullscreen)
+                if (!this.Fullscreen)
                 {
-                    this.fullscreen = true;
-                    this.fullscreen_page = new RecordFullScreen(this);
-                    fullscreen_page.Show();
+                    this.Fullscreen = true;
+                    this.Fullscreen_page = new RecordFullScreen(this);
+                    this.Fullscreen_page.Show();
                 }
                 else
                 {
-                    this.fullscreen_page.Activate();
+                    this.Fullscreen_page.Activate();
                 }
 
             };
@@ -263,14 +264,14 @@ namespace IPCamera
             Button delete = new Button
             {
                 Content = "Del",
-                FontSize = this.buttonsFontSize,
+                FontSize = this.ButtonsFontSize,
                 Padding = new Thickness(3, 0, 3, 0)
             };
             delete.Click += (object obj, RoutedEventArgs e) =>
             {
                 if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    File.Delete(this.video.Path);
+                    File.Delete(this.Video.Path);
                 }
             };
             panel_bakc_forw_open_del.Children.Add(delete);
@@ -288,9 +289,9 @@ namespace IPCamera
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
-            Grid.SetRow(main_panel, this.row);
-            Grid.SetColumn(main_panel, this.column);
-            this.parrent_g.Children.Add(main_panel);
+            Grid.SetRow(main_panel, this.Row);
+            Grid.SetColumn(main_panel, this.Column);
+            this.Parrent_g.Children.Add(main_panel);
 
             // Label
             Label label_1 = new Label
@@ -298,7 +299,7 @@ namespace IPCamera
                 Margin = new Thickness(0, 11, 0, 0),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Content = this.picture.CamName,
+                Content = this.Picture.CamName,
                 Foreground = System.Windows.Media.Brushes.DarkRed,
                 FontSize = 12
             };
@@ -309,7 +310,7 @@ namespace IPCamera
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Content = this.picture.Date,
+                Content = this.Picture.Date,
                 Foreground = System.Windows.Media.Brushes.DarkRed,
                 FontSize = 12
             };
@@ -321,7 +322,7 @@ namespace IPCamera
                 HorizontalAlignment = HorizontalAlignment.Center
             };
             label_2.VerticalAlignment = VerticalAlignment.Center;
-            label_3.Content = this.picture.Time;
+            label_3.Content = this.Picture.Time;
             label_3.Foreground = System.Windows.Media.Brushes.DarkRed;
             label_3.FontSize = 12;
             main_panel.Children.Add(label_3);
@@ -329,7 +330,7 @@ namespace IPCamera
             // Create Media Element
             MediaElement image = new MediaElement
             {
-                Source = new Uri(this.picture.Path),
+                Source = new Uri(this.Picture.Path),
                 Margin = new Thickness(1),
                 Height = 200,
                 VerticalAlignment = VerticalAlignment.Center
@@ -355,15 +356,15 @@ namespace IPCamera
             };
             open.Click += (object obj, RoutedEventArgs e) =>
             {
-                if (!this.fullscreen)
+                if (!this.Fullscreen)
                 {
-                    this.fullscreen = true;
-                    this.fullscreen_page = new RecordFullScreen(this.picture, this.record);
-                    this.fullscreen_page.Show();
+                    this.Fullscreen = true;
+                    this.Fullscreen_page = new RecordFullScreen(this.Picture, this.Record);
+                    this.Fullscreen_page.Show();
                 }
                 else
                 {
-                    this.fullscreen_page.Activate();
+                    this.Fullscreen_page.Activate();
                 }
             };
             panel_b.Children.Add(open);
@@ -378,7 +379,7 @@ namespace IPCamera
             {
                 if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    File.Delete(this.picture.Path);
+                    File.Delete(this.Picture.Path);
                 }
             };
             panel_b.Children.Add(delete);

@@ -1,30 +1,27 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.SqlClient;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace IPCamera
 {
     public partial class Settings : Window
     {
-        List<Users> users;
+        List<Users> _users;
         public List<Users> Users
         {
             get
             {
-                return this.users;
+                return this._users;
             }
             set
             {
-                this.users = value;
+                this._users = value;
             }
         }
 
@@ -111,11 +108,8 @@ namespace IPCamera
 
             using (MySqlConnection cn = new MySqlConnection(App.DB_connection_string))
             {
-
-
                 String query;
                 int result;
-
                 // Save Paths
                 if (txtEditor_pictures.Text != "" && txtEditor_videos.Text != "")
                 {
@@ -578,13 +572,13 @@ namespace IPCamera
             // Update ProgressBar
             Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(70) });
 
-            // Commit Changes to the List with users
+            // Commit Changes to the List with this._users
             users_grid.CommitEdit();
             // Chech If Delete a users
-            if (users.Count > MainWindow.MyUsers.Count)
+            if (this._users.Count > MainWindow.MyUsers.Count)
             {
                 Console.WriteLine("DELETE OK");
-                foreach (Users u in users)
+                foreach (Users u in this._users)
                 {
                     if (!MainWindow.MyUsers.Contains(u))
                     {
@@ -609,7 +603,7 @@ namespace IPCamera
                 int counter = 0;
                 foreach (Users u in MainWindow.MyUsers)
                 {
-                    Users old_user = users[counter];
+                    Users old_user = this._users[counter];
                     // If A record changeds updated
                     if ((old_user.Firstname.Equals(u.Firstname)) ||
                             (old_user.Lastname.Equals(u.Lastname)) ||
