@@ -30,14 +30,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.Install_Requarements">
-    <Position X="11" Y="7.75" Width="1.5" />
+    <Position X="18" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAACAAQAAA=</HashCode>
       <FileName>Install_Requarements.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.Login" BaseTypeListCollapsed="true">
-    <Position X="9.25" Y="8.5" Width="1.5" />
+    <Position X="18" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAgAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Login.xaml.cs</FileName>
@@ -67,7 +67,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.RecordFullScreen" BaseTypeListCollapsed="true">
-    <Position X="4" Y="8" Width="1.5" />
+    <Position X="14.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAQACAEEAAAAAgAAAAAARAAAAAAgAAAABA=</HashCode>
       <FileName>RecordFullScreen.xaml.cs</FileName>
@@ -90,21 +90,21 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="IPCamera.Video">
-    <Position X="9.25" Y="6" Width="1.5" />
+    <Position X="19.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAIAAAAAAAAAAAAAAAABAAAAAAAAAQA=</HashCode>
       <FileName>Records.xaml.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.Picture">
-    <Position X="9.25" Y="3.75" Width="1.5" />
+    <Position X="19.75" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAIAAAAAAAAAAAAAAAABAAAAAAAAAQA=</HashCode>
       <FileName>Records.xaml.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.Settings" BaseTypeListCollapsed="true">
-    <Position X="5.75" Y="6" Width="1.5" />
+    <Position X="16.25" Y="0.5" Width="1.5" />
     <NestedTypes>
       <Delegate Name="IPCamera.Settings.UpdateProgressBarDelegate" Collapsed="true">
         <TypeIdentifier>
@@ -133,7 +133,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.VideoFullscreen" BaseTypeListCollapsed="true">
-    <Position X="7.5" Y="6.5" Width="1.5" />
+    <Position X="19.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAQAAAAAAAEAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>VideoFullscreen.xaml.cs</FileName>
@@ -156,7 +156,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="IPCamera.Properties.Resources">
-    <Position X="7.5" Y="8.75" Width="1.5" />
+    <Position X="9.25" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
     </TypeIdentifier>
@@ -169,7 +169,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="IPCamera.Tools.RatioConverter" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="10" Width="1.5" />
+    <Position X="14.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAECAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>RatioConverter.cs</FileName>
