@@ -244,7 +244,7 @@ namespace IPCamera
             }
         }
 
-        public Camera(String url, String name, String id, bool rec)
+        public Camera(String url, String name, String id, bool rec, bool isesp)
         {
             this.Url = url;
             this.Name = name;
@@ -263,6 +263,7 @@ namespace IPCamera
             Avi_format = false;
             Mp4_format = false;
             this.Camera_oppened = false;
+            this.IsEsp32 = isesp;
 
             // Create an VideoCapture
             if (!this.IsEsp32)

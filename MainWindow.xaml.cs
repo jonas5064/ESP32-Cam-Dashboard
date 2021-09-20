@@ -477,7 +477,7 @@ namespace IPCamera
                         try
                         {
                             bool rec = (recording == "True");
-                            Camera cam = new Camera(url, name, id, rec)
+                            Camera cam = new Camera(url, name, id, rec, isEsp)
                             {
                                 Username = username,
                                 Password = password,
@@ -498,8 +498,7 @@ namespace IPCamera
                                 Left_req = left,
                                 Net_stream_port = net_stream_port_l,
                                 Net_stream_prefix = net_stream_prefix_l,
-                                Net_stream = (net_stream_l == "True"),
-                                IsEsp32 = isEsp
+                                Net_stream = (net_stream_l == "True")
                             };
 
                             Console.WriteLine($"\n\n\nCamera.NetStream_Prefix:  {cam.Net_stream}\n\n\n");
