@@ -366,7 +366,7 @@
                             </Grid.RowDefinitions>
                             <!-- Progress Bar -->
                             <ProgressBar x:Name="progressBarTracking" Grid.Column="0" Grid.Row="1" Margin="5, 5, 5, 5"
-                                         Minimum="0" Maximum="120" Visibility="Hidden"/>
+                                         Minimum="0" Maximum="100" Visibility="Hidden"/>
                             <Button Grid.Column="1" Grid.Row="1" x:Name="Save" Content="Apply" Click="Apply_Click" />
                         </Grid>
                     </Grid>

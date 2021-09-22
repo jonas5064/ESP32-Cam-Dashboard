@@ -1,74 +1,34 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Linq;
 
 namespace IPCamera
 {
 
     public partial class Account : Window
     {
-
-        public Users User { get; set; }
-
-        public Account(Users user)
+        public User User { get; set; }
+        public Account(User user)
         {
             InitializeComponent();
             this.User = user;
-            Console.WriteLine($"\n\nUserName: {this.User.Firstname}  {this.User.Lastname}");
+            Console.WriteLine($"\n\nUserName: {this.User.FirstName}  {this.User.LastName}");
             user_grid.DataContext = this.User;
         }
-
-
         // When Close The Window
         protected override void OnClosed(EventArgs e)
         {
-            MainWindow.Account_oppened = false;
-            Console.WriteLine("account_oppened: " + Convert.ToString(MainWindow.Account_oppened));
+            MainWindow.Main_window.Account_oppened = false;
+            Console.WriteLine("account_oppened: " + Convert.ToString(MainWindow.Main_window.Account_oppened));
             this.Close();
         }
-
         // When Apply Button Clicks Update the current user
         public void Apply_Click(object sender, RoutedEventArgs e)
         {
-            // Save to DataBase
-            using (SqlConnection connection = new SqlConnection(App.DB_connection_string))
-            {
-                String query = $"UPDATE Users SET FirstName='{this.User.Firstname}', LastName='{this.User.Lastname}', " +
-                                $"Email='{this.User.Email}', Phone='{this.User.Phone}', Password='{this.User.Password}' " +
-                                $"WHERE Email='{this.User.Email}'";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    connection.Open();
-                    var result = command.ExecuteNonQuery();
-                    // Check Error
-                    if (result < 0)
-                        System.Windows.MessageBox.Show("Error inserting data into Database!");
-                    connection.Close();
-                }  
-            }
-            // Save in RAM
-            MainWindow.User = this.User;
-            int counter = 0;
-            Boolean checker = false;
-            foreach(Users user in MainWindow.MyUsers)
-            {
-                if (user.Email.Equals(this.User.Email))
-                {
-                    MainWindow.MyUsers[counter] = this.User;
-                    checker = true;
-                    break;
-                }
-                counter++;
-            }
-            if (checker)
-            {
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Can't Find this email.","Warning!!!");
-            }
+            User user = (from u in MainWindow.Main_window.DBModels.Users where u.Email == this.User.Email select u).FirstOrDefault();
+            user = this.User;
+            MainWindow.Main_window.DBModels.SaveChanges();
         }
     }
 }

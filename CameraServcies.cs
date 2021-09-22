@@ -1,323 +1,69 @@
 ﻿using System;
-using System.Drawing;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
 using VisioForge.Controls.UI.WPF;
 using VisioForge.Types;
-using VisioForge.Types.OutputFormat;
-// https://help.visioforge.com/sdks_net/html/T_VisioForge_Controls_UI_WPF_VideoCapture.htm
-using VisioForge.Types.VideoEffects;
-using MimeKit;
-using MimeKit.Utils;
-using System.Globalization;
 
 namespace IPCamera
 {
-    public class Camera
+    public class CameraServcies
     {
-        public String Url { get; set; }
-        public string Name { get; set; }
-        public string Id { get; set; }
-        public bool IsEsp32 { get; set; }
-        public String Username { get; set; }
-        public String Password { get; set; }
+        public VideoCapture video { get; set; }
+        public string cameraId { get; set; }
         WindowControll Win_controll { get; set; }
         public bool Fullscreen { get; set; }
-        public int Row { get; set; }
-        public int Coll { get; set; }
         public int On_move_recording_time { get; set; }
         public String Net_stream_ip { get; set; }
-        public String Net_stream_port { get; set; }
-        public String Net_stream_prefix { get; set; }
         public bool Running { get; set; }
-        public VideoCapture Video { get; set; }    
-        public static int Count { get; set; }
-        public static String Pictures_dir { get; set; }
-        public static String Videos_dir { get; set; }
-        public static bool Avi_format { get; set; }
-        public static bool Mp4_format { get; set; }
-        public String Up_req { get; set; }
-        public String Down_req { get; set; }
-        public String Right_req { get; set; }
-        public String Left_req { get; set; }
+        public VideoCapture Video { get; set; }
         HttpServer Server { get; set; }
         public bool Camera_oppened { get; set; }
-        public bool Recognition { get; set; }
-        public bool On_move_sms { get; set; }
-        public bool On_move_email { get; set; }
-        public bool On_move_pic { get; set; }
-        public bool On_move_rec { get; set; }
-        public int On_move_sensitivity { get; set; }
-        // Set Frame Rates
-        private int _framerate = 0;
-        public int Framerate
+        public CameraServcies(MyCamera camera)
         {
-            get
+            this.cameraId = camera.Id;
+            if (!camera.isEsp32)
             {
-                return this._framerate;
-            }
-            set
-            {
-                this._framerate = value;
-                this.Video.Video_FrameRate = this._framerate;
-            }
-        }
-        // Setup Brightness Effext
-        private int _brightness = 0;
-        public int Brightness
-        {
-            get { return this._brightness; }
-            set
-            {
-                this._brightness = value;
-                // Add the efect
-                IVFVideoEffectLightness lightness;
-                var effect_l = this.Video.Video_Effects_Get("Lightness");
-                if (effect_l == null)
-                {
-                    lightness = new VFVideoEffectLightness(true, this._brightness, 0, "Lightness");
-                    this.Video.Video_Effects_Add(lightness);
-                }
-                else
-                {
-                    lightness = effect_l as IVFVideoEffectLightness;
-                    if (lightness != null)
-                    {
-                        lightness.Value = this._brightness;
-                    }
-                }
-            }
-        }
-        // Setup The Net Stream
-        private bool _net_stream = false;
-        public bool Net_stream
-        {
-            get { return this._net_stream; }
-            set { 
-                this._net_stream = value;
-                if (this.Net_stream_ip.Length > 0 && this.Net_stream_port.Length > 0)
-                {
-                    Console.WriteLine("Server,Run: " + Convert.ToString(this.Net_stream));
-                    if (this.Net_stream)
-                    {
-                        Server = new HttpServer(this);
-                        this.Server.Run = this.Net_stream;
-                        _ = this.Server.ListenAsync();
-                    }
-                    else
-                    {
-                        if (this.Server != null)
-                        {
-                            Console.WriteLine("Try to Stop The Server.");
-                            if (this.Server.Run)
-                            {
-                                Console.WriteLine("Server is Stoping");
-                                this.Server.Close();
-                                Console.WriteLine("Server Stoped.");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // Setup Contrast Effext
-        private int _contrast = 0;
-        public int Contrast
-        {
-            get { return this._contrast; }
-            set
-            {
-                this._contrast = value;
-                // Add the efect
-                IVFVideoEffectContrast contrast;
-                var effect_c = this.Video.Video_Effects_Get("Contrast");
-                if (effect_c == null)
-                {
-                    contrast = new VFVideoEffectContrast(true, this._contrast, 0, "Contrast");
-                    this.Video.Video_Effects_Add(contrast);
-                }
-                else
-                {
-                    contrast = effect_c as IVFVideoEffectContrast;
-                    if (contrast != null)
-                    {
-                        contrast.Value = this._contrast;
-                    }
-                }
-            }
-        }
-        // Setup Drkness Effext
-        private int _darkness = 0;
-        public int Darkness
-        {
-            get { return this._darkness; }
-            set
-            {
-                this._darkness = value;
-                // Add the efect
-                IVFVideoEffectDarkness darkness;
-                var effect_d = this.Video.Video_Effects_Get("Darkness");
-                if (effect_d == null)
-                {
-                    darkness = new VFVideoEffectDarkness(true, this._darkness, 0, "Darkness");
-                    this.Video.Video_Effects_Add(darkness);
-                }
-                else
-                {
-                    darkness = effect_d as IVFVideoEffectDarkness;
-                    if (darkness != null)
-                    {
-                        darkness.Value = this._darkness;
-                    }
-                }
-            }
-        }
-        // When Change Detection
-        private bool _detection = false;
-        public bool Detection
-        {
-            get { return this._detection; }
-            set
-            {
-                this._detection = value;
-                if (this._detection)
-                {
-                    /*
-                    this.video.Face_Tracking = new FaceTrackingSettings
-                    {
-                        ColorMode = CamshiftMode.RGB,
-                        Highlight = true,
-                        MinimumWindowSize = 25,
-                        ScalingMode = ObjectDetectorScalingMode.GreaterToSmaller,
-                        ScaleFactor = (float)1.7,
-                        SearchMode = ObjectDetectorSearchMode.Single
-                    };
-                    */
-                    this.Video.Face_Tracking = new FaceTrackingSettings()
-                    {
-                        Highlight = true
-                    };
-                    this.Video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) =>
-                    {
-                        foreach (Rectangle faceRectangle in e.FaceRectangles)
-                        {
-                            // If Recognition is enable
-                            if (this.Recognition)
-                            {
-
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Face Detection:   left-right({faceRectangle.Left}, {faceRectangle.Right}), " +
-                                    $"top-bottom({faceRectangle.Top}, {faceRectangle.Bottom}),  width-height({faceRectangle.Width}, " +
-                                    $"{faceRectangle.Height})  {Environment.NewLine}");
-                            }
-                        }
-                    };
-                }
-                else
-                {
-                    this.Video.Face_Tracking = new FaceTrackingSettings();
-                    this.Video.OnFaceDetected += (object sender, AFFaceDetectionEventArgs e) => { };
-                }
-            }
-        }
-        // Start / Stop Recording
-        private bool _recording = false;
-        public bool Recording
-        {
-            get { return this._recording; }
-            set { 
-                this._recording = value;
-                if (this._recording)
-                {
-                    Console.WriteLine("Start Recording.");
-                    this.StartRecording();
-                }
-                else
-                {
-                    Console.WriteLine("Stop Recording.");
-                    this.StopRecording();
-                }
-            }
-        }
-
-        public Camera(String url, String name, String id, bool rec, bool isesp)
-        {
-            this.Url = url;
-            this.Name = name;
-            this.Id = id;
-            this.Net_stream_ip = "localhost";
-            this.Recognition = false;
-            this.On_move_sms = false;
-            this.On_move_email = false;
-            this.On_move_pic = false;
-            this.On_move_rec = false;
-            this.On_move_sensitivity = 4;
-            this.IsEsp32 = false;
-            this.Fullscreen = false;
-            this.On_move_recording_time = 10000;
-            this.Running = false;
-            Avi_format = false;
-            Mp4_format = false;
-            this.Camera_oppened = false;
-            this.IsEsp32 = isesp;
-
-            // Create an VideoCapture
-            if (!this.IsEsp32)
-            {
-                this.Video = new VideoCapture
+                this.video = new VideoCapture
                 {
                     IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
                     {
-                        URL = this.Url,
-                        Login = this.Username,
-                        Password = this.Password
+                        URL = camera.urls,
+                        Login = camera.username,
+                        Password = camera.password
                     }
                 };
             }
             else
             {
-                this.Video = new VideoCapture
+                this.video = new VideoCapture
                 {
                     IP_Camera_Source = new VisioForge.Types.Sources.IPCameraSourceSettings()
                     {
-                        URL = this.Url/*,
-                        Type = VisioForge.Types.VFIPSource.Auto_LAV*/
+                        URL = camera.urls
                     }
                 };
             }
-            this.Video.OnError += OnError;
-            this.Video.MouseUp += CamerasFocused;
-            this.Video.Audio_PlayAudio = this.Video.Audio_RecordAudio = false;
-            this.Video.Video_Effects_Enabled = true;
-            this.Video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
-            // Motion Detection Setup
-            this.Video.Motion_Detection = new MotionDetectionSettings
+            this.video.OnError += OnError;
+            this.video.MouseUp += CamerasFocused;
+            this.video.Audio_PlayAudio = video.Audio_RecordAudio = false;
+            this.video.Video_Effects_Enabled = true;
+            this.video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
+            this.video.Motion_Detection = new MotionDetectionSettings
             {
                 Enabled = true,
                 Highlight_Enabled = false
             };
-            this.Video.OnMotion += this.OnMotion;
-            //this.video.Video_Still_Frames_Grabber_Enabled = true;
-            this.Framerate = 33;
-            this.Video.Video_FrameRate = this.Framerate;
-            // Set Recording Variable
-            this.Recording = rec;
-            Count++;
+            this.video.OnMotion += OnMotion;
+            //camera.video.Video_Still_Frames_Grabber_Enabled = true;
+            this.video.Video_FrameRate = camera.fps;
         }
-
-
-        ~Camera()
-        {
-            Count--;
-        }
-
-        // Start the Camera
+        // TODO: Camera Start
         public void Start()
         {
+            /*
             if (this.Video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 try
@@ -336,11 +82,12 @@ namespace IPCamera
                     Console.WriteLine($"OnStart: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
             }
+            */
         }
-
-        // Stop The Camera
+        // TODO: Camera Stop
         public void Stop()
         {
+            /*
             if (this.Video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 try
@@ -360,14 +107,17 @@ namespace IPCamera
                 }
 
             }
+            */
         }
-
-        // Take Picture
+        // TODO: Camera Take Picture
         public void Take_pic()
-        {
+        {/*
+            string picturesDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
+                                      where f.Name.Equals("Pictures")
+                                      select f.Path).FirstOrDefault();
             // Create Folder With Cameras Name for Name
-            String dir_path = Camera.Pictures_dir + "\\" + this.Name;
-            if (! Directory.Exists(dir_path))
+            String dir_path = picturesDirPath + "\\" + this.Name;
+            if (!Directory.Exists(dir_path))
             {
                 Directory.CreateDirectory(dir_path);
             }
@@ -385,13 +135,15 @@ namespace IPCamera
             houre = houre.Replace(":", ".");
             String file = dir_path + "\\" + houre + ".jpg";
             Console.WriteLine($"\n\nCreate File: {file}\n\n");
-            this.Video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
+            this.Video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);*/
         }
-
-
-        // Start Recording
+        // TODO: Camera Start Recording
         public void StartRecording()
         {
+            /*
+            string videoDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
+                                   where f.Name.Equals("Videos")
+                                   select f.Path).FirstOrDefault();
             try
             {
                 bool was_running = this.Running;
@@ -402,7 +154,7 @@ namespace IPCamera
                 // Video mode == capture
                 this.Video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
                 // Create Dir With Cameras Name
-                String dir_path = Camera.Videos_dir + "\\" + this.Name;
+                String dir_path = videoDirPath + "\\" + this.Name;
                 if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
                     Directory.CreateDirectory(dir_path);
@@ -419,9 +171,10 @@ namespace IPCamera
                 }
                 // Start Recording and Creating The Video Files
                 String houre = now.ToString("T", CultureInfo.CreateSpecificCulture("de-DE"));
-                houre = houre.Replace(":",".");
+                houre = houre.Replace(":", ".");
+                FilesFormat fileFormat = (from f in MainWindow.Main_window.DBModels.FilesFormats select f).FirstOrDefault();
                 // AVI
-                if (Avi_format)
+                if (fileFormat.avi)
                 {
                     String file = dir_path + "\\" + houre + ".avi";
                     this.Video.Output_Filename = file;
@@ -429,7 +182,7 @@ namespace IPCamera
                     this.Video.Output_Format = new VFAVIOutput();
                 }
                 // MP4
-                if (Mp4_format)
+                if (fileFormat.mp4)
                 {
                     String file = dir_path + "\\" + houre + ".mp4";
                     this.Video.Output_Filename = file;
@@ -448,11 +201,11 @@ namespace IPCamera
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
+            */
         }
-
-        // Stop Recording
+        // TODO: Camera Stop Recording
         public void StopRecording()
-        {
+        {/*
             bool was_running = this.Running;
             if (this.Running)
             {
@@ -463,24 +216,23 @@ namespace IPCamera
             if (this.Running && was_running)
             {
                 this.Video.Start();
-            }
+            }*/
         }
-
-        // On Error EVnt
         private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
         {
-            Console.WriteLine($"\n\nOnError: Level:{ex.Level}\nStackTrace:{ex.StackTrace}\nMessage:{ex.Message}\n\n");
-            //throw new NotImplementedException();
+            Console.WriteLine($@"\n\nOnError: Level:{ex.Level}\n
+                                    StackTrace:{ex.StackTrace}\n
+                                    Message:{ex.Message}\n\n");
         }
-
-        // When click on camera
+        // TODO: Camera Focused
         public void CamerasFocused(object sender, MouseButtonEventArgs e)
-        {
+        {/*
             if (this.Running)
             {
                 if (e.ChangedButton == MouseButton.Right)
                 {
-                    if ( MainWindow.Logged && MainWindow.MyUsers.Contains(MainWindow.User) && (MainWindow.User.Licences.Equals("Admin")) )
+                    User user = (from u in MainWindow.DBModels.Users where u.Logged == true select u).FirstOrDefault();
+                    if (MainWindow.Logged && user.Licences.Equals("Admin"))
                     {
                         if (this.Camera_oppened == false)
                         {
@@ -505,26 +257,22 @@ namespace IPCamera
                         fullscreen.Show();
                     }
                 }
-            }
+            }*/
         }
-
         // This Happends when camera detectets a motion
+        // TODO: Camera On Motion Detection
         DateTime last_email_date_onmove = DateTime.Now.AddMinutes(-1);
         public void OnMotion(object sender, MotionDetectionEventArgs e)
-        {
+        {/*
             if (e.Level > this.On_move_sensitivity)
             {
                 //Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
                 if (this.On_move_email)
                 {
-                    Console.WriteLine($"Motion Detected Send Email Message.  [Before] Time.now: {DateTime.Now} " +
-                        $"Time.before: {last_email_date_onmove.AddMinutes(1)}");
-
                     // When Send Get the DateTime
                     if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
                     {
                         last_email_date_onmove = DateTime.Now;
-
                         // Return to Sending Email
                         String host = "";
                         int port = 587;
@@ -544,15 +292,13 @@ namespace IPCamera
                         {
                             host = "smtp.live.com";
                         }
-
                         // Create a File with a pic
                         String img_name = "email_pic.jpeg";
                         this.Video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
-
                         // Add All Recievers
-                        foreach (Users u in MainWindow.MyUsers)
+                        List<User> users = (from u in MainWindow.DBModels.Users select u).ToList();
+                        foreach (User u in users)
                         {
-
                             // Create HTML Body
                             var builder = new BodyBuilder();
                             var pathImage = Path.Combine(Directory.GetCurrentDirectory(), img_name);
@@ -570,14 +316,12 @@ namespace IPCamera
                                                                "</head>"
                                                                 , image.ContentId
                                                             );
-
                             // Create Email Message
                             var mailMessage = new MimeMessage();
                             mailMessage.From.Add(new MailboxAddress("Officee", fromEmail));
-                            mailMessage.To.Add(new MailboxAddress(u.Firstname + " " + u.Lastname, u.Email));
+                            mailMessage.To.Add(new MailboxAddress(u.FirstName + " " + u.LastName, u.Email));
                             mailMessage.Subject = subject;
                             mailMessage.Body = builder.ToMessageBody();
-
                             // Send Email Message
                             using (var smtpClient = new MailKit.Net.Smtp.SmtpClient())
                             {
@@ -588,7 +332,6 @@ namespace IPCamera
                                 smtpClient.Disconnect(true);
                             }
                         }
-
                         // Delete The Image
                         File.Delete(img_name);
                     }
@@ -600,7 +343,7 @@ namespace IPCamera
                 }
                 if (this.On_move_rec)
                 {
-                    
+
                 }
                 if (this.On_move_sms)
                 {
@@ -611,7 +354,8 @@ namespace IPCamera
                         // Find your Account Sid and Token at https://account.apifonica.com/
                         Console.WriteLine($"Before Send SMS.   ssid: {MainWindow.TwilioAccountSID}   token: {MainWindow.TwilioAccountToken}");
                         TwilioClient.Init(MainWindow.TwilioAccountSID, MainWindow.TwilioAccountToken);
-                        foreach (Users u in MainWindow.MyUsers)
+                        List<User> users = (from u in MainWindow.DBModels.Users select u).ToList();
+                        foreach (User u in users)
                         {
                             var message = MessageResource.Create(
                                 body: $"[{this.Name}]  Detect Motion at  [{DateTime.Now}]",
@@ -622,29 +366,7 @@ namespace IPCamera
                         }
                     }
                 }
-            }
+            }*/
         }
-
-
-        /*
-        public static Bitmap GetBitmap(BitmapSource source)
-        {
-            Bitmap bmp = new Bitmap(
-              source.PixelWidth,
-              source.PixelHeight,
-              PixelFormat.Format32bppPArgb);
-            BitmapData data = bmp.LockBits(
-              new Rectangle(Point.Empty, bmp.Size),
-              ImageLockMode.WriteOnly,
-              PixelFormat.Format32bppPArgb);
-            source.CopyPixels(
-              Int32Rect.Empty,
-              data.Scan0,
-              data.Height * data.Stride,
-              data.Stride);
-            bmp.UnlockBits(data);
-            return bmp;
-        }
-        */
     }
 }

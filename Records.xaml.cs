@@ -19,7 +19,6 @@ namespace IPCamera
         public bool Fullscreen { get; set; }
         private double _window_width;
         private double _window_height;
-
         public Records()
         {
             InitializeComponent();
@@ -40,7 +39,6 @@ namespace IPCamera
             // When This Window Resized
             this.SizeChanged += OnWindowSizeChanged;
         }
-
         ~Records()
         {
             this.Videos.Clear();
@@ -50,7 +48,6 @@ namespace IPCamera
             this._window_width = 0;
             this._window_height = 0;
         }
-
         // When This Window Resized
         protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -67,8 +64,6 @@ namespace IPCamera
                 Console.WriteLine($"Window Height: {this._window_height}");
             }
         }
-
-
         // If CheckBox All Videos Changeded
         private void Videos_SelectionChanged_all(object sender, RoutedEventArgs e)
         {
@@ -95,7 +90,6 @@ namespace IPCamera
                 this.CreateMediaPlayers();
             }
         }
-
         // If CheckBox All Pictures Changeded
         private void Pictures_SelectionChanged_all(object sender, RoutedEventArgs e)
         {
@@ -121,7 +115,6 @@ namespace IPCamera
                 this.CreatePictures();
             }
         }
-
         // When Select Cameras Name On Videos
         private void Videos_SelectionChanged_cams(object sender, SelectionChangedEventArgs e)
         {
@@ -141,7 +134,6 @@ namespace IPCamera
                 }
             }
         }
-
         // When Select Cameras Name On Pictures
         private void Pictures_SelectionChanged_cams(object sender, SelectionChangedEventArgs e)
         {
@@ -161,8 +153,6 @@ namespace IPCamera
                 }
             }
         }
-
-
         // When Select Date On Videos
         private void Videos_SelectionChanged_date(object sender, SelectionChangedEventArgs e)
         {
@@ -185,7 +175,6 @@ namespace IPCamera
                 }
             }
         }
-
         // When Select Time On Videos
         private void Videos_SelectionChanged_time(object sender, SelectionChangedEventArgs e)
         {
@@ -219,7 +208,6 @@ namespace IPCamera
                 }
             }
         }
-
         // When Select Date On Pictures
         private void Pictures_SelectionChanged_date(object sender, SelectionChangedEventArgs e)
         {
@@ -242,7 +230,6 @@ namespace IPCamera
                 }
             }
         }
-
         // When Select Time On Pictures
         private void Pictures_SelectionChanged_time(object sender, SelectionChangedEventArgs e)
         {
@@ -274,7 +261,6 @@ namespace IPCamera
                 }
             }
         }
-
         // Load Videos ComboBoxes
         private void SetComboBoxesVideos()
         {
@@ -294,7 +280,6 @@ namespace IPCamera
             }
             
         }
-
         // Load Images ComboBoxes
         private void SetComboBoxeesImages()
         {
@@ -313,12 +298,14 @@ namespace IPCamera
                 Console.WriteLine($"Exception:  {ex}");
             }
         }
-
         // Get Records
         private void GetRecordsPath()
         {
             // Get All Videos
-            this.GetDirsSubDirsFiles(Camera.Videos_dir, x =>
+            string videoDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
+                                   where f.Name.Equals("Videos")
+                                   select f.Path).FirstOrDefault();
+            this.GetDirsSubDirsFiles(videoDirPath, x =>
             {
                 try
                 {
@@ -334,7 +321,10 @@ namespace IPCamera
                 }
             });
             // Get All Images
-            this.GetDirsSubDirsFiles(Camera.Pictures_dir, x =>
+            string picturesDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
+                                      where f.Name.Equals("Pictures")
+                                      select f.Path).FirstOrDefault();
+            this.GetDirsSubDirsFiles(picturesDirPath, x =>
             {
                 try
                 {
@@ -367,15 +357,6 @@ namespace IPCamera
                 }
             }
         }
-
-
-
-
-
-
-
-
-
         // Create Media Players For Every File
         private void CreateMediaPlayers()
         {
@@ -434,7 +415,6 @@ namespace IPCamera
                 Console.WriteLine($"Exception: {ex}");
             }
         }
-
         // Create Pictures For Every File
         private void CreatePictures()
         {
@@ -493,31 +473,23 @@ namespace IPCamera
                 Console.WriteLine($"Exception: {ex}");
             }
         }
-
-
         private void X_Button_R_Click(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.Logged)
+            if (MainWindow.Main_window.Logged)
             {
-                MainWindow.Records_oppened = false;
-                Console.WriteLine("Records_oppened: " + Convert.ToString(MainWindow.Records_oppened));
+                MainWindow.Main_window.Records_oppened = false;
+                Console.WriteLine("Records_oppened: " + Convert.ToString(MainWindow.Main_window.Records_oppened));
                 this.Close();
             }
         }
-
-
         // On Close Window
         protected override void OnClosed(EventArgs e)
         {
-            MainWindow.Records_oppened = false;
-            Console.WriteLine("Records_oppened: " + Convert.ToString(MainWindow.Records_oppened));
+            MainWindow.Main_window.Records_oppened = false;
+            Console.WriteLine("Records_oppened: " + Convert.ToString(MainWindow.Main_window.Records_oppened));
             this.Close();
         }
-
-        
     }
-
-
     public class Video
     {
         public String CamName { get; set; }
@@ -534,7 +506,6 @@ namespace IPCamera
             this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 7);
         }
     }
-
     public class Picture
     {
         public String CamName { get; set; }
@@ -551,5 +522,4 @@ namespace IPCamera
             this.Time = parts[parts.Length - 1].Substring(0, parts[parts.Length - 1].Length - 7);
         }
     }
-
 }

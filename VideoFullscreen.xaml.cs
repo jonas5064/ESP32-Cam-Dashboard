@@ -20,22 +20,20 @@ namespace IPCamera
     /// </summary>
     public partial class VideoFullscreen : Window
     {
-        Camera Cam { get; set; }
-
+        CameraServcies CameraService { get; set; }
+        MyCamera Cam { get; set; }
         public VideoFullscreen()
         {
             InitializeComponent();
         }
-
-        public VideoFullscreen(Camera cam)
+        public VideoFullscreen(CameraServcies camSe)
         {
             InitializeComponent();
-
-            this.Cam = cam;
-            title.Content = this.Cam.Name;
-            Grid.SetRow(this.Cam.Video, 1);
-            main_grid.Children.Add(this.Cam.Video);
-
+            this.Cam = (from c in MainWindow.Main_window.DBModels.MyCameras where c.Id == camSe.cameraId select c).FirstOrDefault();
+            this.CameraService = camSe;
+            title.Content = this.Cam.name;
+            Grid.SetRow(this.CameraService.video, 1);
+            main_grid.Children.Add(this.CameraService.video);
             // Update Current Time
             time.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
             //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
@@ -44,18 +42,15 @@ namespace IPCamera
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
         }
-
         protected override void OnClosed(EventArgs e)
         {
-            main_grid.Children.Remove(this.Cam.Video);
-            this.Cam.Fullscreen = false;
-            Grid.SetColumn(this.Cam.Video, this.Cam.Coll);
-            Grid.SetRow(this.Cam.Video, this.Cam.Row);
-            MainWindow.cams_grid.Children.Add(this.Cam.Video);
+            main_grid.Children.Remove(this.CameraService.video);
+            this.CameraService.Fullscreen = false;
+            Grid.SetColumn(this.CameraService.video, (int)this.Cam.Coll);
+            Grid.SetRow(this.CameraService.video, (int)this.Cam.Row);
+            MainWindow.Main_window.cameras_grid.Children.Add(this.CameraService.video);
             this.Close();
         }
-
-        // Set DateTime
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             // Updating the Label which displays the current time 

@@ -9,11 +9,10 @@ using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
-using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls.Primitives;
-using System.Data.SqlClient;
+using System.Linq;
 
 namespace IPCamera
 {
@@ -22,14 +21,13 @@ namespace IPCamera
     /// </summary>
     public partial class WindowControll : Window
     {
-        public Camera Camera { get; set; }
+        public MyCamera Camera { get; set; }
         public String Url { get; set; }
         public bool Remote_start_setup { get; set; }
         public bool Remote_detection { get; set; }
         public bool Remote_recognition { get; set; }
         String _cam_resolution_order = "";
-
-        public WindowControll(Camera cam)
+        public WindowControll(MyCamera cam)
         {
             try
             {
@@ -45,13 +43,13 @@ namespace IPCamera
             this.Remote_recognition = false;
             // Setup this_camera
             this.Camera = cam;
-            this.Url = this.Camera.Url;
+            this.Url = this.Camera.urls;
             // Add Title
-            cameras_title.Content = this.Camera.Name;
+            cameras_title.Content = this.Camera.name;
 
             // Chech if Face_Recognition, Face Detection  is checked
-            Face_det.IsChecked = (this.Camera.Detection);
-            Face_rec.IsChecked = (this.Camera.Recognition);
+            Face_det.IsChecked = (this.Camera.Face_Detection);
+            Face_rec.IsChecked = (this.Camera.Face_Recognition);
             // Setup Brightness and Contrast Labels and Sliders
             brightness_label.Content = $"Brightness: {this.Camera.Brightness}";
             contrast_label.Content   = $"Contrast:   {this.Camera.Contrast}";
@@ -59,8 +57,8 @@ namespace IPCamera
             brightness_slider.Value  = this.Camera.Brightness;
             contrast_slider.Value    = this.Camera.Contrast;
             darkness_slider.Value    = this.Camera.Darkness;
-            sensitivity_value_label.Content = $"{this.Camera.On_move_sensitivity}";
-            sensitivity_slider.Value = this.Camera.On_move_sensitivity;
+            sensitivity_value_label.Content = $"{this.Camera.Move_Sensitivity}";
+            sensitivity_slider.Value = this.Camera.Move_Sensitivity;
             // Setup recording Button
             if (this.Camera.Recording)
             {
@@ -73,16 +71,16 @@ namespace IPCamera
                 rec_label.Foreground = Brushes.Gray;
             }
             // Setup On Movement checkboxes
-            sms_checkbox.IsChecked = (this.Camera.On_move_sms);
-            email_checkbox.IsChecked = (this.Camera.On_move_email);
-            pic_checkbox.IsChecked = (this.Camera.On_move_pic);
-            rec_checkbox.IsChecked = (this.Camera.On_move_rec);
+            sms_checkbox.IsChecked = (this.Camera.On_Move_SMS);
+            email_checkbox.IsChecked = (this.Camera.On_Move_EMAIL);
+            pic_checkbox.IsChecked = (this.Camera.On_Move_Pic);
+            rec_checkbox.IsChecked = (this.Camera.On_Move_Rec);
             // Setuo Network streaming Settings
-            network_streaming_checkbox.IsChecked = this.Camera.Net_stream;
-            network_streaming_port.Text = Convert.ToString(this.Camera.Net_stream_port);
-            network_streaming_prefix.Text = this.Camera.Net_stream_prefix;
+            network_streaming_checkbox.IsChecked = this.Camera.net_stream;
+            network_streaming_port.Text = Convert.ToString(this.Camera.net_stream_port);
+            network_streaming_prefix.Text = this.Camera.net_stream_prefix;
             // Setup Remotes Cameras Settisng
-            if(this.Camera.IsEsp32)
+            if(this.Camera.isEsp32)
             {
                 Update_remote_cameras_status();
             } else
@@ -118,15 +116,10 @@ namespace IPCamera
                 cameras_hostpot_button.IsEnabled = false;
             }
         }
-
-
-        // X Button Clicked
         private void X_Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-
-        // Setup Remotes Cameras Settings
         private void Update_remote_cameras_status()
         {
             try
@@ -136,7 +129,7 @@ namespace IPCamera
                 //Console.WriteLine("Old Url: " + this.Url);
                 int found = this.Url.IndexOf(":81");
                 String ur_l = this.Url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/status?username=" + this.Camera.Username + "&password=" + this.Camera.Password;
+                ur_l += "/status?username=" + this.Camera.username + "&password=" + this.Camera.password;
                 Console.WriteLine("New Url: " + ur_l);
                 HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                 request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -264,179 +257,82 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
-
-
         protected override void OnClosed(EventArgs e)
         {
-            this.Camera.Camera_oppened = false;
             this.Close();
         }
-
-
-        // Face Detection Checked
         private void Face_Detection_Chencked(object sender, EventArgs e)
         {
-            if (!this.Camera.Detection)
+            if (!this.Camera.Face_Detection)
             {
-                this.Camera.Detection = true;
-                try
-                {
-                    // Update DataBase this Camera Object field Face Detection 1
-                    using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                    {
-                        String query = $"UPDATE MyCameras SET Face_Detection='{1}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                        using (SqlCommand cmd = new SqlCommand(query, cn))
-                        {
-                            cn.Open();
-                            int result = cmd.ExecuteNonQuery();
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            cn.Close();
-                        }
-                    }
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                }
-                // Restart Camera
-                this.Camera.Stop();
-                this.Camera.Start();
+                this.Camera.Face_Detection = true;
+                MainWindow.Main_window.DBModels.SaveChanges();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
+                cs.Start();
             }
         }
-
-        // Face Detection Unchecked
         private void Face_Detection_UNChencked(object sender, EventArgs e)
         {
-            if (this.Camera.Detection)
+            if (this.Camera.Face_Detection)
             {
-                this.Camera.Detection = false;
-                if (this.Camera.Recognition)
+                this.Camera.Face_Detection = false;
+                if (this.Camera.Face_Recognition)
                 {
-                    this.Camera.Recognition = false;
-                    Face_rec.IsChecked = (this.Camera.Recognition);
+                    this.Camera.Face_Recognition = false;
+                    Face_rec.IsChecked = (this.Camera.Face_Recognition);
                 }
-                try
-                {
-                    // Update DataBase this Camera Object field Face Detection 0
-                    using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                    {
-                        String query = $"UPDATE MyCameras SET Face_Detection='{0}', Face_Recognition='{0}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                        using (SqlCommand cmd = new SqlCommand(query, cn))
-                        {
-                            cn.Open();
-                            int result = cmd.ExecuteNonQuery();
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            cn.Close();
-                        }
-                    }                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                }
-                // Restart Camera
-                this.Camera.Stop();
-                this.Camera.Start();
+                MainWindow.Main_window.DBModels.SaveChanges();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
+                cs.Start();
             }
         }
-
-        // Face Recognition Chekced
         private void Face_Recognition_Chencked(object sender, EventArgs e)
         {
-            if (!this.Camera.Recognition)
+            if (!this.Camera.Face_Recognition)
             {
-                this.Camera.Recognition = true;
-                if (!this.Camera.Detection)
+                this.Camera.Face_Recognition = true;
+                if (!this.Camera.Face_Detection)
                 {
-                    this.Camera.Detection = true;
-                    Face_det.IsChecked = (this.Camera.Detection);
+                    this.Camera.Face_Detection = true;
+                    Face_det.IsChecked = (this.Camera.Face_Detection);
                 }
-                try
-                {
-                    // Update DataBase this Camera Object field Face Detection 1
-                    using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                    {
-                        String query = $"UPDATE MyCameras SET Face_Recognition='{1}', Face_Detection='{1}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                        using (SqlCommand cmd = new SqlCommand(query, cn))
-                        {
-                            cn.Open();
-                            int result = cmd.ExecuteNonQuery();
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            cn.Close();
-                        }
-                    }
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                }
-                // Restart Camera
-                this.Camera.Stop();
-                this.Camera.Start();
+                MainWindow.Main_window.DBModels.SaveChanges();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
+                cs.Start();
             }
         }
-
-        // Face Recognition Unchecked
         private void Face_Recognition_UNChencked(object sender, EventArgs e)
         {
-            if (this.Camera.Recognition)
+            if (this.Camera.Face_Recognition)
             {
-                this.Camera.Recognition = false;
-                try
-                {
-                    // Update DataBase this Camera Object field Face Detection 0
-                    using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                    {
-                        String query = $"UPDATE MyCameras SET Face_Recognition='{0}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                        using (SqlCommand cmd = new SqlCommand(query, cn))
-                        {
-                            cn.Open();
-                            int result = cmd.ExecuteNonQuery();
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            cn.Close();
-                        } 
-                    }
-                }
-                catch (MySqlException ex)
-                {
-                    Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                }
-                // Restart Camera
-                this.Camera.Stop();
-                this.Camera.Start();
+                this.Camera.Face_Recognition = false;
+                MainWindow.Main_window.DBModels.SaveChanges();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
+                cs.Start();
             }
         }
-
-
-        // Britness slider function
         private void Brightness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             brightness_label.Content = $"Brightness: {val}";
             this.Camera.Brightness = val;
         }
-
-
-        // Contrast slider function
         private void Contrast_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             contrast_label.Content = $"Contrast: {val}";
             this.Camera.Contrast = val;
         }
-
-        // Darkness slider function
         private void Darkness_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int val = Convert.ToInt32(e.NewValue);
             darkness_label.Content = $"Darkness: {val}";
             this.Camera.Darkness = val;
         }
-
-        // UP, DOWN, LEFT,RIGHT use Http request api to controll he camera
         private void GET_request(String url)
         {
             try
@@ -459,171 +355,111 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
         }
-
         private void UP_button_click(object sender, MouseButtonEventArgs e)
         {
             Console.WriteLine("Mouse UP!");
             GET_request("URL_get rest UP");
         }
-
         private void DOWN_button_click(object sender, MouseButtonEventArgs e)
         {
             Console.WriteLine("Mouse DOWN!");
             GET_request("URL_get rest DOWN");
         }
-
         private void LEFT_button_click(object sender, MouseButtonEventArgs e)
         {
             Console.WriteLine("Mouse LEFT!");
             GET_request("URL_get rest LEFT");
         }
-
         private void RIGHT_button_click(object sender, MouseButtonEventArgs e)
         {
             Console.WriteLine("Mouse RIGHT!");
             GET_request("URL_get rest RIGHT");
         }
-
         private void TAKE_PIC_button_click(object sender, MouseButtonEventArgs e)
         {
-            this.Camera.Take_pic();
+            CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+            cs.Take_pic();
         }
-
-        // Start Recording is checked
         private void Start_REC_button_click(object sender, MouseButtonEventArgs e)
         {
-            try
+            if (!this.Camera.Recording)
             {
-                if (!this.Camera.Recording)
-                {
-                    this.Camera.Recording = true;
-                    // Setup Field
-                    rec_label.Content = "Recording";
-                    rec_label.Foreground = Brushes.Red;
-                    // Update DataBase this Camera Object field Recording 1
-                    using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                    {
-                        String query = $"UPDATE MyCameras SET Recording='{1}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                        using (SqlCommand cmd = new SqlCommand(query, cn))
-                        {
-                            cn.Open();
-                            int result = cmd.ExecuteNonQuery();
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            cn.Close();
-                        } 
-                    }
-                }
-            }
-            catch (System.Reflection.TargetInvocationException ex)
-            {
-                Console.WriteLine($"SetupRecordingMode: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
+                this.Camera.Recording = true;
+                // Setup Field
+                rec_label.Content = "Recording";
+                rec_label.Foreground = Brushes.Red;
+                this.Camera.Recording = true;
+                MainWindow.Main_window.DBModels.SaveChanges();
             }
         }
-
-        // Stop Recording is Checked
         private void Stop_REC_button_click(object sender, MouseButtonEventArgs e)
         {
-            try
+            if (this.Camera.Recording)
             {
-                if (this.Camera.Recording)
-                {
-                    this.Camera.Recording = false;
-                    // Setup Field
-                    rec_label.Content = "Stop Recording";
-                    rec_label.Foreground = Brushes.Gray;
-                    // Update DataBase this Camera Object field Recording 0
-                    using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                    {
-                        String query = $"UPDATE MyCameras SET Recording='{0}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                        using (SqlCommand cmd = new SqlCommand(query, cn))
-                        {
-                            cn.Open();
-                            int result = cmd.ExecuteNonQuery();
-                            if (result < 0)
-                                System.Windows.MessageBox.Show("Error inserting data into Database!");
-                            cn.Close();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
+                this.Camera.Recording = false;
+                // Setup Field
+                rec_label.Content = "Stop Recording";
+                rec_label.Foreground = Brushes.Gray;
+                this.Camera.Recording = false;
+                MainWindow.Main_window.DBModels.SaveChanges();
             }
         }
-
-
-
-        // SMS CheckBoxes
         private void Sms_chencked(object sender, EventArgs e)
         {
-            if (!this.Camera.On_move_sms)
+            if (!this.Camera.On_Move_SMS)
             {
-                this.Camera.On_move_sms = true;
+                this.Camera.On_Move_SMS = true;
             }
         }
         private void Sms_unchencked(object sender, EventArgs e)
         {
-            if (this.Camera.On_move_sms)
+            if (this.Camera.On_Move_SMS)
             {
-                this.Camera.On_move_sms = false;
+                this.Camera.On_Move_SMS = false;
             }
         }
-
-        // Email CheckBoxes
         private void Email_chencked(object sender, EventArgs e)
         {
-            if (!this.Camera.On_move_email)
+            if (!this.Camera.On_Move_EMAIL)
             {
-                this.Camera.On_move_email = true;
+                this.Camera.On_Move_EMAIL = true;
             }
         }
         private void Email_unchencked(object sender, EventArgs e)
         {
-            if (this.Camera.On_move_email)
+            if (this.Camera.On_Move_EMAIL)
             {
-                this.Camera.On_move_email = false;
+                this.Camera.On_Move_EMAIL = false;
             }
         }
-
-        // Picture Checkbox
         private void Pic_chencked(object sender, EventArgs e)
         {
-            if (!this.Camera.On_move_pic)
+            if (!this.Camera.On_Move_Pic)
             {
-                this.Camera.On_move_pic = true;
+                this.Camera.On_Move_Pic = true;
             }
         }
         private void Pic_unchencked(object sender, EventArgs e)
         {
-            if (this.Camera.On_move_pic)
+            if (this.Camera.On_Move_Pic)
             {
-                this.Camera.On_move_pic = false;
+                this.Camera.On_Move_Pic = false;
             }
         }
-
-        // Recording Checkbox
         private void Rec_chencked(object sender, EventArgs e)
         {
-            if (!this.Camera.On_move_rec)
+            if (!this.Camera.On_Move_Rec)
             {
-                this.Camera.On_move_rec = true;
+                this.Camera.On_Move_Rec = true;
             }
         }
         private void Rec_unchencked(object sender, EventArgs e)
         {
-            if (this.Camera.On_move_rec)
+            if (this.Camera.On_Move_Rec)
             {
-                this.Camera.On_move_rec = false;
+                this.Camera.On_Move_Rec = false;
             }
         }
-
-        // Set The Sensitivity
         private void Sensitivity_func(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (this.Camera != null)
@@ -631,19 +467,17 @@ namespace IPCamera
                 // Update Cameras Move_Sensitivity
                 int val = Convert.ToInt32(e.NewValue);
                 sensitivity_value_label.Content = $"{val}";
-                this.Camera.On_move_sensitivity = val;
-                Console.WriteLine(this.Camera.On_move_sensitivity.ToString());
+                this.Camera.Move_Sensitivity = val;
             }
         }
-
-        // Remote Camera Resolution
         private void Resolution_combobox_Changed(object sender, SelectionChangedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     ComboBox cmb = sender as ComboBox;
                     String selection = cmb.SelectedValue.ToString();
                     if (selection.Contains("QQVGA(160X120)"))
@@ -699,7 +533,7 @@ namespace IPCamera
                                 if (response.StatusCode.ToString().Equals("OK"))
                                 {
                                     Thread.Sleep(5000);
-                                    this.Camera.Start();
+                                    cs.Start();
                                 }
                             }
                         }
@@ -715,9 +549,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        
-        // When Cameras Quality Changed
         private void Quality_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -725,7 +556,8 @@ namespace IPCamera
                 int val = Convert.ToInt16(e.NewValue);
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // http://192.168.1.50/control?var=quality&val=10
                     int found = this.Url.IndexOf(":81");
@@ -738,8 +570,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -749,8 +580,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remote Cameras Brightness
         private void Brightness_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -758,7 +587,8 @@ namespace IPCamera
                 int val = Convert.ToInt16(e.NewValue);
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // http://192.168.1.50/control?var=quality&val=10
                     int found = this.Url.IndexOf(":81");
@@ -771,8 +601,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -782,8 +611,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remote Cameras Contrast
         private void Contrast_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -791,7 +618,8 @@ namespace IPCamera
                 int val = Convert.ToInt16(e.NewValue);
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // http://192.168.1.50/control?var=quality&val=10
                     int found = this.Url.IndexOf(":81");
@@ -804,8 +632,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -815,8 +642,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remote Cameras Saturasion
         private void Saturation_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -824,7 +649,8 @@ namespace IPCamera
                 int val = Convert.ToInt32(e.NewValue);
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // http://192.168.1.50/control?var=quality&val=10
                     int found = this.Url.IndexOf(":81");
@@ -837,8 +663,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -848,8 +673,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remote Camera Specialeffect
         private void Specialeffect_Changed(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -889,7 +712,8 @@ namespace IPCamera
                     }
                     try
                     {
-                        this.Camera.Stop();
+                        CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                        cs.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -903,8 +727,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -919,18 +742,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remotes Camera AWB
         private void AWB_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -944,14 +766,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -965,8 +785,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -977,18 +796,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remotes Camera AWB GAIN
         private void AWB_GAIN_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1002,14 +820,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1023,8 +839,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1035,8 +850,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remotes Camera WB Mode
         private void WB_MODE_Changed(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -1066,7 +879,8 @@ namespace IPCamera
                     {
                         order = "4";
                     }
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                     //Console.WriteLine("Old Url: " + this.Url);
@@ -1080,8 +894,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -1091,18 +904,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remotes Camera AEC Sensor
         private void AEC_SENSOR_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1116,14 +928,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1137,8 +947,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1149,18 +958,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Remotes Camera AEC DSP SensorSensor
         private void AEC_DSP_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1174,14 +982,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1195,8 +1001,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1207,8 +1012,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // AE LEVEL Changed
         private void AE_LEVEL_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -1216,7 +1019,8 @@ namespace IPCamera
                 int val = Convert.ToInt32(e.NewValue);
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // http://192.168.1.50/control?var=quality&val=10
                     int found = this.Url.IndexOf(":81");
@@ -1229,8 +1033,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -1240,18 +1043,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // AGC Checked
         private void AGC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1265,14 +1067,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1286,8 +1086,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1298,8 +1097,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // GAIN CEILING Changed
         private void GAIN_CEILINGL_changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             try
@@ -1307,7 +1104,8 @@ namespace IPCamera
                 int val = Convert.ToInt32(e.NewValue);
                 if (this.Remote_start_setup)
                 {
-                    this.Camera.Stop();
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                     // http://192.168.1.50/control?var=quality&val=10
                     int found = this.Url.IndexOf(":81");
@@ -1320,8 +1118,7 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
@@ -1331,18 +1128,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // BPC Changed
         private void BPC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1356,14 +1152,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1377,8 +1171,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1389,18 +1182,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // WPC Changed
         private void WPC_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1414,14 +1206,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1435,8 +1225,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1447,18 +1236,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // RAW GMA Changed
         private void RAW_GMA_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1472,14 +1260,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1493,8 +1279,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1505,19 +1290,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        // LENS CORRECTION Changed
         private void LENS_CORRECTION_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1531,14 +1314,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1552,8 +1333,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1564,19 +1344,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        // H MIRROR Changed
         private void H_MIRROR_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1590,14 +1368,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1611,8 +1387,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1623,19 +1398,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        // V FLIP Changed
         private void V_FLIP_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1649,14 +1422,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1670,8 +1441,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1682,19 +1452,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        // DCW DOWNSIZE Changed
         private void DCW_DOWNSIZE_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1708,14 +1476,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1729,8 +1495,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1741,18 +1506,17 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        //  COLOR BAR Changed
         private void COLOR_BAR_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (this.Remote_start_setup)
                 {
+                    CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                    cs.Stop();
                     CheckBox c = sender as CheckBox;
                     if (c.IsChecked.Value)
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1766,14 +1530,12 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
                     else
                     {
-                        this.Camera.Stop();
                         // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                         // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                         //Console.WriteLine("Old Url: " + this.Url);
@@ -1787,8 +1549,7 @@ namespace IPCamera
                         {
                             if (response.StatusCode.ToString().Equals("OK"))
                             {
-                                this.Camera.Start();
-                                //MainWindow.RestartApp();
+                                cs.Start();
                             }
                         }
                     }
@@ -1799,9 +1560,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        //  FACE DETECTION Changed
         private void FACE_DETECTION_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
@@ -1810,10 +1568,11 @@ namespace IPCamera
                 {
                     if (Convert.ToInt16(_cam_resolution_order) <= 5)
                     {
+                        CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                        cs.Stop();
                         CheckBox c = sender as CheckBox;
                         if (c.IsChecked.Value)
                         {
-                            this.Camera.Stop();
                             // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                             // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                             //Console.WriteLine("Old Url: " + this.Url);
@@ -1828,14 +1587,12 @@ namespace IPCamera
                                 if (response.StatusCode.ToString().Equals("OK"))
                                 {
                                     this.Remote_detection = true;
-                                    this.Camera.Start();
-                                    //MainWindow.RestartApp();
+                                    cs.Start();
                                 }
                             }
                         }
                         else
                         {
-                            this.Camera.Stop();
                             // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                             // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                             //Console.WriteLine("Old Url: " + this.Url);
@@ -1851,8 +1608,7 @@ namespace IPCamera
                                 {
                                     this.Remote_detection = false;
                                     this.Remote_recognition = false;
-                                    this.Camera.Start();
-                                    //MainWindow.RestartApp();
+                                    cs.Start();
                                 }
                             }
                         }
@@ -1869,9 +1625,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        //  FACE RECOGNITION Changed
         private void FACE_RECOGNITION_checkbox_Checked(object sender, RoutedEventArgs e)
         {
             try
@@ -1881,9 +1634,10 @@ namespace IPCamera
                     CheckBox c = sender as CheckBox;
                     if (this.Remote_detection)
                     {
+                        CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                        cs.Stop();
                         if (c.IsChecked.Value)
                         {
-                            this.Camera.Stop();
                             // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                             // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                             //Console.WriteLine("Old Url: " + this.Url);
@@ -1898,14 +1652,12 @@ namespace IPCamera
                                 if (response.StatusCode.ToString().Equals("OK"))
                                 {
                                     this.Remote_recognition = true;
-                                    this.Camera.Start();
-                                    //MainWindow.RestartApp();
+                                    cs.Start();
                                 }
                             }
                         }
                         else
                         {
-                            this.Camera.Stop();
                             // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                             // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                             //Console.WriteLine("Old Url: " + this.Url);
@@ -1920,8 +1672,7 @@ namespace IPCamera
                                 if (response.StatusCode.ToString().Equals("OK"))
                                 {
                                     this.Remote_recognition = false;
-                                    this.Camera.Start();
-                                    //MainWindow.RestartApp();
+                                    cs.Start();
                                 }
                             }
                         }
@@ -1938,8 +1689,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Button Get Still Clicked
         private void GET_STILL_Clicked(object sender, RoutedEventArgs e)
         {
             try
@@ -1962,8 +1711,8 @@ namespace IPCamera
                 {
                     if (response.StatusCode.ToString().Equals("OK"))
                     {
-                        this.Camera.Start();
-                        //MainWindow.RestartApp();
+                        CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                        cs.Start();
                     }
                 }
             }
@@ -1972,19 +1721,18 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Button RESTART Clicked
         private void RESTART_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                this.Camera.Stop();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                 // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                 //Console.WriteLine("Old Url: " + this.Url);
                 int found = this.Url.IndexOf(":81");
                 String ur_l = this.Url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/restart?username=" + this.Camera.Username + "&password=" + this.Camera.Password;
+                ur_l += "/restart?username=" + this.Camera.username + "&password=" + this.Camera.password;
                 Console.WriteLine("New Url: " + ur_l);
                 HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                 request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -1999,15 +1747,14 @@ namespace IPCamera
                             this.Remote_detection = false;
                             ((CheckBox)cameras_face_recognition_checkbox).IsChecked = false;
                             this.Remote_recognition = false;
-                            this.Camera.Start();
-                            //MainWindow.RestartApp();
+                            cs.Start();
                         }
                     }
                 }
                 catch (System.Net.WebException ex)
                 {
                     Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-                    this.Camera.Start();
+                    cs.Start();
                 }
             }
             catch (Exception ex)
@@ -2015,8 +1762,6 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Button Enroll Face Clicked (Save a face on DB)
         private void ENROLL_FACE_Clicked(object sender, RoutedEventArgs e)
         {
             try
@@ -2055,19 +1800,18 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Button REBOOT Clicked
         private void Reboot_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                this.Camera.Stop();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                 // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                 //Console.WriteLine("Old Url: " + this.Url);
                 int found = this.Url.IndexOf(":81");
                 String ur_l = this.Url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/reboot?username=" + this.Camera.Username + "&password=" + this.Camera.Password;
+                ur_l += "/reboot?username=" + this.Camera.username + "&password=" + this.Camera.password;
                 Console.WriteLine("New Url: " + ur_l);
                 HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                 request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -2077,7 +1821,6 @@ namespace IPCamera
                     {
                         if (response.StatusCode.ToString().Equals("OK"))
                         {
-                        
                         }
                     }
                 }
@@ -2091,19 +1834,18 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-        // Button HostPot Clicked
         private void Hostpot_Clicked(object sender, RoutedEventArgs e)
         {
             try
             {
-                this.Camera.Stop();
+                CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+                cs.Stop();
                 // Url now = http://192.168.1.50:81/stream?username=alexandrosplatanios&password=Platanios719791
                 // Expected Url = http://192.168.1.50/control?var=framesize&val=0
                 //Console.WriteLine("Old Url: " + this.Url);
                 int found = this.Url.IndexOf(":81");
                 String ur_l = this.Url.Substring(0, found); // = http://192.168.1.50/
-                ur_l += "/hostpot?username=" + this.Camera.Username + "&password=" + this.Camera.Password;
+                ur_l += "/hostpot?username=" + this.Camera.username + "&password=" + this.Camera.password;
                 Console.WriteLine("New Url: " + ur_l);
                 HttpWebRequest request = WebRequest.CreateHttp(ur_l);
                 request.Method = "GET"; // or "POST", "PUT", "PATCH", "DELETE", etc.
@@ -2127,16 +1869,11 @@ namespace IPCamera
                 Console.WriteLine($"Source:{ex.Source}\n{ex.Message}");
             }
         }
-
-
-        // Helper Function For Network streaming
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
-
-        // Network Streaming CheckBox
         private void Network_stream_check(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
@@ -2144,7 +1881,7 @@ namespace IPCamera
             {
                 if (network_streaming_port.Text.Length > 0)
                 {
-                    this.Camera.Net_stream = true;
+                    this.Camera.net_stream = true;
                 } else
                 {
                     MessageBox.Show("Fill ip & port!");
@@ -2153,290 +1890,35 @@ namespace IPCamera
             }
             else
             {
-                this.Camera.Net_stream = false;
+                this.Camera.net_stream = false;
             }
         }
-
-        // Network Streaming Port
         private void Network_streaming_port_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
             if (Int32.Parse(n.Text) >= 8000)
             {
-                this.Camera.Net_stream_port = (String)n.Text;
+                this.Camera.net_stream_port = (String)n.Text;
             }
             else
             {
                 MessageBox.Show("Enter a Port Bigger from 8000");
             }
         }
-
-        // Network Streaming prefix
         private void Network_streaming_prefix_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox n = sender as TextBox;
-            this.Camera.Net_stream_prefix = (String)n.Text;
+            this.Camera.net_stream_prefix = (String)n.Text;
         }
-
-        // Start Button Clicked (Starting camera)
         private void Start_Clicked(object sender, RoutedEventArgs e)
         {
-            this.Camera.Start();
+            CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+            cs.Start();
         }
-
-        // Stop Button Clicked (Stoping camera)
         private void Stop_Clicked(object sender, RoutedEventArgs e)
         {
-            this.Camera.Stop();
+            CameraServcies cs = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == this.Camera.Id select s).FirstOrDefault();
+            cs.Stop();
         }
-
-        // Apply Changes To Database
-        private async void Apply_Clicked(object sender, RoutedEventArgs e)
-        {
-            loadingPanel.Visibility = Visibility.Visible;
-            await Update();
-            loadingPanel.Visibility = Visibility.Hidden;
-        }
-
-        // Progress Bar Event Method
-        private delegate void UpdateProgressBarDelegate(DependencyProperty dp, object value);
-
-        private async Task Update()
-        {
-            try
-            {
-                // ProgressBar Object
-                UpdateProgressBarDelegate updateProgressBaDelegate = new UpdateProgressBarDelegate(loadingPanel.SetValue);
-                // Update ProgressBar
-                Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(0) });
-
-                using (SqlConnection cn = new SqlConnection(App.DB_connection_string))
-                {
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(10) });
-
-                    // Cameras Brightness
-                    string query = $"UPDATE MyCameras SET Brightness='{this.Camera.Brightness}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(20) });
-
-                    // Cameras Contrast
-                    query = $"UPDATE MyCameras SET Contrast='{this.Camera.Contrast}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(30) });
-
-                    // Cameras Darkness
-                    query = $"UPDATE MyCameras SET Darkness='{this.Camera.Darkness}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(40) });
-
-                    // Movement SMS
-                    if (this.Camera.On_move_sms)
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_SMS=1 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    else
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_SMS=0 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(50) });
-
-                    // Movement EMAIL
-                    if (this.Camera.On_move_email)
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_EMAIL=1 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    else
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_EMAIL=0 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(60) });
-
-                    // Movement Take Picture
-                    if (this.Camera.On_move_pic)
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_Pic=1 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    else
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_Pic=0 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(70) });
-
-                    // Movement Recording
-                    if (this.Camera.On_move_rec)
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_Rec=1 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    else
-                    {
-                        query = $"UPDATE MyCameras SET On_Move_Rec=0 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(80) });
-
-                    // Movement Sensor Sensitivity
-                    query = $"UPDATE MyCameras SET Move_Sensitivity='{this.Camera.On_move_sensitivity}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(90) });
-
-                    // Net Stream
-                    if (this.Camera.Net_stream)
-                    {
-                        query = $"UPDATE MyCameras SET net_stream=1 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    else
-                    {
-                        query = $"UPDATE MyCameras SET net_stream=0 WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    }
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(100) });
-
-                    // Net Stream Port
-                    query = $"UPDATE MyCameras SET net_stream_port='{this.Camera.Net_stream_port}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Update ProgressBar
-                    Dispatcher.Invoke(updateProgressBaDelegate, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(110) });
-
-                    // Net Stream Prefix
-                    query = $"UPDATE MyCameras SET net_stream_prefix='{this.Camera.Net_stream_prefix}' WHERE urls='{this.Camera.Url}' AND Name='{this.Camera.Name}'";
-                    using (SqlCommand cmd = new SqlCommand(query, cn))
-                    {
-                        cn.Open();
-                        int result  = await cmd.ExecuteNonQueryAsync();
-                        if (result < 0)
-                        {
-                            System.Windows.MessageBox.Show("Error inserting data into Database!");
-                        }
-                        cn.Close();
-                    }
-
-                    // Close This Window
-                    this.Close();
-                }
-            }
-            catch (MySqlException ex)
-            {
-                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-            }
-            catch (System.NullReferenceException ex)
-            {
-                Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
-            }
-        }
-
     }
-
-        
-    }
+ }

@@ -23,6 +23,7 @@ CREATE TABLE FilesFormats (
     avi  BIT DEFAULT ((0)) NOT NULL,
     mp4  BIT DEFAULT ((1)) NOT NULL,
     history_time TINYINT DEFAULT 1 NOT NULL,
+    file_size INT NOT NULL,
     PRIMARY KEY CLUSTERED (Id ASC)
 );
 GO

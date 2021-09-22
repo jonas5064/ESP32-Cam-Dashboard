@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,8 +8,6 @@ using System.Windows.Media.Imaging;
 
 namespace IPCamera
 {
-
-
     public class HttpServer
     {
         private HttpListener Listener { get; set; }
@@ -17,14 +16,15 @@ namespace IPCamera
         private String Port { get; set; }
         private String Prefix { get; set; }
         private String Url { get; set; }
-        private Camera Cam { get; set; }
-
-        public HttpServer(Camera cam)
+        private MyCamera Cam { get; set; }
+        private CameraServcies CameraSerbice { get; set; }
+        public HttpServer(MyCamera cam)
         {
+            this.CameraSerbice = (from s in MainWindow.Main_window.camerasServicies where s.cameraId == cam.Id select s).FirstOrDefault();
             this.Cam = cam;
-            this.Ip = this.Cam.Net_stream_ip;
-            this.Port = this.Cam.Net_stream_port;
-            this.Prefix = this.Cam.Net_stream_prefix;
+            this.Ip = "localhost";
+            this.Port = this.Cam.net_stream_port;
+            this.Prefix = this.Cam.net_stream_prefix;
             if (!this.Ip.Equals("") && !this.Port.Equals("") && !this.Prefix.Equals(""))
             {
                 this.Url = $"http://{this.Ip}:{this.Port}/{this.Prefix}/";
@@ -43,8 +43,6 @@ namespace IPCamera
                 MessageBox.Show("Enter an IP, Port and the Prefix Please.");
             }
         }
-        
-
         public async Task ListenAsync()
         {
             try
@@ -64,7 +62,7 @@ namespace IPCamera
                             HttpListenerRequest request = context.Request;
                             HttpListenerResponse response = context.Response;
                             // Get Frame Buffer
-                            System.Windows.Media.Imaging.BitmapSource bitmapsource = this.Cam.Video.Frame_GetCurrent();
+                            System.Windows.Media.Imaging.BitmapSource bitmapsource = this.CameraSerbice.video.Frame_GetCurrent();
                             MemoryStream outStream = new MemoryStream();
                             JpegBitmapEncoder enc = new JpegBitmapEncoder
                             {
@@ -99,7 +97,6 @@ namespace IPCamera
                 Console.WriteLine($"\n\n\n{ex.Message}\n\n\n");
             }
         }
-
         public void Close()
         {
             this.Run = false;
@@ -110,7 +107,5 @@ namespace IPCamera
             //this.listener.Prefixes.Clear();
             //this.listener = new HttpListener();
         }
-
     }
-
 }

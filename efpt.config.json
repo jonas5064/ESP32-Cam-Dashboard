@@ -1,0 +1,61 @@
+﻿{
+   "CodeGenerationMode": 0,
+   "ContextClassName": "IpcamerasContext",
+   "ContextNamespace": "DbEntity",
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": "DbEntity",
+   "OutputContextPath": "IpCamerasContext",
+   "OutputPath": "Models",
+   "ProjectRootNamespace": "IPCamera",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[EmailSender]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FilesDirs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FilesFormats]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Logged]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MyCameras]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SMS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Users]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "IPCameras",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}

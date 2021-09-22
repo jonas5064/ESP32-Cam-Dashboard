@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="IpCamerasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="EmailSender">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nchar" MaxLength="255" />
+          <Property Name="Pass" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FilesDirs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="250" Nullable="false" />
+          <Property Name="Path" Type="nchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FilesFormats">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="avi" Type="bit" Nullable="false" />
+          <Property Name="mp4" Type="bit" Nullable="false" />
+          <Property Name="history_time" Type="tinyint" Nullable="false" />
+          <Property Name="file_size" Type="int" />
+        </EntityType>
+        <EntityType Name="MyCameras">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="urls" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="name" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="username" Type="nchar" MaxLength="50" />
+          <Property Name="password" Type="nchar" MaxLength="50" />
+          <Property Name="fps" Type="int" Nullable="false" />
+          <Property Name="net_stream_port" Type="nchar" MaxLength="255" />
+          <Property Name="net_stream_prefix" Type="nchar" MaxLength="255" />
+          <Property Name="net_stream" Type="bit" />
+          <Property Name="Face_Detection" Type="bit" Nullable="false" />
+          <Property Name="Face_Recognition" Type="bit" Nullable="false" />
+          <Property Name="Brightness" Type="int" Nullable="false" />
+          <Property Name="Contrast" Type="int" Nullable="false" />
+          <Property Name="Darkness" Type="int" Nullable="false" />
+          <Property Name="Recording" Type="bit" Nullable="false" />
+          <Property Name="On_Move_Pic" Type="bit" Nullable="false" />
+          <Property Name="On_Move_Rec" Type="bit" Nullable="false" />
+          <Property Name="On_Move_SMS" Type="bit" Nullable="false" />
+          <Property Name="On_Move_EMAIL" Type="bit" Nullable="false" />
+          <Property Name="Move_Sensitivity" Type="int" Nullable="false" />
+          <Property Name="Up_req" Type="nchar" MaxLength="255" />
+          <Property Name="Down_req" Type="nchar" MaxLength="255" />
+          <Property Name="Left_req" Type="nchar" MaxLength="255" />
+          <Property Name="Right_req" Type="nchar" MaxLength="255" />
+          <Property Name="isEsp32" Type="bit" Nullable="false" />
+          <Property Name="Row" Type="int" />
+          <Property Name="Coll" Type="int" />
+          <Property Name="VideoIndex" Type="int" />
+        </EntityType>
+        <EntityType Name="SMS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountSID" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="AccountTOKEN" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="nchar" MaxLength="55" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="LastName" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="Email" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="Password" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Licences" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="Logged" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="IpCamerasModelStoreContainer">
+          <EntitySet Name="EmailSender" EntityType="Self.EmailSender" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FilesDirs" EntityType="Self.FilesDirs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FilesFormats" EntityType="Self.FilesFormats" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MyCameras" EntityType="Self.MyCameras" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SMS" EntityType="Self.SMS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IpCamerasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="EmailSender">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="Pass" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FilesDir">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Path" Type="String" MaxLength="250" FixedLength="true" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FilesFormat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="avi" Type="Boolean" Nullable="false" />
+          <Property Name="mp4" Type="Boolean" Nullable="false" />
+          <Property Name="history_time" Type="Byte" Nullable="false" />
+          <Property Name="file_size" Type="Int32" />
+        </EntityType>
+        <EntityType Name="MyCamera">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="urls" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="fps" Type="Int32" Nullable="false" />
+          <Property Name="net_stream_port" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="net_stream_prefix" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="net_stream" Type="Boolean" />
+          <Property Name="Face_Detection" Type="Boolean" Nullable="false" />
+          <Property Name="Face_Recognition" Type="Boolean" Nullable="false" />
+          <Property Name="Brightness" Type="Int32" Nullable="false" />
+          <Property Name="Contrast" Type="Int32" Nullable="false" />
+          <Property Name="Darkness" Type="Int32" Nullable="false" />
+          <Property Name="Recording" Type="Boolean" Nullable="false" />
+          <Property Name="On_Move_Pic" Type="Boolean" Nullable="false" />
+          <Property Name="On_Move_Rec" Type="Boolean" Nullable="false" />
+          <Property Name="On_Move_SMS" Type="Boolean" Nullable="false" />
+          <Property Name="On_Move_EMAIL" Type="Boolean" Nullable="false" />
+          <Property Name="Move_Sensitivity" Type="Int32" Nullable="false" />
+          <Property Name="Up_req" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="Down_req" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="Left_req" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="Right_req" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="isEsp32" Type="Boolean" Nullable="false" />
+          <Property Name="Row" Type="Int32" />
+          <Property Name="Coll" Type="Int32" />
+          <Property Name="VideoIndex" Type="Int32" />
+        </EntityType>
+        <EntityType Name="SM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountSID" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="AccountTOKEN" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="55" FixedLength="true" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="255" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Licences" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Logged" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="IpCamerasEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="EmailSenders" EntityType="Self.EmailSender" />
+          <EntitySet Name="FilesDirs" EntityType="Self.FilesDir" />
+          <EntitySet Name="FilesFormats" EntityType="Self.FilesFormat" />
+          <EntitySet Name="MyCameras" EntityType="Self.MyCamera" />
+          <EntitySet Name="SMS" EntityType="Self.SM" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IpCamerasModelStoreContainer" CdmEntityContainer="IpCamerasEntities">
+          <EntitySetMapping Name="EmailSenders">
+            <EntityTypeMapping TypeName="IpCamerasModel.EmailSender">
+              <MappingFragment StoreEntitySet="EmailSender">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FilesDirs">
+            <EntityTypeMapping TypeName="IpCamerasModel.FilesDir">
+              <MappingFragment StoreEntitySet="FilesDirs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FilesFormats">
+            <EntityTypeMapping TypeName="IpCamerasModel.FilesFormat">
+              <MappingFragment StoreEntitySet="FilesFormats">
+                <ScalarProperty Name="file_size" ColumnName="file_size" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="avi" ColumnName="avi" />
+                <ScalarProperty Name="mp4" ColumnName="mp4" />
+                <ScalarProperty Name="history_time" ColumnName="history_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MyCameras">
+            <EntityTypeMapping TypeName="IpCamerasModel.MyCamera">
+              <MappingFragment StoreEntitySet="MyCameras">
+                <ScalarProperty Name="VideoIndex" ColumnName="VideoIndex" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="urls" ColumnName="urls" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="fps" ColumnName="fps" />
+                <ScalarProperty Name="net_stream_port" ColumnName="net_stream_port" />
+                <ScalarProperty Name="net_stream_prefix" ColumnName="net_stream_prefix" />
+                <ScalarProperty Name="net_stream" ColumnName="net_stream" />
+                <ScalarProperty Name="Face_Detection" ColumnName="Face_Detection" />
+                <ScalarProperty Name="Face_Recognition" ColumnName="Face_Recognition" />
+                <ScalarProperty Name="Brightness" ColumnName="Brightness" />
+                <ScalarProperty Name="Contrast" ColumnName="Contrast" />
+                <ScalarProperty Name="Darkness" ColumnName="Darkness" />
+                <ScalarProperty Name="Recording" ColumnName="Recording" />
+                <ScalarProperty Name="On_Move_Pic" ColumnName="On_Move_Pic" />
+                <ScalarProperty Name="On_Move_Rec" ColumnName="On_Move_Rec" />
+                <ScalarProperty Name="On_Move_SMS" ColumnName="On_Move_SMS" />
+                <ScalarProperty Name="On_Move_EMAIL" ColumnName="On_Move_EMAIL" />
+                <ScalarProperty Name="Move_Sensitivity" ColumnName="Move_Sensitivity" />
+                <ScalarProperty Name="Up_req" ColumnName="Up_req" />
+                <ScalarProperty Name="Down_req" ColumnName="Down_req" />
+                <ScalarProperty Name="Left_req" ColumnName="Left_req" />
+                <ScalarProperty Name="Right_req" ColumnName="Right_req" />
+                <ScalarProperty Name="isEsp32" ColumnName="isEsp32" />
+                <ScalarProperty Name="Row" ColumnName="Row" />
+                <ScalarProperty Name="Coll" ColumnName="Coll" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SMS">
+            <EntityTypeMapping TypeName="IpCamerasModel.SM">
+              <MappingFragment StoreEntitySet="SMS">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AccountSID" ColumnName="AccountSID" />
+                <ScalarProperty Name="AccountTOKEN" ColumnName="AccountTOKEN" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="IpCamerasModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="IpCamerasModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Logged" ColumnName="Logged" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Licences" ColumnName="Licences" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
