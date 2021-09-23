@@ -1,11 +1,19 @@
-﻿using System;
+﻿using MimeKit;
+using MimeKit.Utils;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 using VisioForge.Controls.UI.WPF;
 using VisioForge.Types;
+using VisioForge.Types.OutputFormat;
 
 namespace IPCamera
 {
@@ -15,10 +23,7 @@ namespace IPCamera
         public string cameraId { get; set; }
         WindowControll Win_controll { get; set; }
         public bool Fullscreen { get; set; }
-        public int On_move_recording_time { get; set; }
-        public String Net_stream_ip { get; set; }
         public bool Running { get; set; }
-        public VideoCapture Video { get; set; }
         HttpServer Server { get; set; }
         public bool Camera_oppened { get; set; }
         public CameraServcies(MyCamera camera)
@@ -48,7 +53,7 @@ namespace IPCamera
             }
             this.video.OnError += OnError;
             this.video.MouseUp += CamerasFocused;
-            this.video.Audio_PlayAudio = video.Audio_RecordAudio = false;
+            this.video.Audio_PlayAudio = this.video.Audio_RecordAudio = false;
             this.video.Video_Effects_Enabled = true;
             this.video.IP_Camera_Source.Type = VisioForge.Types.VFIPSource.HTTP_MJPEG_LowLatency;
             this.video.Motion_Detection = new MotionDetectionSettings
@@ -60,18 +65,14 @@ namespace IPCamera
             //camera.video.Video_Still_Frames_Grabber_Enabled = true;
             this.video.Video_FrameRate = camera.fps;
         }
-        // TODO: Camera Start
-        public void Start()
+        public void Start() // TODO: CameraServicies: Line[68], Function[Start], ERROR[this.video.Start() == NullRefrencesException].
         {
-            /*
-            if (this.Video.Status != VisioForge.Types.VFVideoCaptureStatus.Work)
+            if (this.video.Status == VisioForge.Types.VFVideoCaptureStatus.Free)
             {
                 try
                 {
-                    Console.WriteLine($"Camera Start.");
-                    this.Video.Start();
+                    this.video.Start();
                     this.Running = true;
-                    //this.video.StartAsync();
                 }
                 catch (System.AccessViolationException ex)
                 {
@@ -82,20 +83,15 @@ namespace IPCamera
                     Console.WriteLine($"OnStart: Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
                 }
             }
-            */
         }
-        // TODO: Camera Stop
         public void Stop()
         {
-            /*
-            if (this.Video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
+            if (this.video.Status == VisioForge.Types.VFVideoCaptureStatus.Work)
             {
                 try
                 {
-                    Console.WriteLine($"Camera Stop.");
-                    this.Video.Stop();
+                    this.video.Stop();
                     this.Running = false;
-                    //this.video.StopAsync();
                 }
                 catch (System.AccessViolationException ex)
                 {
@@ -107,16 +103,15 @@ namespace IPCamera
                 }
 
             }
-            */
         }
-        // TODO: Camera Take Picture
         public void Take_pic()
-        {/*
+        {
             string picturesDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
                                       where f.Name.Equals("Pictures")
                                       select f.Path).FirstOrDefault();
             // Create Folder With Cameras Name for Name
-            String dir_path = picturesDirPath + "\\" + this.Name;
+            string camName = (from c in MainWindow.Main_window.DBModels.MyCameras where c.Id == this.cameraId select c.name).FirstOrDefault();
+            String dir_path = picturesDirPath + "\\" + camName;
             if (!Directory.Exists(dir_path))
             {
                 Directory.CreateDirectory(dir_path);
@@ -135,12 +130,10 @@ namespace IPCamera
             houre = houre.Replace(":", ".");
             String file = dir_path + "\\" + houre + ".jpg";
             Console.WriteLine($"\n\nCreate File: {file}\n\n");
-            this.Video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);*/
+            this.video.Frame_Save(file, VisioForge.Types.VFImageFormat.JPEG, 85);
         }
-        // TODO: Camera Start Recording
         public void StartRecording()
         {
-            /*
             string videoDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
                                    where f.Name.Equals("Videos")
                                    select f.Path).FirstOrDefault();
@@ -149,12 +142,13 @@ namespace IPCamera
                 bool was_running = this.Running;
                 if (this.Running)
                 {
-                    this.Video.Stop();
+                    this.video.Stop();
                 }
                 // Video mode == capture
-                this.Video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
+                this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPCapture;
                 // Create Dir With Cameras Name
-                String dir_path = videoDirPath + "\\" + this.Name;
+                string camName = (from c in MainWindow.Main_window.DBModels.MyCameras where c.Id == this.cameraId select c.name).FirstOrDefault();
+                String dir_path = videoDirPath + "\\" + camName;
                 if (!Directory.Exists(dir_path)) // Directory with the name of the camera
                 {
                     Directory.CreateDirectory(dir_path);
@@ -177,20 +171,20 @@ namespace IPCamera
                 if (fileFormat.avi)
                 {
                     String file = dir_path + "\\" + houre + ".avi";
-                    this.Video.Output_Filename = file;
+                    this.video.Output_Filename = file;
                     VFAVIOutput avi = new VFAVIOutput();
-                    this.Video.Output_Format = new VFAVIOutput();
+                    this.video.Output_Format = new VFAVIOutput();
                 }
                 // MP4
                 if (fileFormat.mp4)
                 {
                     String file = dir_path + "\\" + houre + ".mp4";
-                    this.Video.Output_Filename = file;
-                    this.Video.Output_Format = new VFMP4v8v10Output();
+                    this.video.Output_Filename = file;
+                    this.video.Output_Format = new VFMP4v8v10Output();
                 }
                 if (this.Running && was_running)
                 {
-                    this.Video.Start();
+                    this.video.Start();
                 }
             }
             catch (System.Reflection.TargetInvocationException ex)
@@ -201,22 +195,20 @@ namespace IPCamera
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
-            */
         }
-        // TODO: Camera Stop Recording
         public void StopRecording()
-        {/*
+        {
             bool was_running = this.Running;
             if (this.Running)
             {
-                this.Video.Stop();
+                this.video.Stop();
             }
-            this.Video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
+            this.video.Mode = VisioForge.Types.VFVideoCaptureMode.IPPreview;
             Console.WriteLine($"Camera Stop Recording");
             if (this.Running && was_running)
             {
-                this.Video.Start();
-            }*/
+                this.video.Start();
+            }
         }
         private void OnError(object sender, VisioForge.Types.ErrorsEventArgs ex)
         {
@@ -224,20 +216,20 @@ namespace IPCamera
                                     StackTrace:{ex.StackTrace}\n
                                     Message:{ex.Message}\n\n");
         }
-        // TODO: Camera Focused
         public void CamerasFocused(object sender, MouseButtonEventArgs e)
-        {/*
+        {
             if (this.Running)
             {
                 if (e.ChangedButton == MouseButton.Right)
                 {
-                    User user = (from u in MainWindow.DBModels.Users where u.Logged == true select u).FirstOrDefault();
-                    if (MainWindow.Logged && user.Licences.Equals("Admin"))
+                    User user = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
+                    if (MainWindow.Main_window.Logged && user.Licences.Equals("Admin"))
                     {
                         if (this.Camera_oppened == false)
                         {
                             this.Camera_oppened = true;
-                            this.Win_controll = new WindowControll(this);
+                            MyCamera cam = (from c in MainWindow.Main_window.DBModels.MyCameras where c.Id == this.cameraId select c).FirstOrDefault();
+                            this.Win_controll = new WindowControll(cam);
                             Win_controll.Show();
                         }
                         else
@@ -251,23 +243,21 @@ namespace IPCamera
                     // Open A new Window And Show This Camera FullScreen
                     if (!this.Fullscreen)
                     {
-                        MainWindow.cams_grid.Children.Remove(this.Video);
+                        MainWindow.Main_window.cameras_grid.Children.Remove(this.video);
                         this.Fullscreen = true;
                         VideoFullscreen fullscreen = new VideoFullscreen(this);
                         fullscreen.Show();
                     }
                 }
-            }*/
+            }
         }
-        // This Happends when camera detectets a motion
-        // TODO: Camera On Motion Detection
         DateTime last_email_date_onmove = DateTime.Now.AddMinutes(-1);
         public void OnMotion(object sender, MotionDetectionEventArgs e)
-        {/*
-            if (e.Level > this.On_move_sensitivity)
+        {
+            MyCamera cam = (from c in MainWindow.Main_window.DBModels.MyCameras where c.Id == this.cameraId select c).FirstOrDefault();
+            if (e.Level > cam.Move_Sensitivity)
             {
-                //Console.WriteLine($"Motion Detection!!!   Matrix: {e.Matrix.Length.ToString()}   Level: {e.Level}");
-                if (this.On_move_email)
+                if (cam.On_Move_EMAIL)
                 {
                     // When Send Get the DateTime
                     if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
@@ -276,27 +266,26 @@ namespace IPCamera
                         // Return to Sending Email
                         String host = "";
                         int port = 587;
-                        String fromEmail = MainWindow.Email_send;
-                        String fromPassword = MainWindow.Pass_send;
-                        String subject = this.Name;
+                        EmailSender emailSender = (from es in MainWindow.Main_window.DBModels.EmailSenders select es).FirstOrDefault();
+                        String subject = cam.name;
 
-                        if (fromEmail.Contains("gmail"))
+                        if (emailSender.Email.Contains("gmail"))
                         {
                             host = "smtp.gmail.com";
                         }
-                        else if (fromEmail.Contains("yahoo"))
+                        else if (emailSender.Email.Contains("yahoo"))
                         {
                             host = "imap.mail.yahoo.com";
                         }
-                        else if (fromEmail.Contains("live"))
+                        else if (emailSender.Email.Contains("live"))
                         {
                             host = "smtp.live.com";
                         }
                         // Create a File with a pic
                         String img_name = "email_pic.jpeg";
-                        this.Video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
+                        this.video.Frame_Save(img_name, VisioForge.Types.VFImageFormat.JPEG, 100, 300, 300);
                         // Add All Recievers
-                        List<User> users = (from u in MainWindow.DBModels.Users select u).ToList();
+                        List<User> users = (from u in MainWindow.Main_window.DBModels.Users select u).ToList();
                         foreach (User u in users)
                         {
                             // Create HTML Body
@@ -308,7 +297,7 @@ namespace IPCamera
                                                                    "<head>" +
                                                                    "</head" +
                                                                    "<body>" +
-                                                                       "<h1>" + $"[{this.Name}]" + "</h1>" +
+                                                                       "<h1>" + $"[{cam.name}]" + "</h1>" +
                                                                        "<h3>" + "Detect Motion at:" + "</h3>" +
                                                                        "<h2>" + $"[{DateTime.Now}]" + "</h2>" +
                                                                        @"<img src=""cid:{0}"">" +
@@ -318,16 +307,15 @@ namespace IPCamera
                                                             );
                             // Create Email Message
                             var mailMessage = new MimeMessage();
-                            mailMessage.From.Add(new MailboxAddress("Officee", fromEmail));
+                            mailMessage.From.Add(new MailboxAddress("Officee", emailSender.Email));
                             mailMessage.To.Add(new MailboxAddress(u.FirstName + " " + u.LastName, u.Email));
                             mailMessage.Subject = subject;
                             mailMessage.Body = builder.ToMessageBody();
                             // Send Email Message
                             using (var smtpClient = new MailKit.Net.Smtp.SmtpClient())
                             {
-                                Console.WriteLine($"\nHost: {host}    Email: {fromEmail}    Password: {fromPassword}\n");
                                 smtpClient.Connect(host, port, false);
-                                smtpClient.Authenticate(fromEmail, fromPassword);
+                                smtpClient.Authenticate(emailSender.Email, emailSender.Pass);
                                 smtpClient.Send(mailMessage);
                                 smtpClient.Disconnect(true);
                             }
@@ -336,37 +324,37 @@ namespace IPCamera
                         File.Delete(img_name);
                     }
                 }
-                if (this.On_move_pic)
+                if (cam.On_Move_Pic)
                 {
                     Console.WriteLine("Take Picture.");
                     this.Take_pic();
                 }
-                if (this.On_move_rec)
+                if (cam.On_Move_Rec)
                 {
 
                 }
-                if (this.On_move_sms)
+                if (cam.On_Move_SMS)
                 {
                     // Send SMS
                     if (DateTime.Now > last_email_date_onmove.AddMinutes(1))
                     {
                         last_email_date_onmove = DateTime.Now;
                         // Find your Account Sid and Token at https://account.apifonica.com/
-                        Console.WriteLine($"Before Send SMS.   ssid: {MainWindow.TwilioAccountSID}   token: {MainWindow.TwilioAccountToken}");
-                        TwilioClient.Init(MainWindow.TwilioAccountSID, MainWindow.TwilioAccountToken);
-                        List<User> users = (from u in MainWindow.DBModels.Users select u).ToList();
+                        SM sms = (from s in MainWindow.Main_window.DBModels.SMS select s).FirstOrDefault();
+                        TwilioClient.Init(sms.AccountSID, sms.AccountTOKEN);
+                        List<User> users = (from u in MainWindow.Main_window.DBModels.Users select u).ToList();
                         foreach (User u in users)
                         {
                             var message = MessageResource.Create(
-                                body: $"[{this.Name}]  Detect Motion at  [{DateTime.Now}]",
-                                from: new Twilio.Types.PhoneNumber(MainWindow.TwilioNumber),
+                                body: $"[{cam.name}]  Detect Motion at  [{DateTime.Now}]",
+                                from: new Twilio.Types.PhoneNumber(sms.Phone),
                                 to: new Twilio.Types.PhoneNumber(u.Phone)
                             );
                             Console.WriteLine($"Send SMS To: {message.Sid}.");
                         }
                     }
                 }
-            }*/
+            }
         }
     }
 }

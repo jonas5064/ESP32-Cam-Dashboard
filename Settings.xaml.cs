@@ -26,27 +26,24 @@ namespace IPCamera
         }
         SM sms;
         EmailSender emailSender;
+        FilesFormat filesFormats;
         string picturesDirPath = "";
         string videoDirPath = "";
         public Settings()
         {
-
             InitializeComponent();
-
-            this.sms = (from s in MainWindow.Main_window.DBModels.SMS select s).FirstOrDefault();
-            this.emailSender = (from es in MainWindow.Main_window.DBModels.EmailSenders select es).FirstOrDefault();
+            this.emailSender = MainWindow.Main_window.DBModels.EmailSenders.Select(e => e).FirstOrDefault();
+            this.sms = MainWindow.Main_window.DBModels.SMS.Select(s => s).FirstOrDefault();
             this.picturesDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
                                       where f.Name.Equals("Pictures")
                                       select f.Path).FirstOrDefault();
             this.videoDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
                                    where f.Name.Equals("Videos")
                                    select f.Path).FirstOrDefault();
-
+            this.filesFormats = MainWindow.Main_window.DBModels.FilesFormats.Select(f => f).FirstOrDefault();
             this.Update_settings_page();
-
             // Fill The Users in The Users DataGrid
             this.FillUsers();
-
             // Fill the TextBoxes With the Data
             sms_account_ssid.Text = this.sms.AccountSID;
             sms_account_token.Text = this.sms.AccountTOKEN;
@@ -295,23 +292,15 @@ namespace IPCamera
             Dispatcher.Invoke(updateProgressBaDelegateTow, DispatcherPriority.Background, new object[] { RangeBase.ValueProperty, Convert.ToDouble(100) });
         }
         private void Update_settings_page()
-        {
-            string picturesDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
-                                      where f.Name.Equals("Pictures")
-                                      select f.Path).FirstOrDefault();
-            string videoDirPath = (from f in MainWindow.Main_window.DBModels.FilesDirs
-                                   where f.Name.Equals("Videos")
-                                   select f.Path).FirstOrDefault();
-            FilesFormat fileFormat = (from f in MainWindow.Main_window.DBModels.FilesFormats select f).FirstOrDefault();
+        {            
             // Update files paths
             txtEditor_pictures.Text = picturesDirPath;
             txtEditor_videos.Text = videoDirPath;
             // Update Files Formats
-            avi_checkbox.IsChecked = fileFormat.avi;
-            mp4_checkbox.IsChecked = fileFormat.mp4;
+            avi_checkbox.IsChecked = this.filesFormats.avi;
+            mp4_checkbox.IsChecked = this.filesFormats.mp4;
             // Update Recording History Time
-            FilesFormat filesFormats = (from f in MainWindow.Main_window.DBModels.FilesFormats select f).FirstOrDefault();
-            recordingTime_ComboBox.SelectedIndex = filesFormats.history_time-1;
+            recordingTime_ComboBox.SelectedIndex = this.filesFormats.history_time-1;
             // Feel the urls
             List<MyCamera> cameras = (from camera in MainWindow.Main_window.DBModels.MyCameras select camera).ToList();
             if (cameras.Count > 0)
@@ -411,8 +400,11 @@ namespace IPCamera
                 }
             }
             // Update Email Sender And Pasword
-            email_send_textbox.Text = emailSender.Email;
-            pass_send_textbox.Password = emailSender.Pass;
+            if(MainWindow.Main_window.DBModels.EmailSenders.Any())
+            {
+                email_send_textbox.Text = this.emailSender.Email;
+                pass_send_textbox.Password = this.emailSender.Pass;
+            }
             // Update Robotic . CameraSelector cameras
             camera_selector.Items.Add("Select a camera");
             camera_selector.SelectedIndex = camera_selector.Items.IndexOf("Select a camera");

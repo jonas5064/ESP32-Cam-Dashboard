@@ -13,7 +13,6 @@ namespace IPCamera
         {
             InitializeComponent();
             this.User = user;
-            Console.WriteLine($"\n\nUserName: {this.User.FirstName}  {this.User.LastName}");
             user_grid.DataContext = this.User;
         }
         // When Close The Window

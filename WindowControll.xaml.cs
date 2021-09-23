@@ -36,7 +36,6 @@ namespace IPCamera
             {
                 Console.WriteLine($"Source:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}");
             }
-
             this.Remote_start_setup = false;
             this.Remote_detection = false;
             this.DataContext = this;
@@ -46,7 +45,6 @@ namespace IPCamera
             this.Url = this.Camera.urls;
             // Add Title
             cameras_title.Content = this.Camera.name;
-
             // Chech if Face_Recognition, Face Detection  is checked
             Face_det.IsChecked = (this.Camera.Face_Detection);
             Face_rec.IsChecked = (this.Camera.Face_Recognition);

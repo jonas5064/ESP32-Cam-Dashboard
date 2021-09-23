@@ -10,7 +10,6 @@ using VisioForge.Controls.UI.WPF;
 
 namespace IPCamera
 {
-
     public partial class MainWindow : Window
     {
         public static MainWindow Main_window { get; set; }
@@ -22,15 +21,18 @@ namespace IPCamera
         {
             set
             {
-                MainWindow.Main_window._logged = value;
+                this._logged = value;
                 if (!MainWindow.Main_window._logged)
                 {
-                    User oldLoggedUser = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
-                    oldLoggedUser.Logged = false;
-                    MainWindow.Main_window.DBModels.SaveChanges();
+                    if (MainWindow.Main_window.DBModels.Users.Where(u => u.Logged).Any())
+                    {
+                        User oldLoggedUser = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
+                        oldLoggedUser.Logged = false;
+                        MainWindow.Main_window.DBModels.SaveChanges();
+                    } 
                 }
             }
-            get { return MainWindow.Main_window._logged; }
+            get { return this._logged; }
         }
         private Settings _settings;
         public bool Settings_oppened { get; set; } = false;
@@ -43,14 +45,16 @@ namespace IPCamera
         {
             try
             {
+                Main_window = this;
                 // Runs only one time and install some requarements
                 if (Install_Requarements.First_time_runs)
                 {
                     Console.WriteLine("Inside First Time Run.");
+                    // Install Requarements
+                    Install_Requarements.Install_Req();
+                    Install_Requarements.First_time_runs = false;
                     try
                     {
-                        // Install Requarements
-                        Install_Requarements.Install_Req();
                         // Create Admin User
                         User user_a = new User();
                         user_a.FirstName = "admin";
@@ -59,21 +63,40 @@ namespace IPCamera
                         user_a.Phone = "";
                         user_a.Licences = "Admin";
                         user_a.Password = "1234";
-                        MainWindow.Main_window.DBModels.SaveChanges();
-                        // Files Format By Default
-                        foreach(var f in MainWindow.Main_window.DBModels.FilesFormats)
+                        user_a.Logged = false;
+                        User[] usersOld = (from c in Main_window.DBModels.Users
+                                        where c.FirstName == user_a.FirstName
+                                        where c.LastName == user_a.LastName
+                                        where c.Email == user_a.Email
+                                        where c.Phone == user_a.Phone
+                                        where c.Licences == user_a.Licences
+                                        where c.Password == user_a.Password
+                                        where c.Logged == user_a.Logged
+                                        select c).ToArray();
+                        if(usersOld.Length == 0)
                         {
-                            MainWindow.Main_window.DBModels.FilesFormats.Remove(f);
+                            Main_window.DBModels.Users.Add(user_a);
+                            MainWindow.Main_window.DBModels.SaveChanges();
                         }
+                        // Files Format By Default
                         FilesFormat filef = new FilesFormat();
                         filef.Id = 1;
                         filef.avi = false;
                         filef.mp4 = true;
                         filef.history_time = 1;
                         filef.file_size = 3600000;
-                        MainWindow.Main_window.DBModels.FilesFormats.Add(filef);
-                        // Application Varaible to false this code won't runs again
-                        Install_Requarements.First_time_runs = false;
+                        FilesFormat[] filesFormatOld = (from f in MainWindow.Main_window.DBModels.FilesFormats
+                                                     where f.Id == filef.Id
+                                                     where f.avi == filef.avi
+                                                     where f.mp4 == filef.mp4
+                                                     where f.history_time == filef.history_time
+                                                     where f.file_size == filef.file_size
+                                                     select f).ToArray();
+                        if(filesFormatOld.Length > 0)
+                        {
+                            MainWindow.Main_window.DBModels.FilesFormats.Add(filef);
+                            MainWindow.Main_window.DBModels.SaveChanges();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -83,8 +106,6 @@ namespace IPCamera
                         Thread.Sleep(5000);
                     }
                 }
-
-                Console.WriteLine("Starting the base application...");
                 #region "Initialize Main Window"
                 try
                 {
@@ -101,27 +122,27 @@ namespace IPCamera
                     Thread.Sleep(5000);
                 }
                 #endregion
-
                 // Set a Hundeler for this main window
                 Main_window = this;
-                // Setup Login logout button for start
+                // Setup Login/logout button for start
                 login_logout_b.Click += (object sender, RoutedEventArgs e) =>
                 {
                     this.Loggin_clicked();
                 };
-
-                // If User Is Logged In
-                User user = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
-                MainWindow.Main_window._logged = true;
-                MainWindow.Main_window.login_logout_b.Content = "Logout";
-                MainWindow.Main_window.login_logout_b.Click += (object send, RoutedEventArgs ev) =>
+                login_logout_b.Click += (object send, RoutedEventArgs ev) =>
                 {
                     MainWindow.Main_window.Loggout_clicked();
                 };
+                // If User Is Logged In
+                if (MainWindow.Main_window.DBModels.Users.Where(u => u.Logged).Any())
+                {
+                    //User user = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
+                    MainWindow.Main_window.Logged = true;
+                    MainWindow.Main_window.login_logout_b.Content = "Logout";
 
+                }
                 // Open he Cameras Windows
                 CreateVideosPage();
-
                 //  DispatcherTimer setup (Thread Excecutes date update every 1 second)
                 date.Content = DateTime.Now.ToString("G", CultureInfo.CreateSpecificCulture("de-DE"));
                 System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -173,8 +194,6 @@ namespace IPCamera
             };
             recording_Cicle.AutoReset = true;
             recording_Cicle.Enabled = true;
-
-
             // Delete All Video Records Beforethe  " Video_recording_history_length " Start Scheduling
             System.Timers.Timer deleting_cicle = new System.Timers.Timer
             {
@@ -200,7 +219,6 @@ namespace IPCamera
             };
             deleting_cicle.AutoReset = true;
             deleting_cicle.Enabled = true;
-            
         }
         public void DeleteOldFiles()
         {
@@ -311,10 +329,10 @@ namespace IPCamera
             {
                 foreach (MyCamera cam in MainWindow.Main_window.DBModels.MyCameras)
                 {
-                    foreach(CameraServcies cs in MainWindow.Main_window.camerasServicies)
-                    {
-                        cs.Start();
-                    }
+                    CameraServcies cs = Main_window.camerasServicies
+                        .Where(cs1 => cs1.cameraId == cam.Id)
+                        .Select(cs2 => cs2).FirstOrDefault();
+                    cs.Start();
                 }
             }
         }
@@ -322,12 +340,9 @@ namespace IPCamera
         {
             if (Logged)
             {
-                foreach (MyCamera cam in MainWindow.Main_window.DBModels.MyCameras)
+                foreach (CameraServcies cs in MainWindow.Main_window.camerasServicies)
                 {
-                    foreach (CameraServcies cs in MainWindow.Main_window.camerasServicies)
-                    {
-                        cs.Stop();
-                    }
+                    cs.Stop();
                 }
             }
         }
@@ -344,8 +359,7 @@ namespace IPCamera
         }
         private void Settings_clicked(object sender, RoutedEventArgs e)
         {
-            User user = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
-            if (MainWindow.Main_window.Logged && (user.Licences.Equals("Admin")) )
+            if (MainWindow.Main_window.DBModels.Users.Where(u => u.Logged && u.Licences.Contains("Admin")).Any())
             {
                 if (Settings_oppened == false)
                 {
@@ -406,10 +420,9 @@ namespace IPCamera
             int count_columns = 0;
             foreach (MyCamera cam in MainWindow.Main_window.DBModels.MyCameras)
             {
-                // Create Video Capture
                 CameraServcies cs = new CameraServcies(cam);
                 MainWindow.Main_window.camerasServicies.Add(cs);
-                cam.VideoIndex = MainWindow.Main_window.camerasServicies.Count;
+                cam.VideoIndex = MainWindow.Main_window.camerasServicies.Count-1;
                 // New Row
                 if (count_columns == 3)
                 {
@@ -422,7 +435,7 @@ namespace IPCamera
                     cameras_grid.Children.Add(MainWindow.Main_window.camerasServicies[(int)cam.VideoIndex].video);
                     count_columns = 0;
                 }
-                else
+                else // New Column
                 {
                     Grid.SetColumn(MainWindow.Main_window.camerasServicies[(int)cam.VideoIndex].video, count_columns);
                     cam.Coll = count_columns;

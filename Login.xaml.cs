@@ -28,8 +28,12 @@ namespace IPCamera
                 User user = (from u in MainWindow.Main_window.DBModels.Users where u.Email.Equals(email) && u.Password.Equals(password) select u).FirstOrDefault();
                 if (user != null)
                 {
-                    User oldLoggedUser = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
-                    oldLoggedUser.Logged = false;
+                    if (MainWindow.Main_window.DBModels.Users.Where(u => u.Logged).Any())
+                    {
+                        User oldLoggedUser = (from u in MainWindow.Main_window.DBModels.Users where u.Logged == true select u).FirstOrDefault();
+                        oldLoggedUser.Logged = false;
+                        MainWindow.Main_window.DBModels.SaveChanges();
+                    }
                     user.Logged = true;
                     MainWindow.Main_window.DBModels.SaveChanges();
                     MainWindow.Main_window.Logged = true;

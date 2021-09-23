@@ -3,91 +3,54 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows;
 
 namespace IPCamera
 {
     class Install_Requarements
     {
-        public static bool first_time_runs = false;
         public static bool First_time_runs
         {
             get 
             {
-                try
+                String file = $"{GetRootDir()}\\first_run.txt";
+                if (File.Exists(file))
                 {
-                    Console.WriteLine("first_run.txt EXISTS.");
-                    String file = $"{GetRootDir()}\\first_run.txt";
-                    if (File.Exists(file))
+                    String str = System.IO.File.ReadAllText(file);
+                    if (str.Contains('1'))
                     {
-                        Console.WriteLine("File EXISTS.");
-                        String str = System.IO.File.ReadAllText(file);
-                        //MessageBox.Show($"First Time Runs: {str}");
-                        if (str.Contains('1'))
-                        {
-                            first_time_runs = true;
-                        }
-                        else
-                        {
-                            first_time_runs = false;
-                        }
-                        return first_time_runs;
+                        First_time_runs = false;
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("first_run.txt NOT EXISTS.");
-                        first_time_runs = true;
-                        return first_time_runs;
+                        return false;
                     }
-                } catch (System.IO.FileLoadException)
-                {
-                    Console.WriteLine($"\n\nFirst Run Can't Loaded...\n\n");
-                    Thread.Sleep(5000);
-                    return false;
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"\n\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
-                    Thread.Sleep(5000);
-                    return false;
+                    return true;
                 }
             }
             set
             {
-                try
+                string file = $"{GetRootDir()}\\first_run.txt";
+                if (value)
                 {
-                    first_time_runs = value;
-                    string file = $"{GetRootDir()}\\first_run.txt";
-                    // Create the file, or overwrite if the file exists.
-                    using (FileStream fs = File.Create(file))
-                    {
-                        byte[] info;
-                        if (first_time_runs.Equals(true))
-                        {
-                            info = new UTF8Encoding(true).GetBytes("1");
-                        }
-                        else
-                        {
-                            info = new UTF8Encoding(true).GetBytes("0");
-                        }
-                        // Add some information to the file.
-                        fs.Write(info, 0, info.Length);
-                    }
+                    File.WriteAllText(file, "1");
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"\n\nSource:{ex.Source}\nStackTrace:{ex.StackTrace}\n{ex.Message}\n\n");
-                    Thread.Sleep(5000);
+                    File.WriteAllText(file, "0");
                 }
             }
         }
-
         public static String GetRootDir()
         {
             String cur_dir = Environment.CurrentDirectory;
             //string root_dir = Path.GetFullPath(Path.Combine(cur_dir, @"..\..\"));
             return cur_dir;
         }
-
         public static void Install_Req()
         {
             String req_dir = $"{GetRootDir()}\\Requarements\\";
@@ -123,7 +86,6 @@ namespace IPCamera
                 }
                 Thread.Sleep(2000);
             }
-
         }
     }
 }
